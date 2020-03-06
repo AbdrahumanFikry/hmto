@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:senior/addStore.dart';
 import 'package:senior/models/newItem.dart';
-import 'package:senior/providers/newItemProvider.dart';
-import 'package:senior/seniorAds/seniorAdsNavigator.dart';
+
 import 'package:provider/provider.dart';
+import 'package:senior/seniorAds/seniorAdsNavigator.dart';
 
 main() {
   runApp(MyApp());
@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: Colors.white,
         ),
         debugShowCheckedModeBanner: false,
-        home: AdsAddStore(),
+        home: SeniorAdsNavigator(),
       ),
     );
   }
