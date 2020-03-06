@@ -39,10 +39,10 @@ class _SeniorAdsProfileState extends State<SeniorAdsProfile>
                 labelColor: Colors.black,
                 tabs: <Widget>[
                   Tab(
-                    text: 'name',
+                    text: 'My Info',
                   ),
                   Tab(
-                    text: 'name',
+                    text: 'Target',
                   )
                 ],
                 controller: TabController(length: 2, vsync: this),
@@ -75,6 +75,7 @@ class _SeniorAdsProfileState extends State<SeniorAdsProfile>
                                     height: 50.0,
                                   ),
                                 ),
+                                onTap: () {},
                               ),
                               Divider(
                                 height: 2,
