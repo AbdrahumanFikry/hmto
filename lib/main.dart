@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:senior/addStore.dart';
+import 'package:senior/models/newItem.dart';
+import 'package:senior/providers/newItemProvider.dart';
 import 'package:senior/seniorAds/seniorAdsNavigator.dart';
+import 'package:provider/provider.dart';
 
 main() {
   runApp(MyApp());
@@ -8,8 +12,14 @@ main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      showSemanticsDebugger: false,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => NewItem(),
+        ),
+      ],
+      child: MaterialApp(
+        showSemanticsDebugger: false,
 //          locale: Locale.fromSubtags(
 //            languageCode: 'en',
 //          ),
@@ -22,20 +32,21 @@ class MyApp extends StatelessWidget {
 //            const Locale('en', ''),
 //            const Locale('ar', ''),
 //          ],
-      theme: ThemeData(
-        iconTheme: IconThemeData(
-          size: 16,
-        ),
-        textTheme: TextTheme(
-          subhead: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 15,
+        theme: ThemeData(
+          iconTheme: IconThemeData(
+            size: 16,
           ),
+          textTheme: TextTheme(
+            subhead: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 15,
+            ),
+          ),
+          scaffoldBackgroundColor: Colors.white,
         ),
-        scaffoldBackgroundColor: Colors.white,
+        debugShowCheckedModeBanner: false,
+        home: AdsAddStore(),
       ),
-      debugShowCheckedModeBanner: false,
-      home: SeniorAdsNavigator(),
     );
   }
 }

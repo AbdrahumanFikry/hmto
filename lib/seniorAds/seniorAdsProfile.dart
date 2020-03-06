@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:senior/auth/signUp.dart';
 import 'package:senior/seniorAds/tabName.dart';
 
 class SeniorAdsProfile extends StatefulWidget {
@@ -22,7 +21,6 @@ class _SeniorAdsProfileState extends State<SeniorAdsProfile>
   }
 
   var tabs = [
-    {'name': 'Ads', 'add': SignUpPage()},
     {'name': 'Questions', 'add': TabName('Questions')},
     {'name': 'Competators', 'add': TabName('Competators')}
   ];
@@ -119,7 +117,13 @@ class _SeniorAdsProfileState extends State<SeniorAdsProfile>
                                           FontAwesomeIcons.plus,
                                           color: Colors.white,
                                         ),
-                                        onPressed: () {}),
+                                        onPressed: () {
+                                          showModalBottomSheet(
+                                            isScrollControlled: true,
+                                            context: context,
+                                            builder: (_) => tabs[0]['add'],
+                                          );
+                                        }),
                                   ),
                                 ),
                               ],
@@ -168,7 +172,13 @@ class _SeniorAdsProfileState extends State<SeniorAdsProfile>
                                         FontAwesomeIcons.plus,
                                         color: Colors.white,
                                       ),
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        showModalBottomSheet(
+                                          isScrollControlled: true,
+                                          context: context,
+                                          builder: (_) => tabs[1]['add'],
+                                        );
+                                      },
                                     ),
                                   ),
                                 ),
@@ -404,54 +414,6 @@ class _SeniorAdsProfileState extends State<SeniorAdsProfile>
                                   ),
                                 ],
                               ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              right: 2.0,
-                              top: 10,
-                              left: 10,
-                            ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Text(
-                                  '${'name'} list',
-                                  style: TextStyle(
-                                    fontSize: 25,
-                                    color: Colors.green,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                                Spacer(),
-                                tabIndex == 1
-                                    ? SizedBox(
-                                        height: 40,
-                                      )
-                                    : ButtonTheme(
-                                        height: 50,
-                                        minWidth: 50,
-                                        child: FlatButton(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(5),
-                                            ),
-                                          ),
-                                          color: Colors.blue,
-                                          child: Icon(
-                                            FontAwesomeIcons.plus,
-                                            color: Colors.white,
-                                          ),
-                                          onPressed: () {
-                                            showModalBottomSheet(
-                                              isScrollControlled: true,
-                                              context: context,
-                                              builder: (_) => tabs[0]['add'],
-                                            );
-                                          },
-                                        ),
-                                      ),
-                              ],
                             ),
                           ),
                         ],

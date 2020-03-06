@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class TabName extends StatelessWidget {
-  String text;
+  final String text;
   TabName(this.text);
 
   @override
