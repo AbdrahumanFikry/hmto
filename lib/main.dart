@@ -4,6 +4,7 @@ import 'package:senior/models/newItem.dart';
 
 import 'package:provider/provider.dart';
 import 'package:senior/seniorAds/seniorAdsNavigator.dart';
+import 'package:senior/seniorAds/store.dart';
 
 main() {
   runApp(MyApp());

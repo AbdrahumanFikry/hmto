@@ -15,6 +15,7 @@ class Store extends StatelessWidget {
     'https://www.dw.com/image/37077830_303.jpg',
     'https://madosan.com.tr/assets/uploads/galeri/super-market-hiper-market/6b6ac887-23e6-49ac-b44d-e3d8ff6b52b8-jpg_1560158960.jpg'
   ];
+
   //------------------------------------------------------------------------------------------------------------------------------------
 
   @override
@@ -30,62 +31,64 @@ class Store extends StatelessWidget {
             CarouselSlider(
               scrollPhysics: BouncingScrollPhysics(),
               height: 384 * screenSize.aspectRatio,
-              items: [
-                for (var x in urls)
-                  Padding(
-                      padding: EdgeInsets.all(13 * screenSize.aspectRatio),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                        child: CachedNetworkImage(
-                          imageUrl: x,
-                          height: 0.3 * screenSize.height,
-                          width: screenSize.width,
-                          fit: BoxFit.cover,
-                        ),
-                      ))
-              ],
+              items: urls.map(
+                (x) {
+                  return Padding(
+                    padding: EdgeInsets.all(10),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      child: CachedNetworkImage(
+                        imageUrl: x,
+                        height: 0.3 * screenSize.height,
+                        width: screenSize.width,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  );
+                },
+              ).toList(),
               enlargeCenterPage: true,
             ),
             //--------------------------------------------------------------------------
             Center(
                 child: Padding(
-                  padding:
+              padding:
                   EdgeInsets.symmetric(vertical: 16 * screenSize.aspectRatio),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Text(
-                        'Bobo Market',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 46 * screenSize.aspectRatio),
-                      ),
-                      RatingBarIndicator(
-                        itemCount: 5,
-                        itemSize: 50 * screenSize.aspectRatio,
-                        rating: 4.5,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Icon(
-                            Icons.star,
-                            color: Colors.orange,
-                          );
-                        },
-                      )
-                    ],
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Text(
+                    'Bobo Market',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 46 * screenSize.aspectRatio),
                   ),
-                )),
+                  RatingBarIndicator(
+                    itemCount: 5,
+                    itemSize: 50 * screenSize.aspectRatio,
+                    rating: 4.5,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Icon(
+                        Icons.star,
+                        color: Colors.orange,
+                      );
+                    },
+                  )
+                ],
+              ),
+            )),
             Center(
                 child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Icon(
-                      FontAwesomeIcons.mapMarkerAlt,
-                      color: Colors.green,
-                      size: 25,
-                    ),
-                    Text('el hadded St in front of This Long Name'),
-                  ],
-                )),
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Icon(
+                  FontAwesomeIcons.mapMarkerAlt,
+                  color: Colors.green,
+                  size: 25,
+                ),
+                Text('el hadded St in front of This Long Name'),
+              ],
+            )),
             Padding(
               padding: const EdgeInsets.only(top: 10, bottom: 10),
               child: Row(
@@ -123,7 +126,8 @@ class Store extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 50),
-              child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   Row(
                     children: <Widget>[
@@ -143,7 +147,6 @@ class Store extends StatelessWidget {
                       )
                     ],
                   ),
-
                 ],
               ),
             ),
@@ -177,9 +180,9 @@ class Store extends StatelessWidget {
               legendPosition: LegendPosition.left,
               chartRadius: 250 * screenSize.aspectRatio,
               legendStyle:
-              TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
               chartValueStyle:
-              TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
               dataMap: {
                 'Cabury': 50,
                 'Our product': 20,
@@ -189,7 +192,7 @@ class Store extends StatelessWidget {
             Divider(),
             Padding(
               padding:
-              EdgeInsets.symmetric(horizontal: 33 * screenSize.aspectRatio),
+                  EdgeInsets.symmetric(horizontal: 33 * screenSize.aspectRatio),
               child: ExpandablePanel(
                 theme: ExpandableThemeData(
                     animationDuration: Duration(milliseconds: 200)),
@@ -224,7 +227,7 @@ class Store extends StatelessWidget {
             ),
             Padding(
               padding:
-              EdgeInsets.symmetric(horizontal: 33 * screenSize.aspectRatio),
+                  EdgeInsets.symmetric(horizontal: 33 * screenSize.aspectRatio),
               child: ExpandablePanel(
                 theme: ExpandableThemeData(
                     animationDuration: Duration(milliseconds: 200)),

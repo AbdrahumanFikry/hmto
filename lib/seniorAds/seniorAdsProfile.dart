@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:senior/seniorAds/store.dart';
 import 'package:senior/seniorAds/tabName.dart';
 
 class SeniorAdsProfile extends StatefulWidget {
@@ -75,7 +76,13 @@ class _SeniorAdsProfileState extends State<SeniorAdsProfile>
                                     height: 50.0,
                                   ),
                                 ),
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => Store(),
+                                    ),
+                                  );
+                                },
                               ),
                               Divider(
                                 height: 2,
