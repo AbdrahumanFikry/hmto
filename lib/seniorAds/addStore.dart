@@ -6,7 +6,7 @@ import 'package:senior/widgets/question.dart';
 import 'package:senior/widgets/trueAndFalse.dart';
 import 'dart:io';
 import 'dart:async';
-import './models/newItem.dart';
+import '../models/newItem.dart';
 
 class AdsAddStore extends StatefulWidget {
   @override
@@ -68,6 +68,39 @@ class _AdsAddStoreState extends State<AdsAddStore> {
                 ),
                 SizedBox(
                   height: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    onChanged: (val) {
+//                      item.name = val;
+                    },
+                    decoration: InputDecoration(
+                      labelText: 'Phone',
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    onChanged: (val) {
+//                      item.name = val;
+                    },
+                    decoration: InputDecoration(
+                      labelText: 'Price',
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    onChanged: (val) {
+//                      item.name = val;
+                    },
+                    decoration: InputDecoration(
+                      labelText: 'contact',
+                    ),
+                  ),
                 ),
                 Text(
                   'Images',

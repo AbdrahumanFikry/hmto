@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:senior/addStore.dart';
-import 'package:senior/models/newItem.dart';
-
+import 'package:senior/providers/location.dart';
 import 'package:provider/provider.dart';
 import 'package:senior/seniorAds/seniorAdsNavigator.dart';
-import 'package:senior/seniorAds/store.dart';
 
 main() {
   runApp(MyApp());
@@ -16,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => NewItem(),
+          create: (context) => Location(),
         ),
       ],
       child: MaterialApp(

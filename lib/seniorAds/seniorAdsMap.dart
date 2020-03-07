@@ -1,9 +1,12 @@
 import 'dart:async';
-
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:senior/addStore.dart';
+import 'package:provider/provider.dart';
+import 'package:senior/seniorAds/addStore.dart';
+import 'package:app_settings/app_settings.dart';
+import '../providers/location.dart';
 
 class SeniorAdsMap extends StatefulWidget {
   @override
@@ -58,8 +61,17 @@ class _SeniorAdsMapState extends State<SeniorAdsMap> {
 
   @override
   void initState() {
+    initPlatformState();
     _getLocation();
     super.initState();
+  }
+
+  Future<void> initPlatformState() async {
+    if (Provider.of<Location>(context, listen: false).locationOn == false) {
+      AppSettings.openLocationSettings();
+      Provider.of<Location>(context, listen: false).locationOn = true;
+    }
+    if (!mounted) return;
   }
 
   @override

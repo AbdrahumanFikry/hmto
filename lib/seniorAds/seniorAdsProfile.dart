@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:expandable/expandable.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:senior/seniorAds/store.dart';
 import 'package:senior/seniorAds/tabName.dart';
+import '../widgets/lineChart.dart';
 
 class SeniorAdsProfile extends StatefulWidget {
   @override
@@ -95,112 +97,121 @@ class _SeniorAdsProfileState extends State<SeniorAdsProfile>
                       ),
                       ListView(
                         children: <Widget>[
-                          ExpandablePanel(
-                            theme: ExpandableThemeData(
-                              useInkWell: false,
-                              headerAlignment:
-                                  ExpandablePanelHeaderAlignment.center,
-                              iconPlacement: ExpandablePanelIconPlacement.left,
-                            ),
-                            header: Row(
-                              children: <Widget>[
-                                Text(
-                                  'Long answer questions',
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                                Spacer(),
-                                Padding(
-                                  padding: const EdgeInsets.all(2),
-                                  child: ButtonTheme(
-                                    height: 50,
-                                    minWidth: 50,
-                                    child: FlatButton(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(5))),
-                                        color: Colors.blue,
-                                        child: Icon(
-                                          FontAwesomeIcons.plus,
-                                          color: Colors.white,
-                                        ),
-                                        onPressed: () {
-                                          showModalBottomSheet(
-                                            isScrollControlled: true,
-                                            context: context,
-                                            builder: (_) => tabs[0]['add'],
-                                          );
-                                        }),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            expanded: ListView.builder(
-                              itemCount: 3,
-                              shrinkWrap: true,
-                              itemBuilder: (ctx, index) {
-                                return ListTile(
-                                  onTap: () {},
-                                  title: Text('q'),
-                                );
-                              },
-                            ),
-                          ),
-                          Divider(),
-                          ExpandablePanel(
-                            theme: ExpandableThemeData(
-                                useInkWell: false,
-                                headerAlignment:
-                                    ExpandablePanelHeaderAlignment.center,
-                                iconPlacement:
-                                    ExpandablePanelIconPlacement.left),
-                            header: Row(
-                              children: <Widget>[
-                                Text(
-                                  'True/False Questions',
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                                Spacer(),
-                                Padding(
-                                  padding: const EdgeInsets.all(2),
-                                  child: ButtonTheme(
-                                    height: 50,
-                                    minWidth: 50,
-                                    child: FlatButton(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(5),
-                                        ),
-                                      ),
-                                      color: Colors.blue,
-                                      child: Icon(
-                                        FontAwesomeIcons.plus,
-                                        color: Colors.white,
-                                      ),
-                                      onPressed: () {
-                                        showModalBottomSheet(
-                                          isScrollControlled: true,
-                                          context: context,
-                                          builder: (_) => tabs[1]['add'],
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            expanded: ListView.builder(
-                              itemCount: 3,
-                              shrinkWrap: true,
-                              itemBuilder: (ctx, index) {
-                                return ListTile(
-                                  onTap: () {},
-                                  title: Text('q'),
-                                );
-                              },
+//                          ExpandablePanel(
+//                            theme: ExpandableThemeData(
+//                              useInkWell: false,
+//                              headerAlignment:
+//                                  ExpandablePanelHeaderAlignment.center,
+//                              iconPlacement: ExpandablePanelIconPlacement.left,
+//                            ),
+//                            header: Row(
+//                              children: <Widget>[
+//                                Text(
+//                                  'Long answer questions',
+//                                  style: TextStyle(
+//                                      fontSize: 18,
+//                                      fontWeight: FontWeight.w600),
+//                                ),
+//                                Spacer(),
+//                                Padding(
+//                                  padding: const EdgeInsets.all(2),
+//                                  child: ButtonTheme(
+//                                    height: 50,
+//                                    minWidth: 50,
+//                                    child: FlatButton(
+//                                        shape: RoundedRectangleBorder(
+//                                            borderRadius: BorderRadius.all(
+//                                                Radius.circular(5))),
+//                                        color: Colors.blue,
+//                                        child: Icon(
+//                                          FontAwesomeIcons.plus,
+//                                          color: Colors.white,
+//                                        ),
+//                                        onPressed: () {
+//                                          showModalBottomSheet(
+//                                            isScrollControlled: true,
+//                                            context: context,
+//                                            builder: (_) => tabs[0]['add'],
+//                                          );
+//                                        }),
+//                                  ),
+//                                ),
+//                              ],
+//                            ),
+//                            expanded: ListView.builder(
+//                              itemCount: 3,
+//                              shrinkWrap: true,
+//                              itemBuilder: (ctx, index) {
+//                                return ListTile(
+//                                  onTap: () {},
+//                                  title: Text('q'),
+//                                );
+//                              },
+//                            ),
+//                          ),
+//                          Divider(),
+//                          ExpandablePanel(
+//                            theme: ExpandableThemeData(
+//                                useInkWell: false,
+//                                headerAlignment:
+//                                    ExpandablePanelHeaderAlignment.center,
+//                                iconPlacement:
+//                                    ExpandablePanelIconPlacement.left),
+//                            header: Row(
+//                              children: <Widget>[
+//                                Text(
+//                                  'True/False Questions',
+//                                  style: TextStyle(
+//                                      fontSize: 18,
+//                                      fontWeight: FontWeight.w600),
+//                                ),
+//                                Spacer(),
+//                                Padding(
+//                                  padding: const EdgeInsets.all(2),
+//                                  child: ButtonTheme(
+//                                    height: 50,
+//                                    minWidth: 50,
+//                                    child: FlatButton(
+//                                      shape: RoundedRectangleBorder(
+//                                        borderRadius: BorderRadius.all(
+//                                          Radius.circular(5),
+//                                        ),
+//                                      ),
+//                                      color: Colors.blue,
+//                                      child: Icon(
+//                                        FontAwesomeIcons.plus,
+//                                        color: Colors.white,
+//                                      ),
+//                                      onPressed: () {
+//                                        showModalBottomSheet(
+//                                          isScrollControlled: true,
+//                                          context: context,
+//                                          builder: (_) => tabs[1]['add'],
+//                                        );
+//                                      },
+//                                    ),
+//                                  ),
+//                                ),
+//                              ],
+//                            ),
+//                            expanded: ListView.builder(
+//                              itemCount: 3,
+//                              shrinkWrap: true,
+//                              itemBuilder: (ctx, index) {
+//                                return ListTile(
+//                                  onTap: () {},
+//                                  title: Text('q'),
+//                                );
+//                              },
+//                            ),
+//                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                right: 16.0, left: 6.0, top: 20.0),
+                            child: LineChart(
+                              false ? avgData() : mainData(),
+                              swapAnimationDuration:
+                                  Duration(milliseconds: 250),
                             ),
                           ),
                         ],
