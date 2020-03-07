@@ -16,8 +16,10 @@ class SeniorAdsMap extends StatefulWidget {
 class _SeniorAdsMapState extends State<SeniorAdsMap> {
   GoogleMapController mapController;
   final Map<String, Marker> _markers = {};
+  String address;
   var currentLocation = Position();
-  Completer<GoogleMapController> _controller = Completer();
+
+//  Completer<GoogleMapController> _controller = Completer();
 
   Future<String> _getAddress(Position pos) async {
     List<Placemark> placeMarks = await Geolocator()
@@ -25,7 +27,8 @@ class _SeniorAdsMapState extends State<SeniorAdsMap> {
     if (placeMarks != null && placeMarks.isNotEmpty) {
       final Placemark pos = placeMarks[0];
       print(':::::::::::::' + pos.thoroughfare + ', ' + pos.locality);
-      return pos.thoroughfare + ', ' + pos.locality;
+      address = pos.thoroughfare + ', ' + pos.locality;
+      return address;
     }
     return "";
   }
@@ -45,14 +48,14 @@ class _SeniorAdsMapState extends State<SeniorAdsMap> {
         },
         markerId: MarkerId("curr_loc"),
         position: LatLng(currentLocation.latitude, currentLocation.longitude),
-        infoWindow: InfoWindow(title: 'Your Location'),
+        infoWindow: InfoWindow(title: 'Click to add store'),
       );
       _markers["Current Location"] = marker;
       mapController.animateCamera(
         CameraUpdate.newCameraPosition(
           CameraPosition(
             target: LatLng(currentLocation.latitude, currentLocation.longitude),
-            zoom: 30,
+            zoom: 20,
           ),
         ),
       );
@@ -92,19 +95,34 @@ class _SeniorAdsMapState extends State<SeniorAdsMap> {
                     ),
                     markers: _markers.values.toSet(),
                   ),
+                  Positioned(
+                    bottom: 80.0,
+                    right: 20.0,
+                    child: FloatingActionButton(
+                      onPressed: () {
+                        _getLocation();
+                        _getAddress(currentLocation);
+                      },
+                      tooltip: 'Get Location',
+                      child: Icon(
+                        Icons.location_searching,
+                        color: Colors.white,
+                      ),
+                    ),
+                  )
                 ],
               ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            _getLocation();
-            _getAddress(currentLocation);
-          },
-          tooltip: 'Get Location',
-          child: Icon(
-            Icons.location_searching,
-            color: Colors.white,
-          ),
-        ),
+//        floatingActionButton: FloatingActionButton(
+//          onPressed: () {
+//            _getLocation();
+//            _getAddress(currentLocation);
+//          },
+//          tooltip: 'Get Location',
+//          child: Icon(
+//            Icons.location_searching,
+//            color: Colors.white,
+//          ),
+//        ),
       ),
     );
   }

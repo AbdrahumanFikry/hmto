@@ -24,7 +24,6 @@ class _AdsAddStoreState extends State<AdsAddStore> {
 
   @override
   Widget build(BuildContext context) {
-    final item = Provider.of<NewItem>(context);
     return SafeArea(
       child: Scaffold(
         body: NestedScrollView(
@@ -285,7 +284,7 @@ class _AdsAddStoreState extends State<AdsAddStore> {
               floating: true,
               snap: true,
               backgroundColor: Colors.green,
-              title: Text('New '),
+              title: Text('New Store'),
               expandedHeight: 60,
               actions: <Widget>[
                 IconButton(
