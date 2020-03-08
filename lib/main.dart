@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:senior/auth/select.dart';
 import 'package:senior/providers/location.dart';
 import 'package:provider/provider.dart';
 import 'package:senior/seniorAds/seniorAdsNavigator.dart';
+import './senior/seniorProfile.dart';
 
 main() {
   runApp(MyApp());
@@ -43,7 +45,7 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: Colors.white,
         ),
         debugShowCheckedModeBanner: false,
-        home: SeniorAdsNavigator(),
+        home: Select(),
       ),
     );
   }
