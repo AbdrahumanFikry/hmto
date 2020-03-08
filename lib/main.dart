@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:senior/auth/loginScreen.dart';
 import 'package:senior/providers/authenticationProvider.dart';
 import 'package:senior/providers/location.dart';
 import 'package:provider/provider.dart';
-import 'package:senior/senior/SeniorNavigator.dart';
-import 'package:senior/senior/startDay.dart';
-import 'package:senior/seniorAds/addStore.dart';
-import './senior/testStore.dart';
-
-import 'seniorAds/seniorAdsNavigator.dart';
 
 main() {
   runApp(MyApp());
@@ -17,6 +12,12 @@ main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations(
+      [
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitUp,
+      ],
+    );
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -53,7 +54,7 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: Colors.white,
         ),
         debugShowCheckedModeBanner: false,
-        home: TestStore(),
+        home: LoginScreen(),
       ),
     );
   }
