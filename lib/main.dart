@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:senior/auth/loginScreen.dart';
-import 'package:senior/auth/select.dart';
 import 'package:senior/providers/authenticationProvider.dart';
 import 'package:senior/providers/location.dart';
 import 'package:provider/provider.dart';
-import 'package:senior/senior/SeniorNavigator.dart';
-import 'package:senior/senior/startDay.dart';
-import 'package:senior/seniorAds/seniorAdsNavigator.dart';
-import 'package:senior/widgets/lineChart.dart';
 
 main() {
   runApp(MyApp());

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
-import 'package:senior/seniorAds/addStore.dart';
 import 'package:app_settings/app_settings.dart';
 import '../providers/location.dart';
 
@@ -36,20 +35,20 @@ class _SeniorMapState extends State<SeniorMap> {
     currentLocation = await Geolocator()
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
     setState(() {
-      _markers.clear();
-      final marker = Marker(
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => AdsAddStore(),
-            ),
-          );
-        },
-        markerId: MarkerId("curr_loc"),
-        position: LatLng(currentLocation.latitude, currentLocation.longitude),
-        infoWindow: InfoWindow(title: 'Click to add store'),
-      );
-      _markers["Current Location"] = marker;
+//      _markers.clear();
+//      final marker = Marker(
+//        onTap: () {
+//          Navigator.of(context).push(
+//            MaterialPageRoute(
+//              builder: (context) => AdsAddStore(),
+//            ),
+//          );
+//        },
+//        markerId: MarkerId("curr_loc"),
+//        position: LatLng(currentLocation.latitude, currentLocation.longitude),
+//        infoWindow: InfoWindow(title: 'Click to add store'),
+//      );
+//      _markers["Current Location"] = marker;
       mapController.animateCamera(
         CameraUpdate.newCameraPosition(
           CameraPosition(

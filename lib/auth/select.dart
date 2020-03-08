@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:senior/senior/SeniorNavigator.dart';
+import 'package:senior/senior/startDay.dart';
 import 'package:senior/seniorAds/seniorAdsNavigator.dart';
 
 class Select extends StatelessWidget {
@@ -44,7 +45,7 @@ class Select extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
-                      builder: (context) => SeniorNavigator(),
+                      builder: (context) => StartDay(),
                     ),
                   );
                 },

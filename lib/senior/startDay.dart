@@ -108,8 +108,11 @@ class StartDay extends StatelessWidget {
               ),
               child: FlatButton(
                 onPressed: () {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => SeniorNavigator()));
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => SeniorNavigator(),
+                    ),
+                  );
                 },
                 child: Text(
                   'Start Day',
