@@ -14,6 +14,7 @@ class AdsAddStore extends StatefulWidget {
 }
 
 class _AdsAddStoreState extends State<AdsAddStore> {
+  int comptatorLength = 0;
   File image;
   List<File> images = new List<File>();
 
@@ -210,6 +211,156 @@ class _AdsAddStoreState extends State<AdsAddStore> {
                     ),
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        'hmto',
+                        style: TextStyle(
+                          fontSize: 21.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 20.0,
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.5,
+                        child: TextField(
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.only(
+                              right: 100.0,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(
+                                5.0,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        'others',
+                        style: TextStyle(
+                          fontSize: 21.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 20.0,
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.5,
+                        child: TextField(
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(
+                              16.0,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(
+                                5.0,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 5.0,
+                  ),
+                  child: Row(
+                    children: <Widget>[
+                      Text(
+                        'Add Comptators',
+                        style: TextStyle(
+                          fontSize: 21.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Spacer(),
+                      IconButton(
+                        icon: Icon(
+                          Icons.add,
+                          size: 25.0,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            comptatorLength++;
+                          });
+                        },
+                      )
+                    ],
+                  ),
+                ),
+                comptatorLength == 0
+                    ? SizedBox()
+                    : ListView.builder(
+                        itemCount: comptatorLength,
+                        shrinkWrap: true,
+                        itemBuilder: (ctx, index) {
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.5,
+                                  child: TextField(
+                                    decoration: InputDecoration(
+                                      hintText: 'comptator name',
+                                      contentPadding: EdgeInsets.all(
+                                        16.0,
+                                      ),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(
+                                          5.0,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 20.0,
+                                ),
+                                Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.3,
+                                  child: TextField(
+                                    decoration: InputDecoration(
+                                      hintText: 'percent',
+                                      contentPadding: EdgeInsets.all(
+                                        16.0,
+                                      ),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(
+                                          5.0,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
                 SizedBox(
                   height: 20,
                 ),

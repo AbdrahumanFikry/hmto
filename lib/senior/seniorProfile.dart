@@ -2,6 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:senior/senior/itemTargetScreen.dart';
+import 'package:senior/seniorAds/storesScreen.dart';
+import '../widgets/lineChart.dart';
 
 class SeniorProfile extends StatefulWidget {
   @override
@@ -33,13 +36,13 @@ class _SeniorProfileState extends State<SeniorProfile>
                 labelColor: Colors.black,
                 tabs: <Widget>[
                   Tab(
-                    text: 'ads',
+                    text: 'My Info',
                   ),
                   Tab(
-                    text: 'Questions',
+                    text: 'Target',
                   ),
                   Tab(
-                    text: 'Competators',
+                    text: 'Item Target',
                   ),
                 ],
                 controller: TabController(length: 3, vsync: this),
@@ -53,169 +56,18 @@ class _SeniorProfileState extends State<SeniorProfile>
                     controller: pageController,
                     physics: NeverScrollableScrollPhysics(),
                     children: <Widget>[
-                      ListView.builder(
-                        itemCount: 5,
-                        shrinkWrap: true,
-                        itemBuilder: (ctx, index) {
-                          return Column(
-                            children: <Widget>[
-                              ListTile(
-                                subtitle: Text('Has created 50 market'),
-                                title: Text('Monir Monir'),
-                                leading: ClipRRect(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10)),
-                                  child: CachedNetworkImage(
-                                    fit: BoxFit.cover,
-                                    imageUrl:
-                                        'https://specials-images.forbesimg.com/imageserve/5d2893a234a5c400084b2955/1920x0.jpg?cropX1=29&cropX2=569&cropY1=20&cropY2=560',
-                                    width: 50,
-                                    height: 50,
-                                  ),
-                                ),
-                              ),
-                              Divider(
-                                height: 2,
-                                indent: 0,
-                                endIndent: 50,
-                              )
-                            ],
-                          );
-                        },
+                      StoresScreen(),
+                      //--------------------Target Screen ----------------------
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            right: 16.0, left: 6.0, top: 20.0, bottom: 50.0),
+                        child: LineChartSample(),
                       ),
-                      ListView.builder(
-                        itemCount: 5,
-                        shrinkWrap: true,
-                        itemBuilder: (ctx, index) {
-                          return Align(
-                            alignment: Alignment.center,
-                            child: Card(
-                              elevation: 1,
-                              margin: EdgeInsets.all(12),
-                              child: InkWell(
-                                onTap: () {},
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: <Widget>[
-                                      Text(
-                                        'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which',
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                      Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text(
-                                            '12/10/2019 at 5:00',
-                                            style: TextStyle(
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.w100),
-                                          ))
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                      ListView.builder(
-                        itemCount: 5,
-                        shrinkWrap: true,
-                        itemBuilder: (ctx, index) {
-                          return Column(
-                            children: <Widget>[
-                              ListTile(
-                                onTap: () {
-                                  showModalBottomSheet(
-                                      isScrollControlled: true,
-                                      context: context,
-                                      builder: (_) => Column(
-                                            children: <Widget>[
-                                              Spacer(
-                                                flex: 1,
-                                              ),
-                                              Align(
-                                                alignment: Alignment.centerLeft,
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 10),
-                                                  child: Text(
-                                                    'Edit Competator',
-                                                    style: TextStyle(
-                                                        fontSize: 25,
-                                                        fontWeight:
-                                                            FontWeight.w700),
-                                                  ),
-                                                ),
-                                              ),
-                                              Spacer(
-                                                flex: 1,
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: TextField(
-                                                  maxLines: null,
-                                                  controller:
-                                                      TextEditingController(
-                                                          text: 'Cabury'),
-                                                ),
-                                              ),
-                                              Spacer(
-                                                flex: 3,
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 100),
-                                                child: ButtonTheme(
-                                                  colorScheme:
-                                                      ColorScheme.dark(),
-                                                  height: 50,
-                                                  minWidth: 200,
-                                                  child: FlatButton(
-                                                      color: Colors.green,
-                                                      onPressed: () {},
-                                                      child: Text(
-                                                          'Submit update')),
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 20),
-                                                child: ButtonTheme(
-                                                  colorScheme:
-                                                      ColorScheme.dark(),
-                                                  height: 50,
-                                                  minWidth: 200,
-                                                  child: FlatButton(
-                                                      color: Colors.red,
-                                                      onPressed: () {},
-                                                      child: Text('Deny')),
-                                                ),
-                                              ),
-                                              Spacer(
-                                                flex: 2,
-                                              ),
-                                            ],
-                                          ));
-                                },
-                                subtitle: Text('12/10/2005 at 5:00'),
-                                title: Text('Cabury'),
-                              ),
-                              Divider(
-                                height: 2,
-                              )
-                            ],
-                          );
-                        },
-                      ),
+                      ItemTargetScreen(),
                     ],
                   ),
                 ),
+                //-------------------- User Info ------------------------------
                 headerSliverBuilder: (_, x) => [
                   SliverAppBar(
                     backgroundColor: Colors.transparent,
@@ -336,70 +188,6 @@ class _SeniorProfileState extends State<SeniorProfile>
             ),
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            showModalBottomSheet(
-              isScrollControlled: true,
-              context: context,
-              builder: (_) => Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  RaisedButton(
-                    padding: EdgeInsets.symmetric(
-                      vertical: 10.0,
-                      horizontal: 50.0,
-                    ),
-                    color: Colors.green,
-                    child: Text(
-                      'Add Ads',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20.0,
-                      ),
-                    ),
-                  ),
-                  RaisedButton(
-                    padding: EdgeInsets.symmetric(
-                      vertical: 10.0,
-                      horizontal: 50.0,
-                    ),
-                    color: Colors.green,
-                    child: Text(
-                      'Add Question',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20.0,
-                      ),
-                    ),
-                  ),
-                  RaisedButton(
-                    padding: EdgeInsets.symmetric(
-                      vertical: 10.0,
-                      horizontal: 50.0,
-                    ),
-                    color: Colors.green,
-                    child: Text(
-                      'Add Comptator',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20.0,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-          child: Icon(
-            Icons.add,
-            size: 20.0,
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
     );
   }

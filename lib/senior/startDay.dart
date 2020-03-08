@@ -1,5 +1,6 @@
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
+import 'package:senior/senior/SeniorNavigator.dart';
 
 class StartDay extends StatelessWidget {
   @override
@@ -75,7 +76,7 @@ class StartDay extends StatelessWidget {
             theme: ExpandableThemeData(
                 animationDuration: Duration(milliseconds: 200)),
             header: Text(
-              'My Product',
+              'New Product',
               style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
             ),
             expanded: ListView.builder(
@@ -97,6 +98,29 @@ class StartDay extends StatelessWidget {
             ),
           ),
           Divider(),
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Container(
+              height: 50.0,
+              decoration: BoxDecoration(
+                color: Colors.green,
+                borderRadius: BorderRadius.circular(15.0),
+              ),
+              child: FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => SeniorNavigator()));
+                },
+                child: Text(
+                  'Start Day',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20.0,
+                  ),
+                ),
+              ),
+            ),
+          )
         ],
       ),
     );

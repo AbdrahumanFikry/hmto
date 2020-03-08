@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:senior/auth/select.dart';
 import 'package:senior/senior/SeniorNavigator.dart';
 import 'package:senior/seniorAds/seniorAdsNavigator.dart';
 import '../widgets/alertDialog.dart';
@@ -38,22 +39,23 @@ class _LoginScreenState extends State<LoginScreen> {
         _isLoading = true;
       });
       try {
-        await Provider.of<Auth>(context, listen: false)
-            .logIn(email: _email, password: _password);
+//        await Provider.of<Auth>(context, listen: false)
+//            .logIn(email: _email, password: _password);
         setState(() {
           _isLoading = false;
         });
-        Provider.of<Auth>(context, listen: false).type == 'Ads'
-            ? Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (context) => SeniorAdsNavigator(),
-                ),
-              )
-            : Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (context) => SeniorNavigator(),
-                ),
-              );
+//        Provider.of<Auth>(context, listen: false).type == 'Ads'
+//            ? Navigator.of(context).pushReplacement(
+//                MaterialPageRoute(
+//                  builder: (context) => SeniorAdsNavigator(),
+//                ),
+//              )
+//            :
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => Select(),
+          ),
+        );
       } catch (error) {
         GlobalAlertDialog().showErrorDialog(error.toString(), context);
         setState(() {

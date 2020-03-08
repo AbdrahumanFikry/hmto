@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../models/httpExceptionModel.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Auth with ChangeNotifier {
   String _token;
@@ -35,6 +36,11 @@ class Auth with ChangeNotifier {
       if (response.statusCode >= 200 && response.statusCode < 300) {
         print('::::::::::::::::' + responseData.toString());
         _token = responseData['access_token'];
+        final prefs = await SharedPreferences.getInstance();
+        final userData = {
+          'token': _token,
+        };
+        prefs.setString('userData', json.encode(userData));
         notifyListeners();
         return true;
       } else {
@@ -43,5 +49,25 @@ class Auth with ChangeNotifier {
     } catch (error) {
       throw error;
     }
+  }
+
+  //------------------------------ AutoLogin -----------------------------------
+  Future<bool> tryAutoLogin() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (!prefs.containsKey('userData')) {
+      return false;
+    }
+    final extractedUserData =
+        json.decode(prefs.getString('userData')) as Map<String, Object>;
+    _token = extractedUserData['token'];
+    notifyListeners();
+    return true;
+  }
+
+  Future<void> logout() async {
+    _token = null;
+    notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    prefs.clear();
   }
 }

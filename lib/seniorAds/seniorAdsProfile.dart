@@ -1,10 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:expandable/expandable.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:senior/seniorAds/store.dart';
-import 'package:senior/seniorAds/tabName.dart';
+import 'package:senior/seniorAds/storesScreen.dart';
 import '../widgets/lineChart.dart';
 
 class SeniorAdsProfile extends StatefulWidget {
@@ -22,11 +19,6 @@ class _SeniorAdsProfileState extends State<SeniorAdsProfile>
     pageController.animateToPage(tabIndex,
         duration: Duration(milliseconds: 200), curve: Curves.easeIn);
   }
-
-  var tabs = [
-    {'name': 'Questions', 'add': TabName('Questions')},
-    {'name': 'Competators', 'add': TabName('Competators')}
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -59,263 +51,24 @@ class _SeniorAdsProfileState extends State<SeniorAdsProfile>
                     controller: pageController,
                     physics: NeverScrollableScrollPhysics(),
                     children: <Widget>[
-                      ListView.builder(
-                        itemCount: 3,
-                        itemBuilder: (ctx, index) {
-                          return Column(
-                            children: <Widget>[
-                              ListTile(
-                                subtitle: Text('Has created count market'),
-                                title: Text('info'),
-                                leading: ClipRRect(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10)),
-                                  child: CachedNetworkImage(
-                                    fit: BoxFit.cover,
-                                    imageUrl:
-                                        'https://specials-images.forbesimg.com/imageserve/5d2893a234a5c400084b2955/1920x0.jpg?cropX1=29&cropX2=569&cropY1=20&cropY2=560',
-                                    width: 50.0,
-                                    height: 50.0,
-                                  ),
-                                ),
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => Store(),
-                                    ),
-                                  );
-                                },
-                              ),
-                              Divider(
-                                height: 2,
-                                indent: 0,
-                                endIndent: 50,
-                              )
-                            ],
-                          );
-                        },
-                      ),
+                      StoresScreen(),
+                      //-------------------Target Screen -----------------------
                       ListView(
                         children: <Widget>[
-//                          ExpandablePanel(
-//                            theme: ExpandableThemeData(
-//                              useInkWell: false,
-//                              headerAlignment:
-//                                  ExpandablePanelHeaderAlignment.center,
-//                              iconPlacement: ExpandablePanelIconPlacement.left,
-//                            ),
-//                            header: Row(
-//                              children: <Widget>[
-//                                Text(
-//                                  'Long answer questions',
-//                                  style: TextStyle(
-//                                      fontSize: 18,
-//                                      fontWeight: FontWeight.w600),
-//                                ),
-//                                Spacer(),
-//                                Padding(
-//                                  padding: const EdgeInsets.all(2),
-//                                  child: ButtonTheme(
-//                                    height: 50,
-//                                    minWidth: 50,
-//                                    child: FlatButton(
-//                                        shape: RoundedRectangleBorder(
-//                                            borderRadius: BorderRadius.all(
-//                                                Radius.circular(5))),
-//                                        color: Colors.blue,
-//                                        child: Icon(
-//                                          FontAwesomeIcons.plus,
-//                                          color: Colors.white,
-//                                        ),
-//                                        onPressed: () {
-//                                          showModalBottomSheet(
-//                                            isScrollControlled: true,
-//                                            context: context,
-//                                            builder: (_) => tabs[0]['add'],
-//                                          );
-//                                        }),
-//                                  ),
-//                                ),
-//                              ],
-//                            ),
-//                            expanded: ListView.builder(
-//                              itemCount: 3,
-//                              shrinkWrap: true,
-//                              itemBuilder: (ctx, index) {
-//                                return ListTile(
-//                                  onTap: () {},
-//                                  title: Text('q'),
-//                                );
-//                              },
-//                            ),
-//                          ),
-//                          Divider(),
-//                          ExpandablePanel(
-//                            theme: ExpandableThemeData(
-//                                useInkWell: false,
-//                                headerAlignment:
-//                                    ExpandablePanelHeaderAlignment.center,
-//                                iconPlacement:
-//                                    ExpandablePanelIconPlacement.left),
-//                            header: Row(
-//                              children: <Widget>[
-//                                Text(
-//                                  'True/False Questions',
-//                                  style: TextStyle(
-//                                      fontSize: 18,
-//                                      fontWeight: FontWeight.w600),
-//                                ),
-//                                Spacer(),
-//                                Padding(
-//                                  padding: const EdgeInsets.all(2),
-//                                  child: ButtonTheme(
-//                                    height: 50,
-//                                    minWidth: 50,
-//                                    child: FlatButton(
-//                                      shape: RoundedRectangleBorder(
-//                                        borderRadius: BorderRadius.all(
-//                                          Radius.circular(5),
-//                                        ),
-//                                      ),
-//                                      color: Colors.blue,
-//                                      child: Icon(
-//                                        FontAwesomeIcons.plus,
-//                                        color: Colors.white,
-//                                      ),
-//                                      onPressed: () {
-//                                        showModalBottomSheet(
-//                                          isScrollControlled: true,
-//                                          context: context,
-//                                          builder: (_) => tabs[1]['add'],
-//                                        );
-//                                      },
-//                                    ),
-//                                  ),
-//                                ),
-//                              ],
-//                            ),
-//                            expanded: ListView.builder(
-//                              itemCount: 3,
-//                              shrinkWrap: true,
-//                              itemBuilder: (ctx, index) {
-//                                return ListTile(
-//                                  onTap: () {},
-//                                  title: Text('q'),
-//                                );
-//                              },
-//                            ),
-//                          ),
                           Padding(
                             padding: const EdgeInsets.only(
-                                right: 16.0, left: 6.0, top: 20.0),
-                            child: LineChart(
-                              false ? avgData() : mainData(),
-                              swapAnimationDuration:
-                                  Duration(milliseconds: 250),
-                            ),
+                                right: 16.0,
+                                left: 6.0,
+                                top: 20.0,
+                                bottom: 50.0),
+                            child: LineChartSample(),
                           ),
                         ],
                       ),
-//                      ListView(
-//                        children: <Widget>[
-//                          for (int i = 0; i < 2; i++)
-//                            Column(
-//                              children: <Widget>[
-//                                ListTile(
-//                                  onTap: () {
-//                                    showModalBottomSheet(
-//                                        isScrollControlled: true,
-//                                        context: context,
-//                                        builder: (_) => Column(
-//                                              children: <Widget>[
-//                                                Spacer(
-//                                                  flex: 1,
-//                                                ),
-//                                                Align(
-//                                                  alignment:
-//                                                      Alignment.centerLeft,
-//                                                  child: Padding(
-//                                                    padding:
-//                                                        const EdgeInsets.only(
-//                                                            left: 10),
-//                                                    child: Text(
-//                                                      'Edit Competator',
-//                                                      style: TextStyle(
-//                                                          fontSize: 25,
-//                                                          fontWeight:
-//                                                              FontWeight.w700),
-//                                                    ),
-//                                                  ),
-//                                                ),
-//                                                Spacer(
-//                                                  flex: 1,
-//                                                ),
-//                                                Padding(
-//                                                  padding:
-//                                                      const EdgeInsets.all(8.0),
-//                                                  child: TextField(
-//                                                    maxLines: null,
-//                                                    controller:
-//                                                        TextEditingController(
-//                                                            text: 'Cabury'),
-//                                                  ),
-//                                                ),
-//                                                Spacer(
-//                                                  flex: 3,
-//                                                ),
-//                                                Padding(
-//                                                  padding:
-//                                                      const EdgeInsets.only(
-//                                                          top: 100),
-//                                                  child: ButtonTheme(
-//                                                    colorScheme:
-//                                                        ColorScheme.dark(),
-//                                                    height: 50,
-//                                                    minWidth: 200,
-//                                                    child: FlatButton(
-//                                                        color: Colors.green,
-//                                                        onPressed: () {},
-//                                                        child: Text(
-//                                                            'Submit update')),
-//                                                  ),
-//                                                ),
-//                                                Padding(
-//                                                  padding:
-//                                                      const EdgeInsets.only(
-//                                                          top: 20),
-//                                                  child: ButtonTheme(
-//                                                    colorScheme:
-//                                                        ColorScheme.dark(),
-//                                                    height: 50,
-//                                                    minWidth: 200,
-//                                                    child: FlatButton(
-//                                                      color: Colors.red,
-//                                                      onPressed: () {},
-//                                                      child: Text('Deny'),
-//                                                    ),
-//                                                  ),
-//                                                ),
-//                                                Spacer(
-//                                                  flex: 2,
-//                                                ),
-//                                              ],
-//                                            ));
-//                                  },
-//                                  title: Text('name'),
-//                                  trailing: Icon(Icons.arrow_forward_ios),
-//                                ),
-//                                Divider(
-//                                  height: 2,
-//                                  indent: 30,
-//                                  endIndent: 30,
-//                                )
-//                              ],
-//                            ),
-//                        ],
-//                      ),
                     ],
                   ),
                 ),
+                //---------------------- User info ----------------------------
                 headerSliverBuilder: (_, x) => [
                   SliverAppBar(
                     backgroundColor: Colors.transparent,

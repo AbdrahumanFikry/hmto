@@ -28,7 +28,7 @@ class Select extends StatelessWidget {
                 },
                 color: Colors.green,
                 child: Text(
-                  'Ads',
+                  'Field Force',
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -50,7 +50,7 @@ class Select extends StatelessWidget {
                 },
                 color: Colors.green,
                 child: Text(
-                  'Senior',
+                  'Sells',
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
