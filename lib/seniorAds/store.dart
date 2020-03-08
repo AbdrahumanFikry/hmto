@@ -17,73 +17,42 @@ class Store extends StatelessWidget {
     'https://www.dw.com/image/37077830_303.jpg',
     'https://madosan.com.tr/assets/uploads/galeri/super-market-hiper-market/6b6ac887-23e6-49ac-b44d-e3d8ff6b52b8-jpg_1560158960.jpg'
   ];
-
+  //-----------------------------------------------------bottom sheet-------------------------------------------------------------------------------
   void _showModalSheet(BuildContext context) {
-    showModalBottomSheet(
-        context: context,
-        builder: (builder) {
-          return Container(
-            height: 300,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Text(
-                    'Change percent',
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  Spacer(),
-                  RaisedButton(
-                    onPressed: () {},
-                    color: Colors.green,
-                    child: Text(
-                      'Cabury',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  RaisedButton(
-                    onPressed: () {},
-                    color: Colors.green,
-                    child: Text(
-                      'Our Products',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  RaisedButton(
-                    onPressed: () {},
-                    color: Colors.green,
-                    child: Text(
-                      'Shamaadn',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            padding: EdgeInsets.all(40.0),
-          );
-        });
+    showModalBottomSheet(context: context, builder: (builder) {
+      return Container(
+        height: 200,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text('Cabury',style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+              ),),
+              Text('Our Products',style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+              ),),
+              Text('Shamaadn',style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+              ),),
+            ],
+          ),
+        ),
+        padding: EdgeInsets.all(40.0),
+      );
+    });
   }
-
+  //----------------------------------------------------------------------------------------------------------------------------------------------
   @override
   Widget build(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
+    var screenSize = MediaQuery
+        .of(context)
+        .size;
 
     return SafeArea(
       child: Scaffold(
@@ -94,62 +63,63 @@ class Store extends StatelessWidget {
             CarouselSlider(
               scrollPhysics: BouncingScrollPhysics(),
               height: 384 * screenSize.aspectRatio,
-              items: urls.map((url) {
-                return Padding(
-                  padding: EdgeInsets.all(13 * screenSize.aspectRatio),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                    child: CachedNetworkImage(
-                      imageUrl: url,
-                      height: 0.3 * screenSize.height,
-                      width: screenSize.width,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                );
+              items:
+              urls.map((url) {
+                return
+                  Padding(
+                    padding: EdgeInsets.all(13 * screenSize.aspectRatio),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      child: CachedNetworkImage(
+                        imageUrl: url,
+                        height: 0.3 * screenSize.height,
+                        width: screenSize.width,
+                        fit: BoxFit.cover,
+                      ),
+                    ),);
               }).toList(),
               enlargeCenterPage: true,
             ),
             //--------------------------------------------------------------------------
             Center(
                 child: Padding(
-              padding:
+                  padding:
                   EdgeInsets.symmetric(vertical: 16 * screenSize.aspectRatio),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Text(
-                    'Bobo Market',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 46 * screenSize.aspectRatio),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Text(
+                        'Bobo Market',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 46 * screenSize.aspectRatio),
+                      ),
+                      RatingBarIndicator(
+                        itemCount: 5,
+                        itemSize: 50 * screenSize.aspectRatio,
+                        rating: 4.5,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Icon(
+                            Icons.star,
+                            color: Colors.orange,
+                          );
+                        },
+                      )
+                    ],
                   ),
-                  RatingBarIndicator(
-                    itemCount: 5,
-                    itemSize: 50 * screenSize.aspectRatio,
-                    rating: 4.5,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Icon(
-                        Icons.star,
-                        color: Colors.orange,
-                      );
-                    },
-                  )
-                ],
-              ),
-            )),
+                )),
             Center(
                 child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Icon(
-                  FontAwesomeIcons.mapMarkerAlt,
-                  color: Colors.green,
-                  size: 25,
-                ),
-                Text('el hadded St in front of This Long Name'),
-              ],
-            )),
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Icon(
+                      FontAwesomeIcons.mapMarkerAlt,
+                      color: Colors.green,
+                      size: 25,
+                    ),
+                    Text('el hadded St in front of This Long Name'),
+                  ],
+                )),
             Padding(
               padding: const EdgeInsets.only(top: 10, bottom: 10),
               child: Row(
@@ -231,7 +201,6 @@ class Store extends StatelessWidget {
               ),
             ),
             Divider(),
-            //---------------------------------------------------------------------------
             //------------------------------------chart----------------------------------//
             GestureDetector(
               onTap: () {
@@ -246,9 +215,9 @@ class Store extends StatelessWidget {
                 legendPosition: LegendPosition.left,
                 chartRadius: 250 * screenSize.aspectRatio,
                 legendStyle:
-                    TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+                TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
                 chartValueStyle:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+                TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
                 dataMap: {
                   'Cabury': 50,
                   'Our product': 20,
@@ -274,7 +243,10 @@ class Store extends StatelessWidget {
                     width: 20.0,
                   ),
                   Container(
-                    width: MediaQuery.of(context).size.width * 0.5,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width * 0.5,
                     child: TextField(
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.only(
@@ -308,7 +280,10 @@ class Store extends StatelessWidget {
                     width: 20.0,
                   ),
                   Container(
-                    width: MediaQuery.of(context).size.width * 0.5,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width * 0.5,
                     child: TextField(
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.all(
@@ -347,12 +322,14 @@ class Store extends StatelessWidget {
                           itemCount: 2,
                           itemBuilder: (context, index) {
                             return TrueAndFalse(
-                              index: index + 1,
+                              index: index +1,
                               question: 'Molto',
                             );
-                          }),
+                          }
+                      ),
                     ],
-                  )),
+                  )
+              ),
             ),
             Divider(),
             Padding(
@@ -376,12 +353,14 @@ class Store extends StatelessWidget {
                           itemCount: 3,
                           itemBuilder: (context, index) {
                             return TrueAndFalse(
-                              index: index + 1,
+                              index: index +1,
                               question: 'do you have question',
                             );
-                          }),
+                          }
+                      ),
                     ],
-                  )),
+                  )
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -415,13 +394,10 @@ class Store extends StatelessWidget {
                   onPressed: () {
                     //todo------
                   },
-                  child: Text(
-                    'submit',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20.0,
-                    ),
-                  ),
+                  child: Text('submit', style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20.0,
+                  ),),
                 ),
               ),
             )
@@ -429,5 +405,4 @@ class Store extends StatelessWidget {
         ),
       ),
     );
-  }
-}
+  }}
