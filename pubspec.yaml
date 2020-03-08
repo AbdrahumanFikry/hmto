@@ -37,6 +37,7 @@ dependencies:
   flutter_launcher_icons: ^0.7.4
   fl_chart: ^0.8.3
   app_settings: ^3.0.1
+  sleek_circular_slider: ^1.0.7
 
 
 
