@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:senior/auth/select.dart';
+import 'package:senior/auth/loginScreen.dart';
+import 'package:senior/providers/authenticationProvider.dart';
 import 'package:senior/providers/location.dart';
 import 'package:provider/provider.dart';
-import 'package:senior/seniorAds/seniorAdsNavigator.dart';
-import './senior/seniorProfile.dart';
+import 'package:senior/senior/SeniorNavigator.dart';
+import 'package:senior/senior/startDay.dart';
 
 main() {
   runApp(MyApp());
@@ -16,6 +17,9 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (context) => Location(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => Auth(),
         ),
       ],
       child: MaterialApp(
@@ -45,7 +49,7 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: Colors.white,
         ),
         debugShowCheckedModeBanner: false,
-        home: Select(),
+        home: StartDay(),
       ),
     );
   }
