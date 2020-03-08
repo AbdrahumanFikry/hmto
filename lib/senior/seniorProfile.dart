@@ -56,7 +56,9 @@ class _SeniorProfileState extends State<SeniorProfile>
                     controller: pageController,
                     physics: NeverScrollableScrollPhysics(),
                     children: <Widget>[
-                      StoresScreen(),
+                      StoresScreen(
+                        isSells: true,
+                      ),
                       //--------------------Target Screen ----------------------
                       Padding(
                         padding: const EdgeInsets.only(

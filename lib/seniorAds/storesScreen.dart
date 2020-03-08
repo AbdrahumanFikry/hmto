@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:senior/senior/testStore.dart';
 import '../seniorAds/store.dart';
 
 class StoresScreen extends StatelessWidget {
+  final bool isSells;
+
+  StoresScreen({this.isSells = false});
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -26,11 +31,17 @@ class StoresScreen extends StatelessWidget {
                 ),
               ),
               onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => Store(),
-                  ),
-                );
+                isSells
+                    ? Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => TestStore(),
+                        ),
+                      )
+                    : Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => Store(),
+                        ),
+                      );
               },
             ),
             Divider(
