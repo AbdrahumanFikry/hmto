@@ -123,7 +123,7 @@ class Store extends StatelessWidget {
                         fontSize: 46 * screenSize.aspectRatio),
                   ),
                   RatingBarIndicator(
-                    itemCount: 5,
+                    itemCount: 7,
                     itemSize: 50 * screenSize.aspectRatio,
                     rating: 4.5,
                     itemBuilder: (BuildContext context, int index) {
@@ -197,39 +197,10 @@ class Store extends StatelessWidget {
                       )
                     ],
                   ),
-                  Row(
-                    children: <Widget>[
-                      Icon(FontAwesomeIcons.dollarSign),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: Text('Cash'),
-                      )
-                    ],
-                  ),
                 ],
               ),
             ),
             Divider(),
-            //------------------------------------descreption----------------------
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: 33 * screenSize.aspectRatio,
-                  vertical: 16 * screenSize.aspectRatio),
-              child: ExpandablePanel(
-                theme: ExpandableThemeData(
-                    animationDuration: Duration(milliseconds: 200)),
-                header: Text(
-                  'Description',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 33 * screenSize.aspectRatio),
-                ),
-                expanded: Text(
-                    'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using Content here, content here, s, sometimes by accident, sometimes on purpose (injected humour and the like).'),
-              ),
-            ),
-            Divider(),
-            //---------------------------------------------------------------------------
             //------------------------------------chart----------------------------------//
             GestureDetector(
               onTap: () {

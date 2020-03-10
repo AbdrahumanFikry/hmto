@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: Colors.white,
         ),
         debugShowCheckedModeBanner: false,
-        home: SeniorNavigator(),
+        home: LoginScreen(),
       ),
     );
   }
