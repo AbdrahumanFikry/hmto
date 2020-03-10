@@ -61,7 +61,7 @@ class _AdsAddStoreState extends State<AdsAddStore> {
 //                      item.desc = val;
                     },
                     decoration: InputDecoration(
-                      labelText: 'Customer Name',
+                      labelText: 'Customer name',
                     ),
                     maxLines: null,
                   ),
@@ -76,7 +76,7 @@ class _AdsAddStoreState extends State<AdsAddStore> {
 //                      item.name = val;
                     },
                     decoration: InputDecoration(
-                      labelText: 'Phone',
+                      labelText: 'Customer phone',
                     ),
                   ),
                 ),
@@ -87,7 +87,7 @@ class _AdsAddStoreState extends State<AdsAddStore> {
 //                      item.name = val;
                     },
                     decoration: InputDecoration(
-                      labelText: 'Sells Name',
+                      labelText: 'Sells name',
                     ),
                   ),
                 ),
@@ -98,7 +98,7 @@ class _AdsAddStoreState extends State<AdsAddStore> {
 //                      item.name = val;
                     },
                     decoration: InputDecoration(
-                      labelText: 'Area',
+                      labelText: 'Sells phone',
                     ),
                   ),
                 ),
@@ -113,32 +113,38 @@ class _AdsAddStoreState extends State<AdsAddStore> {
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
                     children: <Widget>[
-                      Container(
-                        height: 90.0,
-                        width: 90.0,
-                        margin: EdgeInsets.symmetric(
-                          vertical: 5.0,
-                          horizontal: 5.0,
-                        ),
-                        color: Colors.grey[200],
-                        child: Center(
-                          child: IconButton(
-                            icon: Icon(Icons.camera_alt),
-                            onPressed: () async {
-                              await getImage();
-                              setState(() {
-                                images.add(image);
-                              });
-                            },
-                          ),
-                        ),
-                      ),
+                      images.length >= 4
+                          ? SizedBox(
+                              width: 1.0,
+                            )
+                          : Container(
+                              height: 90.0,
+                              width: 90.0,
+                              margin: EdgeInsets.symmetric(
+                                vertical: 5.0,
+                                horizontal: 5.0,
+                              ),
+                              color: Colors.grey[200],
+                              child: Center(
+                                child: IconButton(
+                                  icon: Icon(Icons.camera_alt),
+                                  onPressed: () async {
+                                    await getImage();
+                                    setState(() {
+                                      images.add(image);
+                                    });
+                                  },
+                                ),
+                              ),
+                            ),
                       Spacer(),
                       images == null
                           ? SizedBox()
                           : Container(
                               height: 100,
-                              width: MediaQuery.of(context).size.width - 130,
+                              width: images.length >= 4
+                                  ? MediaQuery.of(context).size.width - 35
+                                  : MediaQuery.of(context).size.width - 130,
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
                                 itemCount: images.length,
@@ -247,42 +253,42 @@ class _AdsAddStoreState extends State<AdsAddStore> {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Expanded(
-                        child: Text(
-                          'Sale Out Comptators',
-                          style: TextStyle(
-                            fontSize: 21.0,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 20.0,
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        child: TextField(
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.all(
-                              16.0,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                                5.0,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+//                Padding(
+//                  padding: const EdgeInsets.all(8.0),
+//                  child: Row(
+//                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                    children: <Widget>[
+//                      Expanded(
+//                        child: Text(
+//                          'Sale Out Comptators',
+//                          style: TextStyle(
+//                            fontSize: 21.0,
+//                            color: Colors.black,
+//                            fontWeight: FontWeight.bold,
+//                          ),
+//                        ),
+//                      ),
+//                      SizedBox(
+//                        width: 20.0,
+//                      ),
+//                      Container(
+//                        width: MediaQuery.of(context).size.width * 0.5,
+//                        child: TextField(
+//                          decoration: InputDecoration(
+//                            contentPadding: EdgeInsets.all(
+//                              16.0,
+//                            ),
+//                            border: OutlineInputBorder(
+//                              borderRadius: BorderRadius.circular(
+//                                5.0,
+//                              ),
+//                            ),
+//                          ),
+//                        ),
+//                      ),
+//                    ],
+//                  ),
+//                ),
                 Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: 5.0,
@@ -317,6 +323,7 @@ class _AdsAddStoreState extends State<AdsAddStore> {
                     : ListView.builder(
                         itemCount: comptatorLength,
                         shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (ctx, index) {
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
