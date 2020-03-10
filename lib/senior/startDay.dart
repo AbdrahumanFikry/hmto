@@ -98,6 +98,32 @@ class StartDay extends StatelessWidget {
             ),
           ),
           Divider(),
+          ExpandablePanel(
+            theme: ExpandableThemeData(
+                animationDuration: Duration(milliseconds: 200)),
+            header: Text(
+              'Return Products',
+              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
+            ),
+            expanded: ListView.builder(
+              itemCount: 5,
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemBuilder: (ctx, index) {
+                return ListTile(
+                  title: Text(
+                    'Chocolate',
+                    style: TextStyle(fontSize: 16.0),
+                  ),
+                  subtitle: Text(
+                    '50 piece',
+                    style: TextStyle(fontSize: 16.0),
+                  ),
+                );
+              },
+            ),
+          ),
+          Divider(),
           Padding(
             padding: const EdgeInsets.all(15.0),
             child: Container(

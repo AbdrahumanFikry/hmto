@@ -50,7 +50,7 @@ class _AdsAddStoreState extends State<AdsAddStore> {
 //                      item.name = val;
                     },
                     decoration: InputDecoration(
-                      labelText: 'Name',
+                      labelText: 'Out let Name',
                     ),
                   ),
                 ),
@@ -61,7 +61,7 @@ class _AdsAddStoreState extends State<AdsAddStore> {
 //                      item.desc = val;
                     },
                     decoration: InputDecoration(
-                      labelText: 'Description',
+                      labelText: 'Customer Name',
                     ),
                     maxLines: null,
                   ),
@@ -87,7 +87,7 @@ class _AdsAddStoreState extends State<AdsAddStore> {
 //                      item.name = val;
                     },
                     decoration: InputDecoration(
-                      labelText: 'Price',
+                      labelText: 'Sells Name',
                     ),
                   ),
                 ),
@@ -98,7 +98,7 @@ class _AdsAddStoreState extends State<AdsAddStore> {
 //                      item.name = val;
                     },
                     decoration: InputDecoration(
-                      labelText: 'contact',
+                      labelText: 'Area',
                     ),
                   ),
                 ),
@@ -203,7 +203,7 @@ class _AdsAddStoreState extends State<AdsAddStore> {
 //                        item.rating = value;
 //                      });
                     },
-                    itemCount: 5,
+                    itemCount: 7,
                     itemSize: 30,
                     itemBuilder: (_, int index) => Icon(
                       Icons.star,
@@ -216,12 +216,14 @@ class _AdsAddStoreState extends State<AdsAddStore> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Text(
-                        'hmto',
-                        style: TextStyle(
-                          fontSize: 21.0,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
+                      Expanded(
+                        child: Text(
+                          'Sale Out hmto',
+                          style: TextStyle(
+                            fontSize: 21.0,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                       SizedBox(
@@ -250,12 +252,14 @@ class _AdsAddStoreState extends State<AdsAddStore> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Text(
-                        'others',
-                        style: TextStyle(
-                          fontSize: 21.0,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
+                      Expanded(
+                        child: Text(
+                          'Sale Out Comptators',
+                          style: TextStyle(
+                            fontSize: 21.0,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                       SizedBox(
