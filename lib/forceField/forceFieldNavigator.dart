@@ -1,23 +1,23 @@
 import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:senior/senior/seniorMap.dart';
-import 'package:senior/senior/seniorProfile.dart';
+import 'package:senior/forceField/forceFieldMap.dart';
+import 'package:senior/forceField/forceFieldProfile.dart';
 
-class SeniorNavigator extends StatefulWidget {
+class ForceFieldNavigator extends StatefulWidget {
   @override
-  _SeniorNavigatorState createState() => _SeniorNavigatorState();
+  _ForceFieldNavigatorState createState() => _ForceFieldNavigatorState();
 }
 
-class _SeniorNavigatorState extends State<SeniorNavigator> {
+class _ForceFieldNavigatorState extends State<ForceFieldNavigator> {
   int index = 0;
   List<Widget> _pages = [];
 
   @override
   void initState() {
     _pages = [
-      SeniorMap(),
-      SeniorProfile(),
+      ForceFieldMap(),
+      ForceFieldProfile(),
     ];
     super.initState();
   }

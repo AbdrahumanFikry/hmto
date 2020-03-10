@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:senior/auth/select.dart';
-import 'package:senior/senior/SeniorNavigator.dart';
-import 'package:senior/seniorAds/seniorAdsNavigator.dart';
 import '../widgets/alertDialog.dart';
-import 'package:provider/provider.dart';
-import '../providers/authenticationProvider.dart';
 
 class LoginScreen extends StatefulWidget {
   final Color backgroundColor1;

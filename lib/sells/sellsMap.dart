@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
-import 'package:senior/seniorAds/addStore.dart';
 import 'package:app_settings/app_settings.dart';
+import 'package:senior/sells/testStore.dart';
 import '../providers/location.dart';
 
-class SeniorAdsMap extends StatefulWidget {
+class SellsMap extends StatefulWidget {
   @override
-  _SeniorAdsMapState createState() => _SeniorAdsMapState();
+  _SellsMapState createState() => _SellsMapState();
 }
 
-class _SeniorAdsMapState extends State<SeniorAdsMap> {
+class _SellsMapState extends State<SellsMap> {
   GoogleMapController mapController;
   final Map<String, Marker> _markers = {};
   String address;
@@ -41,7 +41,7 @@ class _SeniorAdsMapState extends State<SeniorAdsMap> {
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => AdsAddStore(),
+              builder: (context) => TestStore(),
             ),
           );
         },
@@ -111,17 +111,6 @@ class _SeniorAdsMapState extends State<SeniorAdsMap> {
                   )
                 ],
               ),
-//        floatingActionButton: FloatingActionButton(
-//          onPressed: () {
-//            _getLocation();
-//            _getAddress(currentLocation);
-//          },
-//          tooltip: 'Get Location',
-//          child: Icon(
-//            Icons.location_searching,
-//            color: Colors.white,
-//          ),
-//        ),
       ),
     );
   }

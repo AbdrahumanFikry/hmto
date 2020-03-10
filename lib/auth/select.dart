@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:senior/senior/SeniorNavigator.dart';
-import 'package:senior/senior/startDay.dart';
-import 'package:senior/seniorAds/seniorAdsNavigator.dart';
+import 'package:senior/sells/startDay.dart';
+import 'package:senior/forceField/forceFieldNavigator.dart';
+import 'package:senior/senior/agents.dart';
 
 class Select extends StatelessWidget {
   @override
@@ -23,7 +23,29 @@ class Select extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
-                      builder: (context) => SeniorAdsNavigator(),
+                      builder: (context) => Agents(),
+                    ),
+                  );
+                },
+                color: Colors.green,
+                child: Text(
+                  'Senior',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20.0,
+                  ),
+                ),
+              ),
+              RaisedButton(
+                padding: EdgeInsets.symmetric(
+                  vertical: 10.0,
+                  horizontal: 50.0,
+                ),
+                onPressed: () {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => ForceFieldNavigator(),
                     ),
                   );
                 },

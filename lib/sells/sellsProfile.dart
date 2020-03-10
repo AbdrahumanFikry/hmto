@@ -2,16 +2,16 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:senior/senior/itemTargetScreen.dart';
-import 'package:senior/seniorAds/storesScreen.dart';
+import 'package:senior/sells/itemTargetScreen.dart';
+import 'package:senior/forceField/storesScreen.dart';
 import '../widgets/lineChart.dart';
 
-class SeniorProfile extends StatefulWidget {
+class SellsProfile extends StatefulWidget {
   @override
-  _SeniorProfileState createState() => _SeniorProfileState();
+  _SellsProfileState createState() => _SellsProfileState();
 }
 
-class _SeniorProfileState extends State<SeniorProfile>
+class _SellsProfileState extends State<SellsProfile>
     with TickerProviderStateMixin {
   PageController pageController = PageController();
   int tabIndex = 0;

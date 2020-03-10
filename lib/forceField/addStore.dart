@@ -66,9 +66,6 @@ class _AdsAddStoreState extends State<AdsAddStore> {
                     maxLines: null,
                   ),
                 ),
-                SizedBox(
-                  height: 20,
-                ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextField(
@@ -296,7 +293,7 @@ class _AdsAddStoreState extends State<AdsAddStore> {
                   child: Row(
                     children: <Widget>[
                       Text(
-                        'Add Comptators',
+                        'Comptators',
                         style: TextStyle(
                           fontSize: 21.0,
                           color: Colors.black,

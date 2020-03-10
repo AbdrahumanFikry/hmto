@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
+import 'package:senior/forceField/addStore.dart';
 import 'package:app_settings/app_settings.dart';
-import 'package:senior/senior/testStore.dart';
 import '../providers/location.dart';
 
-class SeniorMap extends StatefulWidget {
+class ForceFieldMap extends StatefulWidget {
   @override
-  _SeniorMapState createState() => _SeniorMapState();
+  _ForceFieldMapState createState() => _ForceFieldMapState();
 }
 
-class _SeniorMapState extends State<SeniorMap> {
+class _ForceFieldMapState extends State<ForceFieldMap> {
   GoogleMapController mapController;
   final Map<String, Marker> _markers = {};
   String address;
@@ -41,7 +41,7 @@ class _SeniorMapState extends State<SeniorMap> {
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => TestStore(),
+              builder: (context) => AdsAddStore(),
             ),
           );
         },
@@ -111,6 +111,17 @@ class _SeniorMapState extends State<SeniorMap> {
                   )
                 ],
               ),
+//        floatingActionButton: FloatingActionButton(
+//          onPressed: () {
+//            _getLocation();
+//            _getAddress(currentLocation);
+//          },
+//          tooltip: 'Get Location',
+//          child: Icon(
+//            Icons.location_searching,
+//            color: Colors.white,
+//          ),
+//        ),
       ),
     );
   }

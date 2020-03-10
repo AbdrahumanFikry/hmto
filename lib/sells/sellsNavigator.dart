@@ -1,23 +1,23 @@
 import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:senior/seniorAds/seniorAdsMap.dart';
-import 'package:senior/seniorAds/seniorAdsProfile.dart';
+import 'package:senior/sells/sellsMap.dart';
+import 'package:senior/sells/sellsProfile.dart';
 
-class SeniorAdsNavigator extends StatefulWidget {
+class SellsNavigator extends StatefulWidget {
   @override
-  _SeniorAdsNavigatorState createState() => _SeniorAdsNavigatorState();
+  _SellsNavigatorState createState() => _SellsNavigatorState();
 }
 
-class _SeniorAdsNavigatorState extends State<SeniorAdsNavigator> {
+class _SellsNavigatorState extends State<SellsNavigator> {
   int index = 0;
   List<Widget> _pages = [];
 
   @override
   void initState() {
     _pages = [
-      SeniorAdsMap(),
-      SeniorAdsProfile(),
+      SellsMap(),
+      SellsProfile(),
     ];
     super.initState();
   }

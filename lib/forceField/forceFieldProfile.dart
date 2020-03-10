@@ -1,15 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:senior/seniorAds/storesScreen.dart';
-import '../widgets/lineChart.dart';
+import 'package:senior/forceField/storesScreen.dart';
+import 'package:senior/forceField/target.dart';
 
-class SeniorAdsProfile extends StatefulWidget {
+class ForceFieldProfile extends StatefulWidget {
   @override
-  _SeniorAdsProfileState createState() => _SeniorAdsProfileState();
+  _ForceFieldProfileState createState() => _ForceFieldProfileState();
 }
 
-class _SeniorAdsProfileState extends State<SeniorAdsProfile>
+class _ForceFieldProfileState extends State<ForceFieldProfile>
     with TickerProviderStateMixin {
   int tabIndex = 0;
   PageController pageController = PageController();
@@ -53,18 +53,7 @@ class _SeniorAdsProfileState extends State<SeniorAdsProfile>
                     children: <Widget>[
                       StoresScreen(),
                       //-------------------Target Screen -----------------------
-                      ListView(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                right: 16.0,
-                                left: 6.0,
-                                top: 20.0,
-                                bottom: 50.0),
-                            child: LineChartSample(),
-                          ),
-                        ],
-                      ),
+                      Target(),
                     ],
                   ),
                 ),

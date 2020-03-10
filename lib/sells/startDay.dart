@@ -1,6 +1,6 @@
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
-import 'package:senior/senior/SeniorNavigator.dart';
+import 'package:senior/sells/sellsNavigator.dart';
 
 class StartDay extends StatelessWidget {
   @override
@@ -136,7 +136,7 @@ class StartDay extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
-                      builder: (context) => SeniorNavigator(),
+                      builder: (context) => SellsNavigator(),
                     ),
                   );
                 },
