@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:senior/forceField/target.dart';
 import 'package:senior/sells/itemTargetScreen.dart';
 import 'package:senior/forceField/storesScreen.dart';
 import '../widgets/lineChart.dart';
@@ -59,12 +60,7 @@ class _SellsProfileState extends State<SellsProfile>
                       StoresScreen(
                         isSells: true,
                       ),
-                      //--------------------Target Screen ----------------------
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            right: 16.0, left: 6.0, top: 20.0, bottom: 50.0),
-                        child: LineChartSample(),
-                      ),
+                      Target(),
                       ItemTargetScreen(),
                     ],
                   ),

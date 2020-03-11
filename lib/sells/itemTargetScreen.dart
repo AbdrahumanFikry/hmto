@@ -13,13 +13,32 @@ class ItemTargetScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
           child: ExpandablePanel(
             theme: ExpandableThemeData(
-                animationDuration: Duration(milliseconds: 200)),
-            header: Text(
-              'Category',
-              style: TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: 20.0,
-              ),
+              animationDuration: Duration(milliseconds: 200),
+            ),
+            header: Row(
+              children: <Widget>[
+                Text(
+                  'Category',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 20.0,
+                  ),
+                ),
+                Spacer(),
+                Padding(
+                  padding: EdgeInsets.all(15.0),
+                  child: new LinearPercentIndicator(
+                    width: 170.0,
+                    animation: true,
+                    animationDuration: 1000,
+                    lineHeight: 20.0,
+                    percent: 0.5,
+                    center: Text("50.0%"),
+                    linearStrokeCap: LinearStrokeCap.butt,
+                    progressColor: Colors.red,
+                  ),
+                ),
+              ],
             ),
             expanded: Column(
               children: <Widget>[
@@ -36,19 +55,6 @@ class ItemTargetScreen extends StatelessWidget {
                               children: <Widget>[
                                 Text('150 point'),
                                 Spacer(),
-                                Padding(
-                                  padding: EdgeInsets.all(15.0),
-                                  child: new LinearPercentIndicator(
-                                    width: 170.0,
-                                    animation: true,
-                                    animationDuration: 1000,
-                                    lineHeight: 20.0,
-                                    percent: 0.5,
-                                    center: Text("50.0%"),
-                                    linearStrokeCap: LinearStrokeCap.butt,
-                                    progressColor: Colors.red,
-                                  ),
-                                ),
                               ],
                             ),
                             title: Text('Cabury'),

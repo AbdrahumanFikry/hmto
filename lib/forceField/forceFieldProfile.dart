@@ -52,7 +52,6 @@ class _ForceFieldProfileState extends State<ForceFieldProfile>
                     physics: NeverScrollableScrollPhysics(),
                     children: <Widget>[
                       StoresScreen(),
-                      //-------------------Target Screen -----------------------
                       Target(),
                     ],
                   ),
