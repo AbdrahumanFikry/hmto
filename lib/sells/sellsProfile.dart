@@ -5,7 +5,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:senior/forceField/target.dart';
 import 'package:senior/sells/itemTargetScreen.dart';
 import 'package:senior/forceField/storesScreen.dart';
-import '../widgets/lineChart.dart';
 
 class SellsProfile extends StatefulWidget {
   @override

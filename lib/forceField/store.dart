@@ -6,6 +6,8 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pie_chart/pie_chart.dart';
 import '../widgets/trueAndFalse.dart';
+import 'package:sleek_circular_slider/sleek_circular_slider.dart';
+import '../widgets/persent.dart';
 
 class Store extends StatelessWidget {
   var url =
@@ -15,74 +17,86 @@ class Store extends StatelessWidget {
     'https://www.dw.com/image/37077830_303.jpg',
     'https://madosan.com.tr/assets/uploads/galeri/super-market-hiper-market/6b6ac887-23e6-49ac-b44d-e3d8ff6b52b8-jpg_1560158960.jpg'
   ];
+  List<String> comptatorsName = [
+    'Cabury',
+    'Our product',
+    'Shamadan',
+  ];
+  List<PercentChanger> compatators = [
+    PercentChanger(
+      initValue: 30,
+    ),
+    PercentChanger(
+      initValue: 50,
+    ),
+    PercentChanger(
+      initValue: 20,
+    ),
+  ];
+
+  void percentChanger(BuildContext context, int index) {
+    showModalBottomSheet(
+      context: context,
+      builder: (builder) {
+        return compatators[index];
+      },
+    );
+  }
 
   void _showModalSheet(BuildContext context) {
     showModalBottomSheet(
-        context: context,
-        builder: (builder) {
-          return Container(
-            height: 300,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Text(
-                    'Change percent',
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue,
-                    ),
-                    textAlign: TextAlign.center,
+      context: context,
+      builder: (builder) {
+        return Container(
+          height: 400,
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Text(
+                  'Change percent',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue,
                   ),
-                  Spacer(),
-                  RaisedButton(
-                    onPressed: () {},
-                    color: Colors.green,
-                    child: Text(
-                      'Cabury',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                  textAlign: TextAlign.center,
+                ),
+                Spacer(),
+                Container(
+                  height: 280,
+                  width: double.infinity,
+                  child: ListView.builder(
+                    itemCount: comptatorsName.length,
+                    itemBuilder: (ctx, index) {
+                      return RaisedButton(
+                        onPressed: () => percentChanger(context, index),
+                        color: Colors.green,
+                        child: Text(
+                          comptatorsName[index],
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                  RaisedButton(
-                    onPressed: () {},
-                    color: Colors.green,
-                    child: Text(
-                      'Our Products',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  RaisedButton(
-                    onPressed: () {},
-                    color: Colors.green,
-                    child: Text(
-                      'Shamaadn',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-            padding: EdgeInsets.all(40.0),
-          );
-        });
+          ),
+//          padding: EdgeInsets.all(40.0),
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
-
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:senior/auth/loginScreen.dart';
+import 'package:senior/forceField/store.dart';
 import 'package:senior/providers/authenticationProvider.dart';
 import 'package:senior/providers/location.dart';
 import 'package:provider/provider.dart';
+import 'package:senior/widgets/persent.dart';
 
 main() {
   runApp(MyApp());
@@ -54,7 +56,7 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: Colors.white,
         ),
         debugShowCheckedModeBanner: false,
-        home: LoginScreen(),
+        home: Store(),
       ),
     );
   }
