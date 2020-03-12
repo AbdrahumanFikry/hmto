@@ -40,9 +40,7 @@ dependencies:
   sleek_circular_slider: ^1.0.7
   shared_preferences: ^0.5.6+2
   percent_indicator: ^2.1.1+1
-
-
-
+  qrscan: ^0.2.17
 
 
 dev_dependencies:

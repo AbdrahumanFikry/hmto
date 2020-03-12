@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:senior/sells/testStore.dart';
+import 'package:senior/widgets/qrReader.dart';
 import '../forceField/store.dart';
 
 class StoresScreen extends StatelessWidget {
@@ -30,12 +31,14 @@ class StoresScreen extends StatelessWidget {
                       isSells
                           ? Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => TestStore(),
+                                builder: (context) =>
+                                    QrReader(whereTo: TestStore()),
                               ),
                             )
                           : Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => Store(),
+                                builder: (context) =>
+                                    QrReader(whereTo: Store()),
                               ),
                             );
                     },
@@ -72,12 +75,14 @@ class StoresScreen extends StatelessWidget {
                       isSells
                           ? Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => TestStore(),
+                                builder: (context) =>
+                                    QrReader(whereTo: TestStore()),
                               ),
                             )
                           : Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => Store(),
+                                builder: (context) =>
+                                    QrReader(whereTo: Store()),
                               ),
                             );
                     },
