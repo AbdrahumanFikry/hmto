@@ -1,13 +1,16 @@
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:senior/sells/sellsNavigator.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class StartDay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Start Day'),
+        title: Text(
+          tr('start_day.start'),
+        ),
         centerTitle: true,
       ),
       body: ListView(
@@ -19,7 +22,7 @@ class StartDay extends StatelessWidget {
             child: Row(
               children: <Widget>[
                 Text(
-                  'Balance :',
+                  '${tr('start_day.balance')} :',
                   style: TextStyle(fontSize: 20.0),
                 ),
                 Spacer(),
@@ -50,7 +53,7 @@ class StartDay extends StatelessWidget {
             theme: ExpandableThemeData(
                 animationDuration: Duration(milliseconds: 200)),
             header: Text(
-              'Cart Product',
+              tr('start_day.cart_products'),
               style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
             ),
             expanded: ListView.builder(
@@ -76,7 +79,7 @@ class StartDay extends StatelessWidget {
             theme: ExpandableThemeData(
                 animationDuration: Duration(milliseconds: 200)),
             header: Text(
-              'New Product',
+              tr('start_day.new_products'),
               style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
             ),
             expanded: ListView.builder(
@@ -102,7 +105,7 @@ class StartDay extends StatelessWidget {
             theme: ExpandableThemeData(
                 animationDuration: Duration(milliseconds: 200)),
             header: Text(
-              'Return Products',
+              tr('start_day.return_products'),
               style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
             ),
             expanded: ListView.builder(
@@ -141,7 +144,7 @@ class StartDay extends StatelessWidget {
                   );
                 },
                 child: Text(
-                  'Start Day',
+                  tr('start_day.submit'),
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 20.0,

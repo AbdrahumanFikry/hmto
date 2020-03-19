@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:senior/forceField/storesScreen.dart';
 import 'package:senior/forceField/target.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ForceFieldProfile extends StatefulWidget {
   @override
@@ -34,10 +35,10 @@ class _ForceFieldProfileState extends State<ForceFieldProfile>
                 labelColor: Colors.black,
                 tabs: <Widget>[
                   Tab(
-                    text: 'My Info',
+                    text: tr('field_force_profile.tab_one'),
                   ),
                   Tab(
-                    text: 'Target',
+                    text: tr('field_force_profile.tab_two'),
                   )
                 ],
                 controller: TabController(length: 2, vsync: this),
@@ -128,7 +129,7 @@ class _ForceFieldProfileState extends State<ForceFieldProfile>
                                           left: 16,
                                         ),
                                         child: Text(
-                                          'ads',
+                                          tr('field_force_profile.type'),
                                           style: TextStyle(
                                             fontWeight: FontWeight.w700,
                                           ),

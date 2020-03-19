@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:provider/provider.dart';
 import 'package:senior/auth/loginScreen.dart';
 import 'package:senior/providers/authenticationProvider.dart';
 import 'package:senior/providers/location.dart';
-import 'package:provider/provider.dart';
 
 main() {
-  runApp(MyApp());
+  runApp(
+    EasyLocalization(
+      child: MyApp(),
+      supportedLocales: [Locale('en', 'US'), Locale('ar', 'DZ')],
+      path: 'resources/langs',
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -21,7 +29,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => Location(),
+          create: (context) => GPS(),
         ),
         ChangeNotifierProvider(
           create: (context) => Auth(),
@@ -29,6 +37,13 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         showSemanticsDebugger: false,
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          EasyLocalization.of(context).delegate,
+        ],
+        supportedLocales: EasyLocalization.of(context).supportedLocales,
+        locale: EasyLocalization.of(context).locale,
         theme: ThemeData(
           iconTheme: IconThemeData(
             size: 16,

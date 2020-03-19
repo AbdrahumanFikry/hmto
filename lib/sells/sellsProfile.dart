@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:senior/forceField/target.dart';
 import 'package:senior/sells/itemTargetScreen.dart';
 import 'package:senior/forceField/storesScreen.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class SellsProfile extends StatefulWidget {
   @override
@@ -36,13 +37,13 @@ class _SellsProfileState extends State<SellsProfile>
                 labelColor: Colors.black,
                 tabs: <Widget>[
                   Tab(
-                    text: 'My Info',
+                    text: tr('sells_profile.tab_one'),
                   ),
                   Tab(
-                    text: 'Target',
+                    text: tr('sells_profile.tab_two'),
                   ),
                   Tab(
-                    text: 'Item Target',
+                    text: tr('sells_profile.tab_three'),
                   ),
                 ],
                 controller: TabController(length: 3, vsync: this),
@@ -129,7 +130,7 @@ class _SellsProfileState extends State<SellsProfile>
                                         padding: EdgeInsets.only(
                                             left: 16 * screenSize.aspectRatio),
                                         child: Text(
-                                          '5',
+                                          tr('sells_profile.type'),
                                           style: TextStyle(
                                               fontWeight: FontWeight.w700),
                                         ),

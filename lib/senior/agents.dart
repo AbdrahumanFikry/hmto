@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class Agents extends StatelessWidget {
   @override
@@ -8,7 +9,7 @@ class Agents extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          'Agents',
+          tr('senior_profile.agents'),
           style: TextStyle(color: Colors.green),
         ),
         backgroundColor: Colors.white,

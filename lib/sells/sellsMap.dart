@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:senior/sells/testStore.dart';
 import '../providers/location.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class SellsMap extends StatefulWidget {
   @override
@@ -47,7 +48,7 @@ class _SellsMapState extends State<SellsMap> {
         },
         markerId: MarkerId("curr_loc"),
         position: LatLng(currentLocation.latitude, currentLocation.longitude),
-        infoWindow: InfoWindow(title: 'Click to add store'),
+        infoWindow: InfoWindow(title: tr('map.marker_info')),
       );
       _markers["Current Location"] = marker;
       mapController.animateCamera(
@@ -69,9 +70,9 @@ class _SellsMapState extends State<SellsMap> {
   }
 
   Future<void> initPlatformState() async {
-    if (Provider.of<Location>(context, listen: false).locationOn == false) {
+    if (Provider.of<GPS>(context, listen: false).locationOn == false) {
       AppSettings.openLocationSettings();
-      Provider.of<Location>(context, listen: false).locationOn = true;
+      Provider.of<GPS>(context, listen: false).locationOn = true;
     }
     if (!mounted) return;
   }

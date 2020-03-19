@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:senior/sells/testStore.dart';
 import 'package:senior/widgets/qrReader.dart';
 import '../forceField/store.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class StoresScreen extends StatelessWidget {
   final bool isSells;
@@ -18,7 +19,9 @@ class StoresScreen extends StatelessWidget {
             ? Column(
                 children: <Widget>[
                   ListTile(
-                    title: Text('Extra'),
+                    title: Text(
+                      tr('field_force_profile.extra'),
+                    ),
                     leading: ClipRRect(
                         borderRadius: BorderRadius.all(
                           Radius.circular(10),
@@ -56,7 +59,7 @@ class StoresScreen extends StatelessWidget {
                     subtitle: Text('Has created count market'),
                     title: Text('info'),
                     trailing: Text(
-                      'Done',
+                      tr('field_force_profile.status'),
                       style: TextStyle(color: Colors.blue),
                     ),
                     leading: ClipRRect(

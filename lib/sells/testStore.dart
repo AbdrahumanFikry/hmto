@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:senior/sells/cartScreen.dart';
 import '../widgets/testStoreWidget.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class TestStore extends StatefulWidget {
   @override
@@ -76,7 +77,7 @@ class _TestStoreState extends State<TestStore> {
                 theme: ExpandableThemeData(
                     animationDuration: Duration(milliseconds: 200)),
                 header: Text(
-                  'Cash',
+                  tr('sells_store.cash'),
                   style: TextStyle(
                       fontWeight: FontWeight.w700,
                       color: Colors.blue,
@@ -103,7 +104,7 @@ class _TestStoreState extends State<TestStore> {
                         child: FlatButton(
                           onPressed: goToCartScreen,
                           child: Text(
-                            'Check out',
+                            tr('sells_store.check_out'),
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 20.0,
@@ -125,7 +126,7 @@ class _TestStoreState extends State<TestStore> {
                 theme: ExpandableThemeData(
                     animationDuration: Duration(milliseconds: 200)),
                 header: Text(
-                  'Debit',
+                  tr('sells_store.debit'),
                   style: TextStyle(
                       fontWeight: FontWeight.w700,
                       color: Colors.blue,
@@ -152,7 +153,7 @@ class _TestStoreState extends State<TestStore> {
                         child: FlatButton(
                           onPressed: goToCartScreen,
                           child: Text(
-                            'Check out',
+                            tr('sells_store.check_out'),
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 20.0,
@@ -174,7 +175,7 @@ class _TestStoreState extends State<TestStore> {
                 theme: ExpandableThemeData(
                     animationDuration: Duration(milliseconds: 200)),
                 header: Text(
-                  'Return',
+                  tr('sells_store.return'),
                   style: TextStyle(
                       fontWeight: FontWeight.w700,
                       color: Colors.blue,
@@ -201,7 +202,7 @@ class _TestStoreState extends State<TestStore> {
                         child: FlatButton(
                           onPressed: goToCartScreen,
                           child: Text(
-                            'Check out',
+                            tr('sells_store.check_out'),
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 20.0,
@@ -223,7 +224,7 @@ class _TestStoreState extends State<TestStore> {
                 theme: ExpandableThemeData(
                     animationDuration: Duration(milliseconds: 200)),
                 header: Text(
-                  'Summery',
+                  tr('sells_store.summary'),
                   style: TextStyle(
                       fontWeight: FontWeight.w700,
                       color: Colors.blue,
@@ -238,7 +239,7 @@ class _TestStoreState extends State<TestStore> {
                         children: <Widget>[
                           Expanded(
                             child: Text(
-                              'Old',
+                              tr('sells_store.summary_details.old'),
                               style: TextStyle(
                                 fontSize: 21.0,
                                 color: Colors.black,
@@ -274,7 +275,7 @@ class _TestStoreState extends State<TestStore> {
                         children: <Widget>[
                           Expanded(
                             child: Text(
-                              'Paid',
+                              tr('sells_store.summary_details.paid'),
                               style: TextStyle(
                                 fontSize: 21.0,
                                 color: Colors.black,
@@ -310,7 +311,7 @@ class _TestStoreState extends State<TestStore> {
                         children: <Widget>[
                           Expanded(
                             child: Text(
-                              'Rest',
+                              tr('sells_store.summary_details.rest'),
                               style: TextStyle(
                                 fontSize: 21.0,
                                 color: Colors.black,
@@ -353,7 +354,7 @@ class _TestStoreState extends State<TestStore> {
                             //todo----
                           },
                           child: Text(
-                            'Done',
+                            tr('sells_store.done'),
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 20.0,

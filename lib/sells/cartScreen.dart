@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:senior/widgets/testStoreWidget.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class CartScreen extends StatelessWidget {
   final List items;
@@ -8,7 +9,9 @@ class CartScreen extends StatelessWidget {
     this.items,
   });
 
-  void print() {}
+  void print() {
+    //TODO --------
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +19,7 @@ class CartScreen extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          'Check out',
+          tr('sells_store.check_out'),
           style: TextStyle(color: Colors.green),
         ),
         backgroundColor: Colors.white,
@@ -44,7 +47,7 @@ class CartScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  'Total',
+                  tr('sells_store.total'),
                   style: TextStyle(
                     fontSize: 20.0,
                     color: Colors.black,
@@ -66,7 +69,7 @@ class CartScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  'prise',
+                  tr('sells_store.price'),
                   style: TextStyle(
                     fontSize: 20.0,
                     color: Colors.black,
@@ -94,7 +97,7 @@ class CartScreen extends StatelessWidget {
               child: FlatButton(
                 onPressed: print,
                 child: Text(
-                  'Print',
+                  tr('sells_store.print'),
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 20.0,

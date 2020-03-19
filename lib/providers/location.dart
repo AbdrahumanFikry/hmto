@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
 
-class Location with ChangeNotifier {
+class GPS with ChangeNotifier {
   bool locationOn = false;
 }

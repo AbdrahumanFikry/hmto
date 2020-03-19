@@ -1,0 +1,86 @@
+{
+  "login_screen": {
+    "login_button": "تسجيل الدخول"
+  },
+  "navigator": {
+    "map": "الخريطه",
+    "profile": "الملف الشخصى"
+  },
+  "map": {
+    "marker_info": "اضغط لإضافه متجر"
+  },
+  "new_store": {
+    "title": "متجر جديد",
+    "info": "بيانات",
+    "info_details": {
+      "name": "اسم المتجر",
+      "c_name": "اسم العميل",
+      "c_phone": "تليفون العميل",
+      "s_name": "اسم البائع",
+      "s_phone": "تليفون البائع"
+    },
+    "images": "الصور",
+    "rating": "التقييم",
+    "sale_out_hmto": "نسبه hmto",
+    "competitor": "منافس",
+    "competitor_name": "اسم المنافس",
+    "percent": "النسبه",
+    "t_f_questions": "أسأله صح وخطأ",
+    "long_answer_questions": "أسأله مقاليه"
+  },
+  "sells_store": {
+    "cash": "كاش",
+    "debit": "اّجل",
+    "return": "مرتجع",
+    "summary": "ملخص",
+    "check_out": "الدفع",
+    "summary_details": {
+      "old": "قديم",
+      "paid": "مدفوع",
+      "rest": "الباقى"
+    },
+    "done": "تم",
+    "total": "الاجمالى",
+    "price": "السعر",
+    "print": "طباعه"
+  },
+  "field_force_profile": {
+    "tab_one": "بياناتى",
+    "extra": "اكسترا",
+    "type": "مندوب",
+    "status": "تم",
+    "tab_two": "التارجت",
+    "my_target": "تارجتى",
+    "visits": "الزيارات",
+    "new": "جديد"
+  },
+  "store": {
+    "hmto": "hmto",
+    "products": "المنتجات",
+    "questions": "أسأله",
+    "add_comment": "اضف تعليق",
+    "submit": "تم"
+  },
+  "start_day": {
+    "start": "ابدأ اليوم",
+    "balance": "الرصيد",
+    "cart_products": "منتجات العربه",
+    "new_products": "منتجات جديده",
+    "return_products": "منتجات مرتجعه",
+    "submit": "ابدأ اليوم"
+  },
+  "sells_profile": {
+    "tab_one": "بياناتى",
+    "extra": "اكسترا",
+    "type": "سيلز",
+    "status": "تم",
+    "tab_two": "تارجت",
+    "my_target": "تارجتى",
+    "visits": "الزيارات",
+    "new": "جديد",
+    "tab_three": "تارجت المنتج"
+  },
+  "senior_profile": {
+    "agents": "المناديب"
+  }
+}

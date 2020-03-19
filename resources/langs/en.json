@@ -1,0 +1,86 @@
+{
+  "login_screen": {
+    "login_button": "Login"
+  },
+  "navigator": {
+    "map": "Map",
+    "profile": "Profile"
+  },
+  "map": {
+    "marker_info": "Click to add store"
+  },
+  "new_store": {
+    "title": "New Store",
+    "info": "Info",
+    "info_details": {
+      "name": "Out let name",
+      "c_name": "Customer name",
+      "c_phone": "Customer phone",
+      "s_name": "Sells name",
+      "s_phone": "Sells phone"
+    },
+    "images": "Images",
+    "rating": "Rating",
+    "sale_out_hmto": "Sale out hmto",
+    "competitor": "Competitor",
+    "competitor_name": "Competitor name",
+    "percent": "percent",
+    "t_f_questions": "True False questions",
+    "long_answer_questions": "Long answer questions"
+  },
+  "sells_store": {
+    "cash": "Cash",
+    "debit": "Debit",
+    "return": "Return",
+    "summary": "Summary",
+    "check_out": "check out",
+    "summary_details": {
+      "old": "Old",
+      "paid": "Paid",
+      "rest": "Rest"
+    },
+    "done": "Done",
+    "total": "Total",
+    "price": "Price",
+    "print": "Print"
+  },
+  "field_force_profile": {
+    "tab_one": "My info",
+    "extra": "Extra",
+    "type": "ads",
+    "status": "Done",
+    "tab_two": "Target",
+    "my_target": "My Target",
+    "visits": "Visits",
+    "new": "New"
+  },
+  "store": {
+    "hmto": "hmto",
+    "products": "Products",
+    "questions": "Questions",
+    "add_comment": "Add comment",
+    "submit": "Submit"
+  },
+  "start_day": {
+    "start": "Start day",
+    "balance": "Balance",
+    "cart_products": "Cart products",
+    "new_products": "New products",
+    "return_products": "Return products",
+    "submit": "Start day"
+  },
+  "sells_profile": {
+    "tab_one": "My info",
+    "extra": "Extra",
+    "type": "ads",
+    "status": "Done",
+    "tab_two": "Target",
+    "my_target": "My Target",
+    "visits": "Visits",
+    "new": "New",
+    "tab_three": "Item Target"
+  },
+  "senior_profile": {
+    "agents": "Agents"
+  }
+}

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:senior/auth/select.dart';
 import '../widgets/alertDialog.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class LoginScreen extends StatefulWidget {
   final Color backgroundColor1;
@@ -63,6 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(':::::::::::::' + EasyLocalization.of(context).locale.toString());
     return Scaffold(
       body: SingleChildScrollView(
         child: Form(
@@ -128,7 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                           decoration: InputDecoration(
                             border: InputBorder.none,
-                            hintText: 'hnto@hnto.com',
+                            hintText: 'hmto@hmto.com',
                             hintStyle:
                                 TextStyle(color: this.widget.foregroundColor),
                           ),
@@ -198,16 +200,62 @@ class _LoginScreenState extends State<LoginScreen> {
                             new Expanded(
                               child: new FlatButton(
                                 padding: const EdgeInsets.symmetric(
-                                    vertical: 20.0, horizontal: 20.0),
+                                  vertical: 20.0,
+                                  horizontal: 20.0,
+                                ),
                                 color: this.widget.highlightColor,
                                 onPressed: _login,
-                                child: Text("Log In",
-                                    style: TextStyle(color: Colors.white)),
+                                child: Text(
+                                  tr('login_screen.login_button'),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
                               ),
                             ),
                           ],
                         ),
                       ),
+                Spacer(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 40.0,
+                    vertical: 20.0,
+                  ),
+                  child: Row(
+                    children: <Widget>[
+                      RaisedButton(
+                        child: Text(
+                          "عربى",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18.0,
+                          ),
+                        ),
+                        color: Colors.green,
+                        onPressed: () {
+                          EasyLocalization.of(context).locale =
+                              Locale("ar", "DZ");
+                        },
+                      ),
+                      Spacer(),
+                      RaisedButton(
+                        child: Text(
+                          "English",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18.0,
+                          ),
+                        ),
+                        color: Colors.green,
+                        onPressed: () {
+                          EasyLocalization.of(context).locale =
+                              Locale("en", "US");
+                        },
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),

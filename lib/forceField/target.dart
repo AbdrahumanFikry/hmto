@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class Target extends StatelessWidget {
   @override
@@ -10,7 +11,7 @@ class Target extends StatelessWidget {
         Row(
           children: <Widget>[
             Text(
-              'My Target',
+              tr('field_force_profile.my_target'),
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.blue,
@@ -36,7 +37,7 @@ class Target extends StatelessWidget {
         Row(
           children: <Widget>[
             Text(
-              'Visits',
+              tr('field_force_profile.visits'),
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.red,
@@ -62,7 +63,7 @@ class Target extends StatelessWidget {
         Row(
           children: <Widget>[
             Text(
-              'New',
+              tr('field_force_profile.new'),
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.yellow,

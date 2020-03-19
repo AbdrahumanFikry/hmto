@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:senior/forceField/addStore.dart';
 import 'package:app_settings/app_settings.dart';
 import '../providers/location.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ForceFieldMap extends StatefulWidget {
   @override
@@ -25,7 +26,7 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
         .placemarkFromCoordinates(pos.latitude, pos.longitude);
     if (placeMarks != null && placeMarks.isNotEmpty) {
       final Placemark pos = placeMarks[0];
-      print(':::::::::::::' + pos.thoroughfare + ', ' + pos.locality);
+//      print(':::::::::::::' + pos.thoroughfare + ', ' + pos.locality);
       address = pos.thoroughfare + ', ' + pos.locality;
       return address;
     }
@@ -47,7 +48,7 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
         },
         markerId: MarkerId("curr_loc"),
         position: LatLng(currentLocation.latitude, currentLocation.longitude),
-        infoWindow: InfoWindow(title: 'Click to add store'),
+        infoWindow: InfoWindow(title: tr('map.marker_info')),
       );
       _markers["Current Location"] = marker;
       mapController.animateCamera(
@@ -69,9 +70,9 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
   }
 
   Future<void> initPlatformState() async {
-    if (Provider.of<Location>(context, listen: false).locationOn == false) {
+    if (Provider.of<GPS>(context, listen: false).locationOn == false) {
       AppSettings.openLocationSettings();
-      Provider.of<Location>(context, listen: false).locationOn = true;
+      Provider.of<GPS>(context, listen: false).locationOn = true;
     }
     if (!mounted) return;
   }

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 import 'package:senior/widgets/question.dart';
 import 'package:senior/widgets/trueAndFalse.dart';
 import 'dart:io';
 import 'dart:async';
-import '../models/newItem.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class AdsAddStore extends StatefulWidget {
   @override
@@ -14,7 +13,7 @@ class AdsAddStore extends StatefulWidget {
 }
 
 class _AdsAddStoreState extends State<AdsAddStore> {
-  int comptatorLength = 0;
+  int competitorLength = 0;
   File image;
   List<File> images = new List<File>();
 
@@ -37,20 +36,22 @@ class _AdsAddStoreState extends State<AdsAddStore> {
                   height: 10,
                 ),
                 Text(
-                  'Info',
+                  tr('new_store.info'),
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(
+                    8.0,
+                  ),
                   child: TextField(
                     onChanged: (val) {
 //                      item.name = val;
                     },
                     decoration: InputDecoration(
-                      labelText: 'Out let Name',
+                      labelText: tr('new_store.info_details.name'),
                     ),
                   ),
                 ),
@@ -61,7 +62,7 @@ class _AdsAddStoreState extends State<AdsAddStore> {
 //                      item.desc = val;
                     },
                     decoration: InputDecoration(
-                      labelText: 'Customer name',
+                      labelText: tr('new_store.info_details.c_name'),
                     ),
                     maxLines: null,
                   ),
@@ -73,7 +74,7 @@ class _AdsAddStoreState extends State<AdsAddStore> {
 //                      item.name = val;
                     },
                     decoration: InputDecoration(
-                      labelText: 'Customer phone',
+                      labelText: tr('new_store.info_details.c_phone'),
                     ),
                   ),
                 ),
@@ -84,7 +85,7 @@ class _AdsAddStoreState extends State<AdsAddStore> {
 //                      item.name = val;
                     },
                     decoration: InputDecoration(
-                      labelText: 'Sells name',
+                      labelText: tr('new_store.info_details.s_name'),
                     ),
                   ),
                 ),
@@ -95,12 +96,12 @@ class _AdsAddStoreState extends State<AdsAddStore> {
 //                      item.name = val;
                     },
                     decoration: InputDecoration(
-                      labelText: 'Sells phone',
+                      labelText: tr('new_store.info_details.s_phone'),
                     ),
                   ),
                 ),
                 Text(
-                  'Images',
+                  tr('new_store.images'),
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.w700,
@@ -190,7 +191,7 @@ class _AdsAddStoreState extends State<AdsAddStore> {
                   height: 20,
                 ),
                 Text(
-                  'Rating',
+                  tr('new_store.rating'),
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.w700,
@@ -221,7 +222,7 @@ class _AdsAddStoreState extends State<AdsAddStore> {
                     children: <Widget>[
                       Expanded(
                         child: Text(
-                          'Sale Out hmto',
+                          tr('new_store.sale_out_hmto'),
                           style: TextStyle(
                             fontSize: 21.0,
                             color: Colors.black,
@@ -250,42 +251,6 @@ class _AdsAddStoreState extends State<AdsAddStore> {
                     ],
                   ),
                 ),
-//                Padding(
-//                  padding: const EdgeInsets.all(8.0),
-//                  child: Row(
-//                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                    children: <Widget>[
-//                      Expanded(
-//                        child: Text(
-//                          'Sale Out Comptators',
-//                          style: TextStyle(
-//                            fontSize: 21.0,
-//                            color: Colors.black,
-//                            fontWeight: FontWeight.bold,
-//                          ),
-//                        ),
-//                      ),
-//                      SizedBox(
-//                        width: 20.0,
-//                      ),
-//                      Container(
-//                        width: MediaQuery.of(context).size.width * 0.5,
-//                        child: TextField(
-//                          decoration: InputDecoration(
-//                            contentPadding: EdgeInsets.all(
-//                              16.0,
-//                            ),
-//                            border: OutlineInputBorder(
-//                              borderRadius: BorderRadius.circular(
-//                                5.0,
-//                              ),
-//                            ),
-//                          ),
-//                        ),
-//                      ),
-//                    ],
-//                  ),
-//                ),
                 Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: 5.0,
@@ -293,7 +258,7 @@ class _AdsAddStoreState extends State<AdsAddStore> {
                   child: Row(
                     children: <Widget>[
                       Text(
-                        'Comptators',
+                        tr('new_store.competitor'),
                         style: TextStyle(
                           fontSize: 21.0,
                           color: Colors.black,
@@ -308,17 +273,17 @@ class _AdsAddStoreState extends State<AdsAddStore> {
                         ),
                         onPressed: () {
                           setState(() {
-                            comptatorLength++;
+                            competitorLength++;
                           });
                         },
                       )
                     ],
                   ),
                 ),
-                comptatorLength == 0
+                competitorLength == 0
                     ? SizedBox()
                     : ListView.builder(
-                        itemCount: comptatorLength,
+                        itemCount: competitorLength,
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (ctx, index) {
@@ -332,7 +297,12 @@ class _AdsAddStoreState extends State<AdsAddStore> {
                                       MediaQuery.of(context).size.width * 0.5,
                                   child: TextField(
                                     decoration: InputDecoration(
-                                      hintText: 'comptator name',
+                                      hintText: EasyLocalization.of(context)
+                                                  .locale
+                                                  .toString() ==
+                                              'ar_DZ'
+                                          ? 'اسم المنافس'
+                                          : 'Competitor name',
                                       contentPadding: EdgeInsets.all(
                                         16.0,
                                       ),
@@ -352,7 +322,7 @@ class _AdsAddStoreState extends State<AdsAddStore> {
                                       MediaQuery.of(context).size.width * 0.3,
                                   child: TextField(
                                     decoration: InputDecoration(
-                                      hintText: 'percent',
+                                      hintText: '0',
                                       contentPadding: EdgeInsets.all(
                                         16.0,
                                       ),
@@ -375,7 +345,7 @@ class _AdsAddStoreState extends State<AdsAddStore> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10),
                   child: Text(
-                    'True / False questions',
+                    tr('new_store.t_f_questions'),
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w700,
@@ -404,7 +374,7 @@ class _AdsAddStoreState extends State<AdsAddStore> {
                   },
                 ),
                 Text(
-                  'Long answer questions',
+                  tr('new_store.long_answer_questions'),
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.w700,
@@ -443,7 +413,9 @@ class _AdsAddStoreState extends State<AdsAddStore> {
               floating: true,
               snap: true,
               backgroundColor: Colors.green,
-              title: Text('New Store'),
+              title: Text(
+                tr('new_store.title'),
+              ),
               expandedHeight: 60,
               actions: <Widget>[
                 IconButton(

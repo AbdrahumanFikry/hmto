@@ -1,8 +1,8 @@
-import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:senior/sells/sellsMap.dart';
 import 'package:senior/sells/sellsProfile.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class SellsNavigator extends StatefulWidget {
   @override
@@ -30,25 +30,38 @@ class _SellsNavigatorState extends State<SellsNavigator> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: _pages[index],
-        bottomNavigationBar: FancyBottomNavigation(
-          barBackgroundColor: Colors.white,
-          circleColor: Colors.green,
-          inactiveIconColor: Color(0xff737373),
-          onTabChangedListener: onPageChanged,
-          tabs: [
-            TabData(
-              iconData: FontAwesomeIcons.map,
-              title: 'Map',
+    return Scaffold(
+      body: _pages[index],
+      bottomNavigationBar: BottomNavigationBar(
+        onTap: onPageChanged,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(
+              FontAwesomeIcons.map,
+              color: index != 0 ? Colors.black : Colors.green,
             ),
-            TabData(
-              iconData: FontAwesomeIcons.user,
-              title: 'Profile',
+            title: Text(
+              tr('navigator.map'),
+              style: TextStyle(
+                fontSize: 16,
+                color: index != 0 ? Colors.black : Colors.green,
+              ),
             ),
-          ],
-        ),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              FontAwesomeIcons.user,
+              color: index != 1 ? Colors.black : Colors.green,
+            ),
+            title: Text(
+              tr('navigator.profile'),
+              style: TextStyle(
+                fontSize: 16,
+                color: index != 1 ? Colors.black : Colors.green,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
