@@ -17,8 +17,11 @@ class _ForceFieldProfileState extends State<ForceFieldProfile>
 
   onTabTabBar(int tabIndex) {
     tabIndex = tabIndex;
-    pageController.animateToPage(tabIndex,
-        duration: Duration(milliseconds: 200), curve: Curves.easeIn);
+    pageController.animateToPage(
+      tabIndex,
+      duration: Duration(milliseconds: 200),
+      curve: Curves.easeIn,
+    );
   }
 
   @override
