@@ -1,21 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:flutter/material.dart';
 
-class Agents extends StatelessWidget {
+class SellesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          tr('senior_profile.agents'),
-          style: TextStyle(color: Colors.green),
-        ),
-        backgroundColor: Colors.white,
-        elevation: 3.0,
-      ),
       body: ListView(
         children: <Widget>[
           SizedBox(
@@ -24,7 +13,7 @@ class Agents extends StatelessWidget {
           ListView.builder(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
-            itemCount: 10,
+            itemCount: 3,
             itemBuilder: (ctx, index) {
               return Column(
                 children: <Widget>[
@@ -38,24 +27,6 @@ class Agents extends StatelessWidget {
                         children: <Widget>[
                           Text('mohammed abdulatif'),
                           Spacer(),
-                          LinearPercentIndicator(
-                            width: MediaQuery.of(context).size.width * 0.16,
-                            animation: true,
-                            animationDuration: 1000,
-                            lineHeight: 25.0,
-                            percent: 0.3,
-                            center: Text("30.0%"),
-                            linearStrokeCap: LinearStrokeCap.butt,
-                            progressColor: Colors.red,
-                          ),
-                          Spacer(),
-                          Text(
-                            '20',
-                            style: TextStyle(
-                              fontSize: 16.0,
-                              color: Colors.black,
-                            ),
-                          ),
                           SizedBox(
                             width: 10.0,
                           ),
@@ -76,7 +47,7 @@ class Agents extends StatelessWidget {
                       child: CachedNetworkImage(
                         fit: BoxFit.cover,
                         imageUrl:
-                            'https://specials-images.forbesimg.com/imageserve/5d2893a234a5c400084b2955/1920x0.jpg?cropX1=29&cropX2=569&cropY1=20&cropY2=560',
+                        'https://specials-images.forbesimg.com/imageserve/5d2893a234a5c400084b2955/1920x0.jpg?cropX1=29&cropX2=569&cropY1=20&cropY2=560',
                         width: 50.0,
                         height: 50.0,
                       ),
