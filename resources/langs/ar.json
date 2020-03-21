@@ -47,7 +47,7 @@
   "field_force_profile": {
     "tab_one": "بياناتى",
     "extra": "اكسترا",
-    "type": "مندوب",
+    "type": "مشرف ميدانى",
     "status": "تم",
     "tab_two": "التارجت",
     "my_target": "تارجتى",
@@ -72,7 +72,7 @@
   "sells_profile": {
     "tab_one": "بياناتى",
     "extra": "اكسترا",
-    "type": "سيلز",
+    "type": "مندوب مبيعات",
     "status": "تم",
     "tab_two": "تارجت",
     "my_target": "تارجتى",
@@ -81,6 +81,12 @@
     "tab_three": "تارجت المنتج"
   },
   "senior_profile": {
-    "agents": "المناديب"
+    "agents": "الموظفين",
+    "type": "مدير عام",
+    "visits": "زيارات",
+    "one_visit": "زياره",
+    "cash": "كاش",
+    "target": "تارجت",
+    "egp": "جنيه"
   }
 }

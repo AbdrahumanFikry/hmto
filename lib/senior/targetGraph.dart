@@ -1,5 +1,7 @@
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
+
 class TargetGraphSenior extends StatefulWidget {
   @override
   _TargetGraphSeniorState createState() => _TargetGraphSeniorState();
@@ -12,17 +14,16 @@ class ClicksPerYear {
 
   ClicksPerYear(this.year, this.clicks, Color color)
       : this.color = charts.Color(
-      r: color.red, g: color.green, b: color.blue, a: color.alpha);
+            r: color.red, g: color.green, b: color.blue, a: color.alpha);
 }
 
 class _TargetGraphSeniorState extends State<TargetGraphSenior> {
-
   @override
   Widget build(BuildContext context) {
     var data = [
-      ClicksPerYear('cash', 22, Colors.red),
-      ClicksPerYear('visits', 42, Colors.yellow),
-      ClicksPerYear('target',80, Colors.green),
+      ClicksPerYear(tr('senior_profile.cash'), 22, Colors.red),
+      ClicksPerYear(tr('senior_profile.visits'), 42, Colors.yellow),
+      ClicksPerYear(tr('senior_profile.target'), 80, Colors.green),
     ];
 
     var series = [

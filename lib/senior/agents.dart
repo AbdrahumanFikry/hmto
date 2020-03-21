@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:senior/senior/targetGraph.dart';
 
 class Agents extends StatelessWidget {
   @override
@@ -31,24 +32,39 @@ class Agents extends StatelessWidget {
                   ListTile(
                     title: GestureDetector(
                       onTap: () {
-                        //todo----
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => TargetGraphSenior(),
+                          ),
+                        );
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text('mohammed abdulatif'),
-                          Spacer(),
-                          LinearPercentIndicator(
-                            width: MediaQuery.of(context).size.width * 0.16,
-                            animation: true,
-                            animationDuration: 1000,
-                            lineHeight: 25.0,
-                            percent: 0.3,
-                            center: Text("30.0%"),
-                            linearStrokeCap: LinearStrokeCap.butt,
-                            progressColor: Colors.red,
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.23,
+                            child: Text(
+                              'mohammed abdulatif',
+                              softWrap: true,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                            ),
                           ),
-                          Spacer(),
+                          SizedBox(
+                            width: 10.0,
+                          ),
+                          Expanded(
+                            child: LinearPercentIndicator(
+//                              width: MediaQuery.of(context).size.width * 0.3,
+                              animation: true,
+                              animationDuration: 1000,
+                              lineHeight: 25.0,
+                              percent: 0.3,
+                              center: Text("30.0%"),
+                              linearStrokeCap: LinearStrokeCap.butt,
+                              progressColor: Colors.red,
+                            ),
+                          ),
                           Text(
                             '20',
                             style: TextStyle(
@@ -60,9 +76,9 @@ class Agents extends StatelessWidget {
                             width: 10.0,
                           ),
                           Text(
-                            'visit',
+                            tr('senior_profile.one_visit'),
                             style: TextStyle(
-                              fontSize: 16.0,
+                              fontSize: 12.0,
                               color: Colors.blue,
                             ),
                           ),

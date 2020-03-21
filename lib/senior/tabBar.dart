@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:senior/senior/selles.dart';
+import 'package:senior/senior/sells.dart';
 import '../senior/targetGraph.dart';
 import 'cash.dart';
+import 'package:easy_localization/easy_localization.dart';
+
 class TabBarScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -10,7 +12,7 @@ class TabBarScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            'Salles',
+            tr('sells_profile.type'),
             style: TextStyle(
               fontSize: 18.0,
               color: Colors.black,
@@ -31,21 +33,21 @@ class TabBarScreen extends StatelessWidget {
           bottom: TabBar(
             tabs: [
               Text(
-                'salles',
+                tr('sells_profile.type'),
                 style: TextStyle(
                   fontSize: 18.0,
                   color: Colors.black,
                 ),
               ),
               Text(
-                'Cash',
+                tr('senior_profile.cash'),
                 style: TextStyle(
                   fontSize: 18.0,
                   color: Colors.black,
                 ),
               ),
               Text(
-                'Target',
+                tr('senior_profile.target'),
                 style: TextStyle(
                   fontSize: 18.0,
                   color: Colors.black,
@@ -56,7 +58,7 @@ class TabBarScreen extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            SellesScreen(),
+            SellsScreen(),
             CashScreen(),
             TargetGraphSenior(),
           ],

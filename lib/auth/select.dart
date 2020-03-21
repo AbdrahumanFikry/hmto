@@ -1,8 +1,8 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:senior/sells/startDay.dart';
 import 'package:senior/forceField/forceFieldNavigator.dart';
-import 'package:senior/senior/agents.dart';
+import 'package:senior/senior/selectType.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class Select extends StatelessWidget {
   @override
@@ -24,19 +24,22 @@ class Select extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
-                      builder: (context) => Agents(),
+                      builder: (context) => SelectTypeScreen(),
                     ),
                   );
                 },
                 color: Colors.green,
                 child: Text(
-                  'Senior',
+                  tr('senior_profile.type'),
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                     fontSize: 20.0,
                   ),
                 ),
+              ),
+              SizedBox(
+                height: 15.0,
               ),
               RaisedButton(
                 padding: EdgeInsets.symmetric(
@@ -52,13 +55,16 @@ class Select extends StatelessWidget {
                 },
                 color: Colors.green,
                 child: Text(
-                  'Field Force',
+                  tr('field_force_profile.type'),
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                     fontSize: 20.0,
                   ),
                 ),
+              ),
+              SizedBox(
+                height: 15.0,
               ),
               RaisedButton(
                 padding: EdgeInsets.symmetric(
@@ -74,7 +80,7 @@ class Select extends StatelessWidget {
                 },
                 color: Colors.green,
                 child: Text(
-                  'Sells',
+                  tr('sells_profile.type'),
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,

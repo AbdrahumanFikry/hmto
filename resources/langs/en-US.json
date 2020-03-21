@@ -47,7 +47,7 @@
   "field_force_profile": {
     "tab_one": "My info",
     "extra": "Extra",
-    "type": "ads",
+    "type": "Field force",
     "status": "Done",
     "tab_two": "Target",
     "my_target": "My Target",
@@ -72,7 +72,7 @@
   "sells_profile": {
     "tab_one": "My info",
     "extra": "Extra",
-    "type": "ads",
+    "type": "Sells",
     "status": "Done",
     "tab_two": "Target",
     "my_target": "My Target",
@@ -81,6 +81,12 @@
     "tab_three": "Item Target"
   },
   "senior_profile": {
-    "agents": "Agents"
+    "agents": "Agents",
+    "type": "Senior",
+    "visits": "visits",
+    "one_visit": "visit",
+    "cash": "cash",
+    "target": "target",
+    "egp": "EGP"
   }
 }

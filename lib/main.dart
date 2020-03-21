@@ -6,10 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:senior/auth/loginScreen.dart';
 import 'package:senior/providers/authenticationProvider.dart';
 import 'package:senior/providers/location.dart';
-import 'package:senior/senior/tabBar.dart';
-import 'package:senior/senior/targetGraph.dart';
-import './senior/agents.dart';
-import './senior/selectType.dart';
 
 main() {
   runApp(
@@ -61,7 +57,7 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: Colors.white,
         ),
         debugShowCheckedModeBanner: false,
-        home: SelectTypeScreen(),
+        home: LoginScreen(),
       ),
     );
   }

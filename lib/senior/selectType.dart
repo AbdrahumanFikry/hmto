@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:senior/senior/agents.dart';
 import 'package:senior/senior/tabBar.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class SelectTypeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        height: MediaQuery
-            .of(context)
-            .size
-            .height,
-        width: MediaQuery
-            .of(context)
-            .size
-            .width,
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -25,7 +20,7 @@ class SelectTypeScreen extends StatelessWidget {
                 horizontal: 50.0,
               ),
               onPressed: () {
-                Navigator.of(context).pushReplacement(
+                Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => Agents(),
                   ),
@@ -33,7 +28,7 @@ class SelectTypeScreen extends StatelessWidget {
               },
               color: Colors.green,
               child: Text(
-                'Field Force',
+                tr('field_force_profile.type'),
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -41,13 +36,16 @@ class SelectTypeScreen extends StatelessWidget {
                 ),
               ),
             ),
+            SizedBox(
+              height: 15.0,
+            ),
             RaisedButton(
               padding: EdgeInsets.symmetric(
                 vertical: 10.0,
                 horizontal: 50.0,
               ),
               onPressed: () {
-                Navigator.of(context).pushReplacement(
+                Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => TabBarScreen(),
                   ),
@@ -55,7 +53,7 @@ class SelectTypeScreen extends StatelessWidget {
               },
               color: Colors.green,
               child: Text(
-                'Salles',
+                tr('sells_profile.type'),
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,

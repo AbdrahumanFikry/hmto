@@ -1,7 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
-class SellesScreen extends StatelessWidget {
+class SellsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,15 +26,30 @@ class SellesScreen extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text('mohammed abdulatif'),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.5,
+                            child: Text(
+                              'mohammed abdulatif',
+                              softWrap: true,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                            ),
+                          ),
                           Spacer(),
+                          Text(
+                            '20',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              color: Colors.black,
+                            ),
+                          ),
                           SizedBox(
                             width: 10.0,
                           ),
                           Text(
-                            'visit',
+                            tr('senior_profile.one_visit'),
                             style: TextStyle(
-                              fontSize: 16.0,
+                              fontSize: 12.0,
                               color: Colors.blue,
                             ),
                           ),
@@ -47,7 +63,7 @@ class SellesScreen extends StatelessWidget {
                       child: CachedNetworkImage(
                         fit: BoxFit.cover,
                         imageUrl:
-                        'https://specials-images.forbesimg.com/imageserve/5d2893a234a5c400084b2955/1920x0.jpg?cropX1=29&cropX2=569&cropY1=20&cropY2=560',
+                            'https://specials-images.forbesimg.com/imageserve/5d2893a234a5c400084b2955/1920x0.jpg?cropX1=29&cropX2=569&cropY1=20&cropY2=560',
                         width: 50.0,
                         height: 50.0,
                       ),
