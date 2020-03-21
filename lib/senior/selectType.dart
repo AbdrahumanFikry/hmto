@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:senior/senior/agents.dart';
-import 'package:senior/senior/tabBar.dart';
+import 'package:senior/senior/tabBarForceField.dart';
+import 'package:senior/senior/tabBarSells.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class SelectTypeScreen extends StatelessWidget {
@@ -22,7 +23,7 @@ class SelectTypeScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => Agents(),
+                    builder: (context) => TabBarForceFieldScreen(),
                   ),
                 );
               },
@@ -47,7 +48,7 @@ class SelectTypeScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => TabBarScreen(),
+                    builder: (context) => TabBarScreenSells(),
                   ),
                 );
               },

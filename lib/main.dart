@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:senior/auth/loginScreen.dart';
 import 'package:senior/providers/authenticationProvider.dart';
 import 'package:senior/providers/location.dart';
-
 main() {
   runApp(
     EasyLocalization(

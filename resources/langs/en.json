@@ -52,7 +52,9 @@
     "tab_two": "Target",
     "my_target": "My Target",
     "visits": "Visits",
-    "new": "New"
+    "new": "New",
+    "pro": "Products",
+    "special": "Special Products"
   },
   "store": {
     "hmto": "hmto",
@@ -87,7 +89,8 @@
     "one_visit": "visit",
     "cash": "cash",
     "target": "target",
-    "egp": "EGP"
+    "egp": "EGP",
+    "newStore": "New Stores"
   },
   "other": {
     "items": "items",

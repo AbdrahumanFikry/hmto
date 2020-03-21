@@ -52,7 +52,9 @@
     "tab_two": "التارجت",
     "my_target": "تارجتى",
     "visits": "الزيارات",
-    "new": "جديد"
+    "new": "جديد",
+    "pro": "المنتجات",
+    "special": "منتجات خاصه"
   },
   "store": {
     "hmto": "hmto",
@@ -78,7 +80,7 @@
     "my_target": "تارجتى",
     "visits": "الزيارات",
     "new": "جديد",
-    "tab_three": "تارجت المنتج"
+    "tab_three": "تارجت المنتج",
   },
   "senior_profile": {
     "agents": "الموظفين",
@@ -87,7 +89,8 @@
     "one_visit": "زياره",
     "cash": "كاش",
     "target": "تارجت",
-    "egp": "جنيه"
+    "egp": "جنيه",
+    "newStore": "محلات جديده"
   },
   "other": {
     "items": "منتجات",

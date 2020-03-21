@@ -1,24 +1,16 @@
-import 'package:flutter/material.dart';
-import 'package:senior/senior/sells.dart';
-import '../senior/targetGraph.dart';
-import 'cash.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:senior/senior/agents.dart';
+import 'package:senior/senior/targetGraphForceField.dart';
+import 'package:senior/senior/targetGraphSells.dart';
 
-class TabBarScreen extends StatelessWidget {
+class TabBarForceFieldScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(
-            tr('sells_profile.type'),
-            style: TextStyle(
-              fontSize: 18.0,
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
           elevation: 0.4,
           backgroundColor: Colors.white,
           leading: IconButton(
@@ -33,14 +25,7 @@ class TabBarScreen extends StatelessWidget {
           bottom: TabBar(
             tabs: [
               Text(
-                tr('sells_profile.type'),
-                style: TextStyle(
-                  fontSize: 18.0,
-                  color: Colors.black,
-                ),
-              ),
-              Text(
-                tr('senior_profile.cash'),
+                tr('senior_profile.agents'),
                 style: TextStyle(
                   fontSize: 18.0,
                   color: Colors.black,
@@ -58,9 +43,8 @@ class TabBarScreen extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            SellsScreen(),
-            CashScreen(),
-            TargetGraphSenior(),
+           Agents(),
+            TargetGraphForceField(),
           ],
         ),
       ),

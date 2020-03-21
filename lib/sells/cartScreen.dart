@@ -65,39 +65,39 @@ class CartScreen extends StatelessWidget {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  tr('other.sale'),
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.black,
-                  ),
-                ),
-                SizedBox(
-                  width: 20.0,
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.5,
-                  child: TextField(
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(
-                        right: 100.0,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(
-                          5.0,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+//          Padding(
+//            padding: const EdgeInsets.all(8.0),
+//            child: Row(
+//              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//              children: <Widget>[
+//                Text(
+//                  tr('other.sale'),
+//                  style: TextStyle(
+//                    fontSize: 20.0,
+//                    color: Colors.black,
+//                  ),
+//                ),
+//                SizedBox(
+//                  width: 20.0,
+//                ),
+//                Container(
+//                  width: MediaQuery.of(context).size.width * 0.5,
+//                  child: TextField(
+//                    decoration: InputDecoration(
+//                      contentPadding: EdgeInsets.only(
+//                        right: 100.0,
+//                      ),
+//                      border: OutlineInputBorder(
+//                        borderRadius: BorderRadius.circular(
+//                          5.0,
+//                        ),
+//                      ),
+//                    ),
+//                  ),
+//                ),
+//              ],
+//            ),
+//          ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
