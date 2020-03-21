@@ -58,7 +58,7 @@ class TabBarScreen extends StatelessWidget {
           children: [
             SellesScreen(),
             CashScreen(),
-            TargetScreen(),
+            TargetGraphSenior(),
           ],
         ),
       ),

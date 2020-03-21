@@ -1,11 +1,61 @@
+import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
+class TargetGraphSenior extends StatefulWidget {
+  @override
+  _TargetGraphSeniorState createState() => _TargetGraphSeniorState();
+}
 
-class TargetScreen extends StatelessWidget {
+class ClicksPerYear {
+  final String year;
+  final int clicks;
+  final charts.Color color;
+
+  ClicksPerYear(this.year, this.clicks, Color color)
+      : this.color = charts.Color(
+      r: color.red, g: color.green, b: color.blue, a: color.alpha);
+}
+
+class _TargetGraphSeniorState extends State<TargetGraphSenior> {
+
   @override
   Widget build(BuildContext context) {
+    var data = [
+      ClicksPerYear('cash', 22, Colors.red),
+      ClicksPerYear('visits', 42, Colors.yellow),
+      ClicksPerYear('target',80, Colors.green),
+    ];
+
+    var series = [
+      charts.Series(
+        domainFn: (ClicksPerYear clickData, _) => clickData.year,
+        measureFn: (ClicksPerYear clickData, _) => clickData.clicks,
+        colorFn: (ClicksPerYear clickData, _) => clickData.color,
+        id: 'Clicks',
+        data: data,
+      ),
+    ];
+
+    var chart = charts.BarChart(
+      series,
+      animate: true,
+    );
+
+    var chartWidget = Padding(
+      padding: EdgeInsets.all(32.0),
+      child: SizedBox(
+        height: 200.0,
+        child: chart,
+      ),
+    );
+
     return Scaffold(
       body: Center(
-        child: Text('todo'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            chartWidget,
+          ],
+        ),
       ),
     );
   }
