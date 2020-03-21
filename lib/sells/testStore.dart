@@ -2,9 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:senior/sells/cartScreen.dart';
-import '../widgets/testStoreWidget.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:senior/widgets/properties.dart';
+import 'package:senior/widgets/qrReader.dart';
 
 class TestStore extends StatefulWidget {
   @override
@@ -19,14 +19,6 @@ class _TestStoreState extends State<TestStore> {
     'https://www.dw.com/image/37077830_303.jpg',
     'https://madosan.com.tr/assets/uploads/galeri/super-market-hiper-market/6b6ac887-23e6-49ac-b44d-e3d8ff6b52b8-jpg_1560158960.jpg'
   ];
-
-  void goToCartScreen() {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => CartScreen(),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,39 +75,7 @@ class _TestStoreState extends State<TestStore> {
                       color: Colors.blue,
                       fontSize: 33 * screenSize.aspectRatio),
                 ),
-                expanded: Column(
-                  children: <Widget>[
-                    ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: 10,
-                        itemBuilder: (context, index) {
-                          return TestStoreWidget();
-                        }),
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Container(
-                        height: 60.0,
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                          color: Colors.green,
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        child: FlatButton(
-                          onPressed: goToCartScreen,
-                          child: Text(
-                            tr('sells_store.check_out'),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+                expanded: Properties(),
               ),
             ),
             Padding(
@@ -132,39 +92,7 @@ class _TestStoreState extends State<TestStore> {
                       color: Colors.blue,
                       fontSize: 33 * screenSize.aspectRatio),
                 ),
-                expanded: Column(
-                  children: <Widget>[
-                    ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: 10,
-                        itemBuilder: (context, index) {
-                          return TestStoreWidget();
-                        }),
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Container(
-                        height: 60.0,
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                          color: Colors.green,
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        child: FlatButton(
-                          onPressed: goToCartScreen,
-                          child: Text(
-                            tr('sells_store.check_out'),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+                expanded: Properties(),
               ),
             ),
             Padding(
@@ -181,39 +109,7 @@ class _TestStoreState extends State<TestStore> {
                       color: Colors.blue,
                       fontSize: 33 * screenSize.aspectRatio),
                 ),
-                expanded: Column(
-                  children: <Widget>[
-                    ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: 10,
-                        itemBuilder: (context, index) {
-                          return TestStoreWidget();
-                        }),
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Container(
-                        height: 60.0,
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                          color: Colors.green,
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        child: FlatButton(
-                          onPressed: goToCartScreen,
-                          child: Text(
-                            tr('sells_store.check_out'),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+                expanded: Properties(),
               ),
             ),
             Padding(

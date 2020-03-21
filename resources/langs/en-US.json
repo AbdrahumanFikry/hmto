@@ -88,5 +88,16 @@
     "cash": "cash",
     "target": "target",
     "egp": "EGP"
+  },
+  "other": {
+    "items": "items",
+    "barCode": "Bar code",
+    "serial": "Serial number",
+    "qty": "quantity",
+    "sale": "Sale"
+  },
+  "driver_profile": {
+    "type": "Driver",
+    "bills": "Bills"
   }
 }

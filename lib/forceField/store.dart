@@ -6,7 +6,6 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pie_chart/pie_chart.dart';
 import '../widgets/trueAndFalse.dart';
-import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 import '../widgets/persent.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -218,7 +217,6 @@ class Store extends StatelessWidget {
               ),
             ),
             Divider(),
-            //------------------------------------chart----------------------------------//
             GestureDetector(
               onTap: () {
                 _showModalSheet(context);

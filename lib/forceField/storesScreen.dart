@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:senior/driver/driverStore.dart';
 import 'package:senior/sells/testStore.dart';
 import 'package:senior/widgets/qrReader.dart';
 import '../forceField/store.dart';
@@ -7,8 +8,9 @@ import 'package:easy_localization/easy_localization.dart';
 
 class StoresScreen extends StatelessWidget {
   final bool isSells;
+  final bool isDriver;
 
-  StoresScreen({this.isSells = false});
+  StoresScreen({this.isSells = false, this.isDriver = false});
 
   @override
   Widget build(BuildContext context) {
@@ -16,43 +18,53 @@ class StoresScreen extends StatelessWidget {
       itemCount: 5,
       itemBuilder: (ctx, index) {
         return index == 4
-            ? Column(
-                children: <Widget>[
-                  ListTile(
-                    title: Text(
-                      tr('field_force_profile.extra'),
-                    ),
-                    leading: ClipRRect(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
+            ? isDriver
+                ? null
+                : Column(
+                    children: <Widget>[
+                      ListTile(
+                        title: Text(
+                          tr('field_force_profile.extra'),
                         ),
-                        child: Icon(
-                          Icons.add,
-                          size: 30.0,
-                        )),
-                    onTap: () {
-                      isSells
-                          ? Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    QrReader(whereTo: TestStore()),
-                              ),
-                            )
-                          : Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    QrReader(whereTo: Store()),
-                              ),
-                            );
-                    },
-                  ),
-                  Divider(
-                    height: 2,
-                    indent: 0,
-                    endIndent: 50,
+                        leading: ClipRRect(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                          child: Icon(
+                            Icons.add,
+                            size: 30.0,
+                          ),
+                        ),
+                        onTap: () {
+                          isSells
+                              ? Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        QrReader(whereTo: TestStore()),
+                                  ),
+                                )
+                              : isDriver
+                                  ? Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => DriverStore(),
+                                      ),
+                                    )
+                                  : Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => QrReader(
+                                          whereTo: Store(),
+                                        ),
+                                      ),
+                                    );
+                        },
+                      ),
+                      Divider(
+                        height: 2,
+                        indent: 0,
+                        endIndent: 50,
+                      )
+                    ],
                   )
-                ],
-              )
             : Column(
                 children: <Widget>[
                   ListTile(
@@ -82,12 +94,18 @@ class StoresScreen extends StatelessWidget {
                                     QrReader(whereTo: TestStore()),
                               ),
                             )
-                          : Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    QrReader(whereTo: Store()),
-                              ),
-                            );
+                          : isDriver
+                              ? Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => DriverStore(),
+                                  ),
+                                )
+                              : Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        QrReader(whereTo: Store()),
+                                  ),
+                                );
                     },
                   ),
                   Divider(

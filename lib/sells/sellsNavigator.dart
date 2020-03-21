@@ -1,10 +1,15 @@
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:senior/driver/driverScreen.dart';
 import 'package:senior/sells/sellsMap.dart';
 import 'package:senior/sells/sellsProfile.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class SellsNavigator extends StatefulWidget {
+  final bool isDriver;
+
+  SellsNavigator({this.isDriver = false});
+
   @override
   _SellsNavigatorState createState() => _SellsNavigatorState();
 }
@@ -16,8 +21,10 @@ class _SellsNavigatorState extends State<SellsNavigator> {
   @override
   void initState() {
     _pages = [
-      SellsMap(),
-      SellsProfile(),
+      SellsMap(
+        isDriver: widget.isDriver,
+      ),
+      widget.isDriver ? DriverProfile() : SellsProfile(),
     ];
     super.initState();
   }

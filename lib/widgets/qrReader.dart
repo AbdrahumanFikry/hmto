@@ -8,7 +8,7 @@ class QrReader extends StatefulWidget {
   final Widget whereTo;
 
   QrReader({
-    @required this.whereTo,
+    this.whereTo,
   });
 
   @override

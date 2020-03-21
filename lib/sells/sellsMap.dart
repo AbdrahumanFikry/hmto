@@ -4,11 +4,16 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:app_settings/app_settings.dart';
+import 'package:senior/sells/cartScreen.dart';
 import 'package:senior/sells/testStore.dart';
 import '../providers/location.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class SellsMap extends StatefulWidget {
+  final bool isDriver;
+
+  SellsMap({this.isDriver = false});
+
   @override
   _SellsMapState createState() => _SellsMapState();
 }
@@ -40,11 +45,19 @@ class _SellsMapState extends State<SellsMap> {
       _markers.clear();
       final marker = Marker(
         onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => TestStore(),
-            ),
-          );
+          widget.isDriver
+              ? Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => CartScreen(
+                      isReady: true,
+                    ),
+                  ),
+                )
+              : Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => TestStore(),
+                  ),
+                );
         },
         markerId: MarkerId("curr_loc"),
         position: LatLng(currentLocation.latitude, currentLocation.longitude),

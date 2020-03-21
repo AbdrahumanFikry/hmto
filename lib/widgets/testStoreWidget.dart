@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
-class TestStoreWidget extends StatelessWidget {
-  final bool isCart;
+class CartScreenItem extends StatefulWidget {
+  final bool isReady;
 
-  TestStoreWidget({
-    this.isCart = false,
+  CartScreenItem({
+    this.isReady = false,
   });
+
+  @override
+  _CartScreenItemState createState() => _CartScreenItemState();
+}
+
+class _CartScreenItemState extends State<CartScreenItem> {
+  int qnt = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -13,64 +21,46 @@ class TestStoreWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          'Molto (30 PCS)',
-          style: TextStyle(
-            fontSize: 18.0,
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Row(
               children: <Widget>[
-                Icon(
-                  Icons.monetization_on,
-                  color: Colors.green,
-                  size: 20.0,
-                ),
                 Text(
-                  '5 EGP (total:20 EGP)',
+                  'Molto',
                   style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 16.0,
+                    color: Colors.black,
+                    fontSize: 20.0,
                   ),
                 ),
               ],
             ),
-            isCart
-                ? Icon(
+            Spacer(),
+            widget.isReady
+                ? SizedBox(
+                    width: 1,
+                  )
+                : Icon(
                     Icons.cancel,
                     size: 20.0,
                   )
-                : Row(
-                    children: <Widget>[
-                      Icon(
-                        Icons.add_shopping_cart,
-                        size: 20.0,
-                      ),
-                      SizedBox(
-                        width: 24.0,
-                      ),
-                      Icon(
-                        Icons.remove_shopping_cart,
-                        size: 24.0,
-                      ),
-                    ],
-                  )
           ],
+        ),
+        SizedBox(
+          height: 10.0,
         ),
         Row(
           children: <Widget>[
             Icon(
-              Icons.store,
+              Icons.monetization_on,
               color: Colors.green,
               size: 20.0,
             ),
+            SizedBox(
+              width: 10.0,
+            ),
             Text(
-              '5 PTS (total:20 PTS)',
+              '5 ' + tr('senior_profile.egp'),
               style: TextStyle(
                 color: Colors.grey,
                 fontSize: 16.0,
@@ -78,6 +68,74 @@ class TestStoreWidget extends StatelessWidget {
             ),
           ],
         ),
+        widget.isReady
+            ? Row(
+                children: <Widget>[
+                  Icon(
+                    Icons.queue,
+                    color: Colors.green,
+                    size: 20.0,
+                  ),
+                  SizedBox(
+                    width: 10.0,
+                  ),
+                  Text(
+                    '${tr('other.qty')} :' + qnt.toString(),
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                  Spacer(),
+                ],
+              )
+            : Row(
+                children: <Widget>[
+                  Icon(
+                    Icons.queue,
+                    color: Colors.green,
+                    size: 20.0,
+                  ),
+                  SizedBox(
+                    width: 10.0,
+                  ),
+                  Text(
+                    '${tr('other.qty')} :' + qnt.toString(),
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                  Spacer(),
+                  IconButton(
+                    icon: Icon(
+                      Icons.remove,
+                      color: Colors.green,
+                    ),
+                    onPressed: () {
+                      if (qnt != 1) {
+                        setState(() {
+                          qnt--;
+                        });
+                      }
+                    },
+                  ),
+                  SizedBox(
+                    width: 15.0,
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.add,
+                      color: Colors.green,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        qnt++;
+                      });
+                    },
+                  ),
+                ],
+              ),
         Divider(),
       ],
     );

@@ -88,5 +88,16 @@
     "cash": "كاش",
     "target": "تارجت",
     "egp": "جنيه"
+  },
+  "other": {
+    "items": "منتجات",
+    "barCode": "باركور",
+    "serial": "رقم تسلسلى",
+    "qty": "الكميه",
+    "sale": "خصم"
+  },
+  "driver_profile": {
+    "type": "سائق",
+    "bills": "فواتير"
   }
 }

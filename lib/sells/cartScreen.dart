@@ -4,9 +4,11 @@ import 'package:easy_localization/easy_localization.dart';
 
 class CartScreen extends StatelessWidget {
   final List items;
+  final bool isReady;
 
   CartScreen({
     this.items,
+    this.isReady = false,
   });
 
   void print() {
@@ -36,8 +38,8 @@ class CartScreen extends StatelessWidget {
             physics: NeverScrollableScrollPhysics(),
             itemCount: 10,
             itemBuilder: (ctx, index) {
-              return TestStoreWidget(
-                isCart: true,
+              return CartScreenItem(
+                isReady: isReady,
               );
             },
           ),
@@ -54,10 +56,43 @@ class CartScreen extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '2600 EGP',
+                  '2600 ' + tr('senior_profile.egp'),
                   style: TextStyle(
                     fontSize: 20.0,
-                    color: Colors.grey,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  tr('other.sale'),
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(
+                  width: 20.0,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  child: TextField(
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.only(
+                        right: 100.0,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(
+                          5.0,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -76,10 +111,10 @@ class CartScreen extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '5000 EGP',
+                  '5000 ' + tr('senior_profile.egp'),
                   style: TextStyle(
                     fontSize: 20.0,
-                    color: Colors.grey,
+                    color: Colors.black,
                   ),
                 ),
               ],
@@ -106,7 +141,7 @@ class CartScreen extends StatelessWidget {
                 ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );
