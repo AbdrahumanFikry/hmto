@@ -136,6 +136,9 @@ class _ForceFieldProfileState extends State<ForceFieldProfile>
                                           style: TextStyle(
                                             fontWeight: FontWeight.w700,
                                           ),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 2,
+                                          softWrap: true,
                                         ),
                                       ),
                                     ],
