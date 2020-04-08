@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:senior/auth/select.dart';
+import 'package:provider/provider.dart';
+import 'package:senior/forceField/forceFieldNavigator.dart';
+import 'package:senior/providers/authenticationProvider.dart';
+import 'package:senior/sells/sellsNavigator.dart';
+import 'package:senior/senior/tabBarForceField.dart';
+import 'package:senior/senior/tabBarSells.dart';
 import '../widgets/alertDialog.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class LoginScreen extends StatefulWidget {
-  final Color backgroundColor1;
-  final Color backgroundColor2;
-  final Color highlightColor;
   final Color foregroundColor;
-  final AssetImage logo;
 
   LoginScreen({
-    Key k,
-    this.backgroundColor1 = Colors.white,
-    this.backgroundColor2 = Colors.white,
-    this.highlightColor = Colors.green,
     this.foregroundColor = Colors.teal,
-    this.logo,
   });
 
   @override
@@ -36,23 +32,55 @@ class _LoginScreenState extends State<LoginScreen> {
         _isLoading = true;
       });
       try {
-//        await Provider.of<Auth>(context, listen: false)
-//            .logIn(email: _email, password: _password);
+        await Provider.of<Auth>(context, listen: false)
+            .logIn(email: _email, password: _password);
+        switch (Provider.of<Auth>(context, listen: false).type) {
+          case 'driver':
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => SellsNavigator(
+                  isDriver: true,
+                ),
+              ),
+            );
+            break;
+          case 'salles_man':
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => SellsNavigator(
+                  isDriver: false,
+                ),
+              ),
+            );
+            break;
+          case 'filed_force_man':
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => ForceFieldNavigator(),
+              ),
+            );
+            break;
+          case 'sales_senior':
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => TabBarScreenSells(),
+              ),
+            );
+            break;
+          case 'field_force_senior':
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => TabBarForceFieldScreen(),
+              ),
+            );
+            break;
+          default:
+            GlobalAlertDialog().showErrorDialog('Unknown user!', context);
+            break;
+        }
         setState(() {
           _isLoading = false;
         });
-//        Provider.of<Auth>(context, listen: false).type == 'Ads'
-//            ? Navigator.of(context).pushReplacement(
-//                MaterialPageRoute(
-//                  builder: (context) => SeniorAdsNavigator(),
-//                ),
-//              )
-//            :
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => Select(),
-          ),
-        );
       } catch (error) {
         GlobalAlertDialog().showErrorDialog(error.toString(), context);
         setState(() {
@@ -64,7 +92,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(':::::::::::::' + EasyLocalization.of(context).locale.toString());
     return Scaffold(
       body: SingleChildScrollView(
         child: Form(
@@ -76,8 +103,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 end: new Alignment(1.0, 0.0),
                 // 10% of the width, so there are ten blinds.
                 colors: [
-                  this.widget.backgroundColor1,
-                  this.widget.backgroundColor2
+                  Colors.white,
+                  Colors.white,
                 ],
                 // whitish to gray
                 tileMode:
@@ -203,7 +230,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   vertical: 20.0,
                                   horizontal: 20.0,
                                 ),
-                                color: this.widget.highlightColor,
+                                color: Colors.green,
                                 onPressed: _login,
                                 child: Text(
                                   tr('login_screen.login_button'),
