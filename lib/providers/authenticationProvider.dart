@@ -37,7 +37,6 @@ class Auth with ChangeNotifier {
         'client_id': '2',
         'client_secret': '83mW91iXZenucUT4paaGuDNnNL29OFp19EDN80CY',
       };
-
       final response = await http.post(
         url,
         body: body,
@@ -85,6 +84,7 @@ class Auth with ChangeNotifier {
     return true;
   }
 
+  //------------------------------- Logout -------------------------------------
   Future<void> logout() async {
     _token = null;
     _userId = null;

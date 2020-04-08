@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:senior/auth/loginScreen.dart';
 import 'package:senior/forceField/forceFieldNavigator.dart';
 import 'package:senior/providers/authenticationProvider.dart';
+import 'package:senior/providers/fieldForceProvider.dart';
 import 'package:senior/providers/location.dart';
 import 'package:senior/sells/sellsNavigator.dart';
 import 'package:senior/senior/tabBarForceField.dart';
@@ -15,7 +16,10 @@ main() {
   runApp(
     EasyLocalization(
       child: MyApp(),
-      supportedLocales: [Locale('en', 'US'), Locale('ar', 'DZ')],
+      supportedLocales: [
+        Locale('en', 'US'),
+        Locale('ar', 'DZ'),
+      ],
       path: 'resources/langs',
     ),
   );
@@ -63,6 +67,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => Auth(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => FieldForceData(),
         ),
       ],
       child: Consumer<Auth>(
