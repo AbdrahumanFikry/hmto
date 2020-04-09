@@ -6,8 +6,11 @@ import 'package:provider/provider.dart';
 import 'package:senior/auth/loginScreen.dart';
 import 'package:senior/forceField/forceFieldNavigator.dart';
 import 'package:senior/providers/authenticationProvider.dart';
+import 'package:senior/providers/driverProvider.dart';
 import 'package:senior/providers/fieldForceProvider.dart';
 import 'package:senior/providers/location.dart';
+import 'package:senior/providers/sellsProvider.dart';
+import 'package:senior/providers/seniorProvider.dart';
 import 'package:senior/sells/sellsNavigator.dart';
 import 'package:senior/senior/tabBarForceField.dart';
 import 'package:senior/senior/tabBarSells.dart';
@@ -70,6 +73,15 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => FieldForceData(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => SellsData(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => DriverData(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => SeniorData(),
         ),
       ],
       child: Consumer<Auth>(
