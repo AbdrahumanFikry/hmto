@@ -113,7 +113,11 @@ class MyApp extends StatelessWidget {
                   future: auth.tryAutoLogin(),
                   builder: (ctx, snapShot) =>
                       snapShot.connectionState == ConnectionState.waiting
-                          ? navigator(auth.type, context)
+                          ? Scaffold(
+                              body: Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                            )
                           : LoginScreen(),
                 ),
         ),

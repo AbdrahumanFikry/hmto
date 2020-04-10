@@ -1,6 +1,7 @@
 {
   "login_screen": {
-    "login_button": "Login"
+    "login_button": "Login",
+    "logout": "logout"
   },
   "navigator": {
     "map": "Map",

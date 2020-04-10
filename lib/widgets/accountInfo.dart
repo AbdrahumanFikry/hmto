@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:provider/provider.dart';
+import 'package:senior/auth/loginScreen.dart';
+import '../providers/authenticationProvider.dart';
 
 class AccountInfo extends StatelessWidget {
   final String name;
@@ -9,6 +12,15 @@ class AccountInfo extends StatelessWidget {
   AccountInfo({
     @required this.name,
   });
+
+  void _logout(BuildContext context) {
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (context) => LoginScreen(),
+        ),
+        (Route<dynamic> route) => false);
+    Provider.of<Auth>(context).logout();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,9 +89,7 @@ class AccountInfo extends StatelessWidget {
                       color: Colors.green,
                     ),
                     Padding(
-                      padding: EdgeInsets.only(
-                        left: 16,
-                      ),
+                      padding: EdgeInsets.all(5.0),
                       child: Text(
                         tr('field_force_profile.type'),
                         style: TextStyle(
@@ -92,42 +102,27 @@ class AccountInfo extends StatelessWidget {
                     ),
                   ],
                 ),
-//                Row(
-//                  mainAxisSize: MainAxisSize.min,
-//                  children: <Widget>[
-//                    Icon(
-//                      FontAwesomeIcons.question,
-//                      color: Colors.green,
-//                    ),
-//                    Padding(
-//                      padding: EdgeInsets.only(left: 16),
-//                      child: Text(
-//                        'qs',
-//                        style: TextStyle(
-//                          fontWeight: FontWeight.w700,
-//                        ),
-//                      ),
-//                    ),
-//                  ],
-//                ),
-//                Row(
-//                  mainAxisSize: MainAxisSize.min,
-//                  children: <Widget>[
-//                    Icon(
-//                      FontAwesomeIcons.bomb,
-//                      color: Colors.green,
-//                    ),
-//                    Padding(
-//                      padding: EdgeInsets.only(left: 16),
-//                      child: Text(
-//                        'comp'.length.toString(),
-//                        style: TextStyle(
-//                          fontWeight: FontWeight.w700,
-//                        ),
-//                      ),
-//                    ),
-//                  ],
-//                ),
+                InkWell(
+                  onTap: () => _logout(context),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Icon(
+                        FontAwesomeIcons.signOutAlt,
+                        color: Colors.green,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(5.0),
+                        child: Text(
+                          tr('login_screen.logout'),
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
