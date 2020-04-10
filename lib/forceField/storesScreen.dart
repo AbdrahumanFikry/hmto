@@ -10,7 +10,10 @@ class StoresScreen extends StatelessWidget {
   final bool isSells;
   final bool isDriver;
 
-  StoresScreen({this.isSells = false, this.isDriver = false});
+  StoresScreen({
+    this.isSells = false,
+    this.isDriver = false,
+  });
 
   @override
   Widget build(BuildContext context) {

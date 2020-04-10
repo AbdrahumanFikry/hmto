@@ -1,9 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:senior/forceField/storesScreen.dart';
 import 'package:senior/forceField/target.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:senior/providers/authenticationProvider.dart';
 import 'package:senior/widgets/accountInfo.dart';
 
 class ForceFieldProfile extends StatefulWidget {
@@ -68,7 +68,11 @@ class _ForceFieldProfileState extends State<ForceFieldProfile>
                     expandedHeight: 320,
                     flexibleSpace: FlexibleSpaceBar(
                       collapseMode: CollapseMode.parallax,
-                      background: AccountInfo(),
+                      background: Consumer<Auth>(
+                        builder: (context, auth, _) => AccountInfo(
+                          name: auth.userName,
+                        ),
+                      ),
                     ),
                   ),
                 ],

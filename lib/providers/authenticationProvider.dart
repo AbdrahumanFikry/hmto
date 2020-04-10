@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Auth with ChangeNotifier {
   String _token;
   String type;
+  String userName;
   int _userId;
   int _businessId;
 
@@ -47,6 +48,7 @@ class Auth with ChangeNotifier {
         _token = responseData['access_token'];
         _userId = responseData['user_id'];
         type = responseData['work_type'];
+        userName = responseData['first_name'] + ' ' + responseData['last_name'];
         _businessId = responseData['business_id'];
         print(
             'userID::::::$_userId\nBusinessId:::::$_businessId\nType:::::$type\nToken:::::$_token\n');
@@ -55,6 +57,7 @@ class Auth with ChangeNotifier {
           'token': _token,
           'userId': _userId,
           'type': type,
+          'userName': userName,
           'businessId': _businessId,
         };
         prefs.setString('userData', json.encode(userData));
@@ -80,6 +83,7 @@ class Auth with ChangeNotifier {
     _userId = extractedUserData['userId'];
     type = extractedUserData['type'];
     _businessId = extractedUserData['business_id'];
+    userName = extractedUserData['userName'];
     notifyListeners();
     return true;
   }
@@ -89,6 +93,7 @@ class Auth with ChangeNotifier {
     _token = null;
     _userId = null;
     type = null;
+    userName = null;
     _businessId = null;
     notifyListeners();
     final prefs = await SharedPreferences.getInstance();

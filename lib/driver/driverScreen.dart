@@ -1,9 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
+import '../providers/authenticationProvider.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:senior/forceField/storesScreen.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:senior/widgets/accountInfo.dart';
 
 class DriverProfile extends StatefulWidget {
@@ -15,7 +13,6 @@ class _DriverProfileState extends State<DriverProfile>
     with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
         body: Column(
@@ -41,7 +38,11 @@ class _DriverProfileState extends State<DriverProfile>
                     expandedHeight: 325.250,
                     flexibleSpace: FlexibleSpaceBar(
                       collapseMode: CollapseMode.parallax,
-                      background: AccountInfo(),
+                      background: Consumer<Auth>(
+                        builder: (context, auth, _) => AccountInfo(
+                          name: auth.userName,
+                        ),
+                      ),
                     ),
                   ),
                 ],
