@@ -25,6 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isLoading = false;
 
   Future<void> _login() async {
+    FocusScope.of(context).requestFocus(new FocusNode());
     final formData = _formKey.currentState;
     if (formData.validate()) {
       formData.save();

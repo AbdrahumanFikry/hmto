@@ -19,7 +19,7 @@ class AccountInfo extends StatelessWidget {
           builder: (context) => LoginScreen(),
         ),
         (Route<dynamic> route) => false);
-    Provider.of<Auth>(context).logout();
+    Provider.of<Auth>(context, listen: false).logout();
   }
 
   @override
