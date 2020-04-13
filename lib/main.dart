@@ -15,6 +15,8 @@ import 'package:senior/sells/sellsNavigator.dart';
 import 'package:senior/senior/tabBarForceField.dart';
 import 'package:senior/senior/tabBarSells.dart';
 
+import 'forceField/addStore.dart';
+
 main() {
   runApp(
     EasyLocalization(
@@ -123,7 +125,7 @@ class MyApp extends StatelessWidget {
                                 child: CircularProgressIndicator(),
                               ),
                             )
-                          : LoginScreen(),
+                          : AdsAddStore(),
                 ),
         ),
       ),
