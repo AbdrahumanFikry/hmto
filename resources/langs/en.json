@@ -103,5 +103,8 @@
   "driver_profile": {
     "type": "Driver",
     "bills": "Bills"
+  },
+  "extra": {
+    "images": "4 images required"
   }
 }

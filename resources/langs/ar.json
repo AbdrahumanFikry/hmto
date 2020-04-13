@@ -103,5 +103,8 @@
   "driver_profile": {
     "type": "سائق",
     "bills": "فواتير"
+  },
+  "extra": {
+    "images": "مطلوب 4 صور"
   }
 }

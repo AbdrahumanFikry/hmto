@@ -76,14 +76,14 @@ class _LoginScreenState extends State<LoginScreen> {
             );
             break;
           default:
-            GlobalAlertDialog().showErrorDialog('Unknown user!', context);
+            GlobalAlertDialog.showErrorDialog('Unknown user!', context);
             break;
         }
         setState(() {
           _isLoading = false;
         });
       } catch (error) {
-        GlobalAlertDialog().showErrorDialog(error.toString(), context);
+        GlobalAlertDialog.showErrorDialog(error.toString(), context);
         setState(() {
           _isLoading = false;
         });
@@ -113,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             height: MediaQuery.of(context).size.height,
-            child: Column(
+            child: ListView(
               children: <Widget>[
                 Container(
                   padding: const EdgeInsets.only(top: 80.0, bottom: 50.0),

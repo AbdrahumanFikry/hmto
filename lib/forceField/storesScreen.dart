@@ -42,9 +42,11 @@ class StoresScreen extends StatelessWidget {
                           isSells
                               ? Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        QrReader(whereTo: TestStore()),
-                                  ),
+                                      builder: (context) =>
+//                                        QrReader(whereTo:
+                                          TestStore()
+//                                        ),
+                                      ),
                                 )
                               : isDriver
                                   ? Navigator.of(context).push(
@@ -54,9 +56,11 @@ class StoresScreen extends StatelessWidget {
                                     )
                                   : Navigator.of(context).push(
                                       MaterialPageRoute(
-                                        builder: (context) => QrReader(
-                                          whereTo: Store(),
-                                        ),
+                                        builder: (context) =>
+//                                            QrReader(
+//                                          whereTo:
+                                            Store(),
+//                                        ),
                                       ),
                                     );
                         },
@@ -93,9 +97,11 @@ class StoresScreen extends StatelessWidget {
                       isSells
                           ? Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    QrReader(whereTo: TestStore()),
-                              ),
+                                  builder: (context) =>
+//                                    QrReader(whereTo:
+                                      TestStore()
+//                                    ),
+                                  ),
                             )
                           : isDriver
                               ? Navigator.of(context).push(
@@ -105,9 +111,11 @@ class StoresScreen extends StatelessWidget {
                                 )
                               : Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        QrReader(whereTo: Store()),
-                                  ),
+                                      builder: (context) =>
+//                                        QrReader(whereTo:
+                                          Store()
+//                                        ),
+                                      ),
                                 );
                     },
                   ),

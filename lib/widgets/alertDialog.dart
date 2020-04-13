@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/globalDialog.dart';
 
 class GlobalAlertDialog {
-  void showErrorDialog(String errorMessage, BuildContext context) {
+  static void showErrorDialog(String errorMessage, BuildContext context) {
     showDialog(
       context: context,
       builder: (ctx) => GlobalDialog(

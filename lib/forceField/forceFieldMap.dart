@@ -36,13 +36,19 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
   void _getLocation() async {
     currentLocation = await Geolocator()
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
+    _getAddress(currentLocation);
     setState(() {
       _markers.clear();
       final marker = Marker(
         onTap: () {
+          print(currentLocation.latitude.toString());
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => AdsAddStore(),
+              builder: (context) => AdsAddStore(
+                lat: currentLocation.latitude,
+                long: currentLocation.longitude,
+                address: address,
+              ),
             ),
           );
         },

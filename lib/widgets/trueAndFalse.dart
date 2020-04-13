@@ -2,11 +2,17 @@ import 'package:flutter/material.dart';
 
 class TrueAndFalse extends StatefulWidget {
   final int index;
+  final Function onSavedTrue;
   final String question;
+  final String answer;
+  final Function onSavedFalse;
 
   TrueAndFalse({
     this.index,
+    this.onSavedTrue,
+    this.answer,
     this.question,
+    this.onSavedFalse,
   });
 
   @override
@@ -14,10 +20,9 @@ class TrueAndFalse extends StatefulWidget {
 }
 
 class _TrueAndFalseState extends State<TrueAndFalse> {
-  String answer;
-
   @override
   Widget build(BuildContext context) {
+    print('::::::::::::' + widget.answer);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -38,18 +43,14 @@ class _TrueAndFalseState extends State<TrueAndFalse> {
             ),
             InkWell(
               splashColor: Colors.transparent,
-              onTap: () {
-                setState(() {
-                  answer = 'true';
-                });
-              },
+              onTap: widget.onSavedTrue,
               child: Container(
                 height: 50,
                 width: 50,
                 decoration: BoxDecoration(
                   //boxShadow: [BoxShadow()],
                   shape: BoxShape.circle,
-                  color: answer == 'true' ? Colors.blue : Colors.green,
+                  color: widget.answer == 'true' ? Colors.blue : Colors.green,
                   border: Border.all(
                     color: Colors.black12,
                   ),
@@ -66,18 +67,14 @@ class _TrueAndFalseState extends State<TrueAndFalse> {
             ),
             InkWell(
               splashColor: Colors.transparent,
-              onTap: () {
-                setState(() {
-                  answer = 'false';
-                });
-              },
+              onTap: widget.onSavedFalse,
               child: Container(
                 height: 50,
                 width: 50,
                 decoration: BoxDecoration(
                   //boxShadow: [BoxShadow()],
                   shape: BoxShape.circle,
-                  color: answer == 'false' ? Colors.blue : Colors.green,
+                  color: widget.answer == 'false' ? Colors.blue : Colors.green,
                   border: Border.all(color: Colors.black12),
                 ),
                 child: Icon(
