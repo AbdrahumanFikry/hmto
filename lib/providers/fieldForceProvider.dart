@@ -14,7 +14,7 @@ class FieldForceData with ChangeNotifier {
   int businessId;
   String progress = '0';
 
-  Dio dio;
+  var dio = Dio();
   QuestionsList questionsList;
   List<Question> trueAndFalse;
   List<Question> longAnswerQuestion;
@@ -23,9 +23,10 @@ class FieldForceData with ChangeNotifier {
   Future<void> fetchQuestions() async {
     const url = 'https://api.hmto-eleader.com/api/questions';
     try {
-      final response = await http.get(
-        url,
-      );
+      await fetchUserData();
+      final response = await http.get(url, headers: {
+        'Authorization': 'Bearer $token',
+      });
       final Map responseData = json.decode(response.body);
       if (response.statusCode >= 200 && response.statusCode < 300) {
         print('::::::::::::::::' + responseData.toString());
@@ -63,9 +64,12 @@ class FieldForceData with ChangeNotifier {
     String position,
     String answers,
   }) async {
+    await fetchUserData();
     const url = 'https://api.hmto-eleader.com/api/add_field_force_shop';
     try {
-      await fetchUserData();
+      print('::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: '
+          '\n$shopName\n$customerName\n$customerPhone\n$sellsName\n$sellsPhone\n'
+          '$rate\n$answers\n$lat\n$long\n$landmark\n$position\n$businessId\n$userId\n$image1\n$image2\n$image3\n$image4');
       var formData = FormData();
       formData.fields..add(MapEntry('business_id', businessId.toString()));
       formData.fields..add(MapEntry('supplier_business_name', shopName));
@@ -104,21 +108,24 @@ class FieldForceData with ChangeNotifier {
       formData.fields..add(MapEntry('position', position));
       formData.fields..add(MapEntry('created_by', userId.toString()));
       formData.fields..add(MapEntry('questionsAnswer', answers));
-      var response =
-          await dio.post(url, data: formData, onSendProgress: (sent, total) {
-        progress = (sent / total * 100).toStringAsFixed(0);
-        notifyListeners();
-      }
+      var response = await dio.post(
+        url,
+        data: formData,
+        onSendProgress: (sent, total) {
+          progress = (sent / total * 100).toStringAsFixed(0);
+          notifyListeners();
+        },
 //        options: Options(
 //            followRedirects: false,
 //            validateStatus: (status) {
 //              return status == 500;
 //            }),
-              );
+      );
       print(':::::::::::::::' + response.toString());
       notifyListeners();
       return true;
     } catch (error) {
+      print(error.toString());
       throw error;
     }
   }

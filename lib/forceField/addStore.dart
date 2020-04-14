@@ -69,21 +69,27 @@ class _AdsAddStoreState extends State<AdsAddStore> {
             "data": questionsAnswer
           })}\n${widget.lat}\n${widget.long}');
           await Provider.of<FieldForceData>(context, listen: false).addNewShop(
-            shopName: shopName,
-            customerName: customerName,
-            customerPhone: customerPhone,
-            sellsName: sellsName,
-            sellsPhone: sellsPhone,
-            rate: rate,
-            image1: images[0],
-            image2: images[1],
-            image3: images[2],
-            image4: images[3],
-            answers: json.encode({"data": questionsAnswer}),
-            lat: widget.lat.toString(),
-            long: widget.long.toString(),
-            landmark: widget.address,
-            position: widget.address,
+            shopName: shopName == null ? 'Nothing' : shopName,
+            customerName: customerName == null ? 'Nothing' : customerName,
+            customerPhone: customerPhone == null ? 'Nothing' : customerPhone,
+            sellsName: sellsName == null ? 'Nothing' : sellsName,
+            sellsPhone: sellsPhone == null ? 'Nothing' : sellsPhone,
+            rate: rate == null ? 'Nothing' : rate,
+            image1: images[0] == null ? 'Nothing' : images[0],
+            image2: images[1] == null ? 'Nothing' : images[1],
+            image3: images[2] == null ? 'Nothing' : images[2],
+            image4: images[3] == null ? 'Nothing' : images[3],
+            answers: json.encode({"data": questionsAnswer}) == null
+                ? 'Nothing'
+                : json.encode({"data": questionsAnswer}),
+            lat: widget.lat.toString() == null
+                ? '31.000'
+                : widget.lat.toString(),
+            long: widget.long.toString() == null
+                ? '31.00'
+                : widget.long.toString(),
+            landmark: widget.address == null ? 'Nothing' : widget.address,
+            position: widget.address == null ? 'Nothing' : widget.address,
           );
           setState(() {
             _isLoading = false;
