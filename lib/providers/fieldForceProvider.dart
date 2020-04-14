@@ -113,20 +113,29 @@ class FieldForceData with ChangeNotifier {
         data: formData,
         onSendProgress: (sent, total) {
           progress = (sent / total * 100).toStringAsFixed(0);
+          print(progress);
           notifyListeners();
         },
-//        options: Options(
+        options: Options(
+          headers: {
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
 //            followRedirects: false,
 //            validateStatus: (status) {
 //              return status == 500;
-//            }),
+//            },
+        ),
       );
       print(':::::::::::::::' + response.toString());
       notifyListeners();
       return true;
     } catch (error) {
+      if (!error.toString().contains(
+          'DioError [DioErrorType.DEFAULT]: FormatException: Unexpected character (at character 1)')) {
+        throw error;
+      }
       print(error.toString());
-      throw error;
     }
   }
 

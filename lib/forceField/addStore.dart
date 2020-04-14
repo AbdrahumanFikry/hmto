@@ -64,10 +64,6 @@ class _AdsAddStoreState extends State<AdsAddStore> {
           _isLoading = true;
         });
         try {
-          print(
-              ':::: $shopName\n$customerName\n$customerPhone\n$sellsName\n$sellsPhone\n$rate\n${json.encode({
-            "data": questionsAnswer
-          })}\n${widget.lat}\n${widget.long}');
           await Provider.of<FieldForceData>(context, listen: false).addNewShop(
             shopName: shopName == null ? 'Nothing' : shopName,
             customerName: customerName == null ? 'Nothing' : customerName,

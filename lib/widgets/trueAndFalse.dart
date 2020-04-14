@@ -24,7 +24,6 @@ class _TrueAndFalseState extends State<TrueAndFalse> {
 
   @override
   Widget build(BuildContext context) {
-    print('::::::::::::' + widget.answer);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
