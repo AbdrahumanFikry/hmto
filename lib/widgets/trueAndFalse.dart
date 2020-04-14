@@ -50,7 +50,7 @@ class _TrueAndFalseState extends State<TrueAndFalse> {
                 decoration: BoxDecoration(
                   //boxShadow: [BoxShadow()],
                   shape: BoxShape.circle,
-                  color: widget.answer == 'true' ? Colors.blue : Colors.green,
+                  color: widget.answer == 'True' ? Colors.blue : Colors.green,
                   border: Border.all(
                     color: Colors.black12,
                   ),
@@ -74,7 +74,7 @@ class _TrueAndFalseState extends State<TrueAndFalse> {
                 decoration: BoxDecoration(
                   //boxShadow: [BoxShadow()],
                   shape: BoxShape.circle,
-                  color: widget.answer == 'false' ? Colors.blue : Colors.green,
+                  color: widget.answer == 'False' ? Colors.blue : Colors.green,
                   border: Border.all(color: Colors.black12),
                 ),
                 child: Icon(

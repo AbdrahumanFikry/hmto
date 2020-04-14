@@ -73,13 +73,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => Auth(),
         ),
-        ChangeNotifierProxyProvider<Auth, FieldForceData>(
-          update: (context, auth, previousItems) => FieldForceData(
-            auth.token,
-            auth.userId,
-            auth.userName,
-            auth.businessId,
-          ),
+        ChangeNotifierProvider(
+          create: (context) => FieldForceData(),
         ),
         ChangeNotifierProvider(
           create: (context) => SellsData(),

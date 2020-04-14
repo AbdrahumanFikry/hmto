@@ -113,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             height: MediaQuery.of(context).size.height,
-            child: ListView(
+            child: Column(
               children: <Widget>[
                 Container(
                   padding: const EdgeInsets.only(top: 80.0, bottom: 50.0),

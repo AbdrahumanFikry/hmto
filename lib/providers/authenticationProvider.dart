@@ -82,7 +82,7 @@ class Auth with ChangeNotifier {
     _token = extractedUserData['token'];
     _userId = extractedUserData['userId'];
     type = extractedUserData['type'];
-    _businessId = extractedUserData['business_id'];
+    _businessId = extractedUserData['businessId'];
     userName = extractedUserData['userName'];
     notifyListeners();
     return true;
