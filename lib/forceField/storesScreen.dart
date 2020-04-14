@@ -113,7 +113,7 @@ class StoresScreen extends StatelessWidget {
                                   MaterialPageRoute(
                                       builder: (context) =>
 //                                        QrReader(whereTo:
-                                          Store()
+                                          QrReader()
 //                                        ),
                                       ),
                                 );

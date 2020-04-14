@@ -5,15 +5,21 @@ import '../models/httpExceptionModel.dart';
 import '../models/questions.dart';
 import 'package:dio/dio.dart';
 import 'dart:io';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class FieldForceData with ChangeNotifier {
-  String token;
-  int userId;
-  String userName;
-  int businessId;
-  String progress = '0';
-  var dio = Dio();
+  final String token;
+  final int userId;
+  final String userName;
+  final int businessId;
+
+  FieldForceData(
+    this.token,
+    this.userId,
+    this.userName,
+    this.businessId,
+  );
+
+  Dio dio;
   QuestionsList questionsList;
   List<Question> trueAndFalse;
   List<Question> longAnswerQuestion;
@@ -64,8 +70,6 @@ class FieldForceData with ChangeNotifier {
   }) async {
     const url = 'https://api.hmto-eleader.com/api/add_field_force_shop';
     try {
-      await fetchData();
-      print('::::::::::' + businessId.toString());
       var formData = FormData();
       formData.fields..add(MapEntry('business_id', businessId.toString()));
       formData.fields..add(MapEntry('supplier_business_name', shopName));
@@ -104,18 +108,15 @@ class FieldForceData with ChangeNotifier {
       formData.fields..add(MapEntry('position', position));
       formData.fields..add(MapEntry('created_by', userId.toString()));
       formData.fields..add(MapEntry('questionsAnswer', answers));
-      var response =
-          await dio.post(url, data: formData, onSendProgress: (send, total) {
-        progress = (send / total * 100).toStringAsFixed(0);
-        notifyListeners();
-        print(send / total * 100);
-      }
+      var response = await dio.post(
+        url,
+        data: formData,
 //        options: Options(
-//          followRedirects: false,
-//          validateStatus: (status) {
-//            return status == 500;
-//          }),
-              );
+//            followRedirects: false,
+//            validateStatus: (status) {
+//              return status == 500;
+//            }),
+      );
       print(':::::::::::::::' + response.toString());
       notifyListeners();
       return true;
@@ -124,19 +125,17 @@ class FieldForceData with ChangeNotifier {
     }
   }
 
-  //------------------------------ fetch Data ----------------------------------
-  Future<bool> fetchData() async {
-    final prefs = await SharedPreferences.getInstance();
-    if (!prefs.containsKey('userData')) {
-      return false;
-    }
-    final extractedUserData =
-        json.decode(prefs.getString('userData')) as Map<String, Object>;
-    token = extractedUserData['token'];
-    userId = extractedUserData['userId'];
-    businessId = extractedUserData['businessId'];
-    userName = extractedUserData['userName'];
-    notifyListeners();
-    return true;
+  Future<void> sendQrData(
+      {String qrData, int userId}) async {
+    String url = 'https://api.hmto-eleader.com/api/store/visited';
+    var body = {
+      "qrcode": "$qrData",
+      "user_id": "$userId",
+    };
+    print(body.toString());
+    await http.post(url, body: body).then((response) {
+      print('Response status : ${response.statusCode}');
+      print('Response body : ${response.body}');
+    });
   }
 }
