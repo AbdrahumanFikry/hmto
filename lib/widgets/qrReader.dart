@@ -36,9 +36,8 @@ class _QrReaderState extends State<QrReader> {
           builder: (context) => Store(),
         ),
       );
-      await Provider.of<FieldForceData>(context, listen: false).sendQrData(
+      await Provider.of<FieldForceData>(context, listen: false).qrReader(
         qrData: barcode,
-        userId: 1,
       );
     }
   }

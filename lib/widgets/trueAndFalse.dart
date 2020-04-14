@@ -20,6 +20,8 @@ class TrueAndFalse extends StatefulWidget {
 }
 
 class _TrueAndFalseState extends State<TrueAndFalse> {
+  String answer = '';
+
   @override
   Widget build(BuildContext context) {
     print('::::::::::::' + widget.answer);
@@ -43,14 +45,19 @@ class _TrueAndFalseState extends State<TrueAndFalse> {
             ),
             InkWell(
               splashColor: Colors.transparent,
-              onTap: widget.onSavedTrue,
+              onTap: () {
+                widget.onSavedTrue();
+                setState(() {
+                  answer = 'True';
+                });
+              },
               child: Container(
                 height: 50,
                 width: 50,
                 decoration: BoxDecoration(
                   //boxShadow: [BoxShadow()],
                   shape: BoxShape.circle,
-                  color: widget.answer == 'True' ? Colors.blue : Colors.green,
+                  color: answer == 'True' ? Colors.blue : Colors.green,
                   border: Border.all(
                     color: Colors.black12,
                   ),
@@ -67,14 +74,19 @@ class _TrueAndFalseState extends State<TrueAndFalse> {
             ),
             InkWell(
               splashColor: Colors.transparent,
-              onTap: widget.onSavedFalse,
+              onTap: () {
+                widget.onSavedFalse();
+                setState(() {
+                  answer = 'False';
+                });
+              },
               child: Container(
                 height: 50,
                 width: 50,
                 decoration: BoxDecoration(
                   //boxShadow: [BoxShadow()],
                   shape: BoxShape.circle,
-                  color: widget.answer == 'False' ? Colors.blue : Colors.green,
+                  color: answer == 'False' ? Colors.blue : Colors.green,
                   border: Border.all(color: Colors.black12),
                 ),
                 child: Icon(

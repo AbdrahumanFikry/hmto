@@ -5,19 +5,14 @@ import '../models/httpExceptionModel.dart';
 import '../models/questions.dart';
 import 'package:dio/dio.dart';
 import 'dart:io';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FieldForceData with ChangeNotifier {
-  final String token;
-  final int userId;
-  final String userName;
-  final int businessId;
-
-  FieldForceData(
-    this.token,
-    this.userId,
-    this.userName,
-    this.businessId,
-  );
+  String token;
+  int userId;
+  String userName;
+  int businessId;
+  String progress = '0';
 
   Dio dio;
   QuestionsList questionsList;
@@ -70,6 +65,7 @@ class FieldForceData with ChangeNotifier {
   }) async {
     const url = 'https://api.hmto-eleader.com/api/add_field_force_shop';
     try {
+      await fetchUserData();
       var formData = FormData();
       formData.fields..add(MapEntry('business_id', businessId.toString()));
       formData.fields..add(MapEntry('supplier_business_name', shopName));
@@ -108,15 +104,17 @@ class FieldForceData with ChangeNotifier {
       formData.fields..add(MapEntry('position', position));
       formData.fields..add(MapEntry('created_by', userId.toString()));
       formData.fields..add(MapEntry('questionsAnswer', answers));
-      var response = await dio.post(
-        url,
-        data: formData,
+      var response =
+          await dio.post(url, data: formData, onSendProgress: (sent, total) {
+        progress = (sent / total * 100).toStringAsFixed(0);
+        notifyListeners();
+      }
 //        options: Options(
 //            followRedirects: false,
 //            validateStatus: (status) {
 //              return status == 500;
 //            }),
-      );
+              );
       print(':::::::::::::::' + response.toString());
       notifyListeners();
       return true;
@@ -125,17 +123,39 @@ class FieldForceData with ChangeNotifier {
     }
   }
 
-  Future<void> sendQrData(
-      {String qrData, int userId}) async {
-    String url = 'https://api.hmto-eleader.com/api/store/visited';
-    var body = {
-      "qrcode": "$qrData",
-      "user_id": "$userId",
-    };
-    print(body.toString());
-    await http.post(url, body: body).then((response) {
-      print('Response status : ${response.statusCode}');
-      print('Response body : ${response.body}');
-    });
+  //----------------------------- Fetch Data -----------------------------------
+  Future<bool> fetchUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (!prefs.containsKey('userData')) {
+      return false;
+    }
+    final extractedUserData =
+        json.decode(prefs.getString('userData')) as Map<String, Object>;
+    token = extractedUserData['token'];
+    userId = extractedUserData['userId'];
+    businessId = extractedUserData['businessId'];
+    userName = extractedUserData['userName'];
+    notifyListeners();
+    return true;
+  }
+
+  //------------------------------ Qr reader -----------------------------------
+  Future<void> qrReader({String qrData}) async {
+    const url = 'https://api.hmto-eleader.com/api/store/visited';
+    try {
+      final response = await http.post(url, body: {
+        "qrcode": "$qrData",
+        "user_id": "$userId",
+      });
+      final Map responseData = json.decode(response.body);
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        print('::::::::::::::::' + responseData.toString());
+        return true;
+      } else {
+        throw HttpException(message: responseData['error']);
+      }
+    } catch (error) {
+      throw error;
+    }
   }
 }
