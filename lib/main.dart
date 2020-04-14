@@ -14,6 +14,7 @@ import 'package:senior/providers/seniorProvider.dart';
 import 'package:senior/sells/sellsNavigator.dart';
 import 'package:senior/senior/tabBarForceField.dart';
 import 'package:senior/senior/tabBarSells.dart';
+import 'package:senior/widgets/qrReader.dart';
 
 import 'forceField/addStore.dart';
 
@@ -125,7 +126,7 @@ class MyApp extends StatelessWidget {
                                 child: CircularProgressIndicator(),
                               ),
                             )
-                          : AdsAddStore(),
+                          :LoginScreen(),
                 ),
         ),
       ),

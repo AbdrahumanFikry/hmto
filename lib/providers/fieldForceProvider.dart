@@ -124,4 +124,18 @@ class FieldForceData with ChangeNotifier {
       throw error;
     }
   }
+
+  Future<void> sendQrData(
+      {String qrData, int userId}) async {
+    String url = 'https://api.hmto-eleader.com/api/store/visited';
+    var body = {
+      "qrcode": "$qrData",
+      "user_id": "$userId",
+    };
+    print(body.toString());
+    await http.post(url, body: body).then((response) {
+      print('Response status : ${response.statusCode}');
+      print('Response body : ${response.body}');
+    });
+  }
 }
