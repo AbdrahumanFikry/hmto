@@ -122,7 +122,7 @@ class MyApp extends StatelessWidget {
                                 child: CircularProgressIndicator(),
                               ),
                             )
-                          :Store(),
+                          :LoginScreen(),
                 ),
         ),
       ),
