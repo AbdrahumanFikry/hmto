@@ -5,6 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:senior/auth/loginScreen.dart';
 import 'package:senior/forceField/forceFieldNavigator.dart';
+import 'package:senior/forceField/store.dart';
 import 'package:senior/providers/authenticationProvider.dart';
 import 'package:senior/providers/driverProvider.dart';
 import 'package:senior/providers/fieldForceProvider.dart';

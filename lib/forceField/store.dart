@@ -49,12 +49,11 @@ class Store extends StatelessWidget {
       builder: (builder) {
         return Container(
           height: 400,
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
+          child:  Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              //crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
+                SizedBox(height: 20.0,),
                 Text(
                   'Change percent',
                   style: TextStyle(
@@ -87,7 +86,7 @@ class Store extends StatelessWidget {
                 ),
               ],
             ),
-          ),
+
 //          padding: EdgeInsets.all(40.0),
         );
       },
@@ -127,7 +126,7 @@ class Store extends StatelessWidget {
               child: Padding(
                 padding:
                     EdgeInsets.symmetric(vertical: 16 * screenSize.aspectRatio),
-                child: Row(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     Text(
@@ -155,10 +154,12 @@ class Store extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Icon(
-                    FontAwesomeIcons.mapMarkerAlt,
-                    color: Colors.green,
-                    size: 25,
+                  Flexible(
+                    child: Icon(
+                      FontAwesomeIcons.mapMarkerAlt,
+                      color: Colors.green,
+                      size: 25,
+                    ),
                   ),
                   Text('el hadded St in front of This Long Name'),
                 ],
@@ -170,6 +171,7 @@ class Store extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   Row(
+
                     children: <Widget>[
                       Icon(FontAwesomeIcons.phone),
                       Padding(
