@@ -14,6 +14,7 @@ class FieldForceData with ChangeNotifier {
   String userName;
   int businessId;
   String progress = '0';
+  String qrResult;
 
   var dio = Dio();
   QuestionsList questionsList;
@@ -178,6 +179,7 @@ class FieldForceData with ChangeNotifier {
       final Map responseData = json.decode(response.body);
       if (response.statusCode >= 200 && response.statusCode < 300) {
         print('::::::::::::::::' + responseData.toString());
+        qrResult = responseData['status'];
         return true;
       } else {
         throw HttpException(message: responseData['error']);

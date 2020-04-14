@@ -7,6 +7,7 @@ import 'package:qrscan/qrscan.dart' as scanner;
 import 'package:senior/forceField/store.dart';
 import 'package:senior/providers/fieldForceProvider.dart';
 import 'package:senior/sells/testStore.dart';
+import 'package:senior/widgets/alertDialog.dart';
 
 class QrReader extends StatefulWidget {
   final Widget whereTo;
@@ -31,14 +32,20 @@ class _QrReaderState extends State<QrReader> {
     } else {
       this._outputController.text = barcode;
       print('BarCode Output : ' + barcode);
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => Store(),
-        ),
-      );
       await Provider.of<FieldForceData>(context, listen: false).qrReader(
         qrData: barcode,
       );
+      if (Provider.of<FieldForceData>(context, listen: false).qrResult ==
+          'visited') {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => Store(),
+          ),
+        );
+      } else {
+        Navigator.of(context).pop();
+        GlobalAlertDialog.showErrorDialog('Try again', context);
+      }
     }
   }
 
@@ -51,13 +58,10 @@ class _QrReaderState extends State<QrReader> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: Colors.grey[300],
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
+    return Scaffold(
+      backgroundColor: Colors.grey[300],
+      body: Center(
+        child: CircularProgressIndicator(),
       ),
     );
   }
