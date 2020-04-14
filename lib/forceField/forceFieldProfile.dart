@@ -4,6 +4,7 @@ import 'package:senior/forceField/storesScreen.dart';
 import 'package:senior/forceField/target.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:senior/providers/authenticationProvider.dart';
+import 'package:senior/providers/fieldForceProvider.dart';
 import 'package:senior/widgets/accountInfo.dart';
 
 class ForceFieldProfile extends StatefulWidget {
@@ -56,7 +57,13 @@ class _ForceFieldProfileState extends State<ForceFieldProfile>
                     controller: pageController,
                     physics: NeverScrollableScrollPhysics(),
                     children: <Widget>[
-                      StoresScreen(),
+                      Consumer<FieldForceData>(
+                        builder: (context, data, child) => StoresScreen(
+                          isSells: false,
+                          isDriver: false,
+                          data: data.stores.data,
+                        ),
+                      ),
                       Target(),
                     ],
                   ),

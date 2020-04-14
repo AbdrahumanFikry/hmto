@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:senior/forceField/forceFieldMap.dart';
 import 'package:senior/forceField/forceFieldProfile.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:provider/provider.dart';
+import '../providers/fieldForceProvider.dart';
 
 class ForceFieldNavigator extends StatefulWidget {
   @override
@@ -32,7 +34,64 @@ class _ForceFieldNavigatorState extends State<ForceFieldNavigator> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: _pages[index],
+        body: FutureBuilder(
+            future:
+                Provider.of<FieldForceData>(context, listen: false).stores ==
+                        null
+                    ? Provider.of<FieldForceData>(context, listen: false)
+                        .fetchStores()
+                    : null,
+            builder: (context, dataSnapShot) {
+              if (dataSnapShot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else {
+                if (dataSnapShot.hasError) {
+                  return Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          'Check your internet connection',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20.0,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        RaisedButton(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 20.0,
+                            vertical: 10.0,
+                          ),
+                          child: Text(
+                            'Refresh',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18.0,
+                            ),
+                          ),
+                          color: Colors.green,
+                          onPressed: () {
+                            setState(() {
+                              Provider.of<FieldForceData>(context,
+                                      listen: false)
+                                  .stores = null;
+                            });
+                          },
+                        )
+                      ],
+                    ),
+                  );
+                } else {
+                  return _pages[index];
+                }
+              }
+            }),
         bottomNavigationBar: BottomNavigationBar(
           onTap: onPageChanged,
           items: [

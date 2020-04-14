@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:senior/models/stores.dart';
 import 'dart:convert';
 import '../models/httpExceptionModel.dart';
 import '../models/questions.dart';
@@ -18,6 +19,7 @@ class FieldForceData with ChangeNotifier {
   QuestionsList questionsList;
   List<Question> trueAndFalse;
   List<Question> longAnswerQuestion;
+  Stores stores;
 
   //--------------------------- Fetch questions --------------------------------
   Future<void> fetchQuestions() async {
@@ -159,13 +161,45 @@ class FieldForceData with ChangeNotifier {
   Future<void> qrReader({String qrData}) async {
     const url = 'https://api.hmto-eleader.com/api/store/visited';
     try {
-      final response = await http.post(url, body: {
+      var body = json.encode({
         "qrcode": "$qrData",
         "user_id": "$userId",
+      });
+
+      Map<String, String> headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      };
+      final response = await http.post(
+        url,
+        body: body,
+        headers: headers,
+      );
+      final Map responseData = json.decode(response.body);
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        print('::::::::::::::::' + responseData.toString());
+        return true;
+      } else {
+        throw HttpException(message: responseData['error']);
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  //----------------------------- Fetch stores ---------------------------------
+  Future<void> fetchStores() async {
+    await fetchUserData();
+    final url = 'https://api.hmto-eleader.com/api/ownstores/$userId';
+    try {
+      final response = await http.get(url, headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
       });
       final Map responseData = json.decode(response.body);
       if (response.statusCode >= 200 && response.statusCode < 300) {
         print('::::::::::::::::' + responseData.toString());
+        stores = Stores.fromJson(responseData);
         return true;
       } else {
         throw HttpException(message: responseData['error']);

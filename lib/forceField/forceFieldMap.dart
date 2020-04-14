@@ -7,6 +7,7 @@ import 'package:senior/forceField/addStore.dart';
 import 'package:app_settings/app_settings.dart';
 import '../providers/location.dart';
 import 'package:easy_localization/easy_localization.dart';
+import '../providers/fieldForceProvider.dart';
 
 class ForceFieldMap extends StatefulWidget {
   @override
@@ -85,6 +86,19 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<FieldForceData>(context, listen: false)
+        .stores
+        .data
+        .forEach((store) {
+      final marker = Marker(
+        markerId: MarkerId(store.id.toString()),
+        position:
+            LatLng(double.tryParse(store.lat), double.tryParse(store.long)),
+        infoWindow: InfoWindow(title: store.storeName),
+      );
+      _markers[store.id.toString()] = marker;
+    });
+    print(":::::::::::::::::::::" + _markers.length.toString());
     return SafeArea(
       child: Scaffold(
         body: currentLocation == null
