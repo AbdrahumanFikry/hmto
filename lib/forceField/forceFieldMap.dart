@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
@@ -19,8 +22,19 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
   final Map<String, Marker> _markers = {};
   String address;
   var currentLocation = Position();
+  Uint8List markerIcon;
 
 //  Completer<GoogleMapController> _controller = Completer();
+
+  Future<Uint8List> getBytesFromAsset(String path, int width) async {
+    ByteData data = await rootBundle.load(path);
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
+        targetWidth: width);
+    ui.FrameInfo fi = await codec.getNextFrame();
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))
+        .buffer
+        .asUint8List();
+  }
 
   Future<String> _getAddress(Position pos) async {
     List<Placemark> placeMarks = await Geolocator()
@@ -35,12 +49,16 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
   }
 
   void _getLocation() async {
+    markerIcon = await getBytesFromAsset('assets/addMaker.png', 100);
+    print('::marker:::::::' + markerIcon.length.toString());
     currentLocation = await Geolocator()
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
     _getAddress(currentLocation);
     setState(() {
       _markers.clear();
+//      final Marker marker = Marker(icon: BitmapDescriptor.fromBytes(markerIcon));
       final marker = Marker(
+        icon: BitmapDescriptor.fromBytes(markerIcon),
         onTap: () {
           print(currentLocation.latitude.toString());
           Navigator.of(context).push(

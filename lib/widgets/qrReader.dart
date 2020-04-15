@@ -4,16 +4,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qrscan/qrscan.dart' as scanner;
-import 'package:senior/forceField/store.dart';
 import 'package:senior/providers/fieldForceProvider.dart';
-import 'package:senior/sells/testStore.dart';
 import 'package:senior/widgets/alertDialog.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class QrReader extends StatefulWidget {
   final Widget whereTo;
 
   QrReader({
-    this.whereTo,
+    @required this.whereTo,
   });
 
   @override
@@ -21,31 +20,49 @@ class QrReader extends StatefulWidget {
 }
 
 class _QrReaderState extends State<QrReader> {
-  bool done = false;
+  bool hasError = false;
   Uint8List bytes = Uint8List(0);
   TextEditingController _outputController;
 
   Future _scan() async {
+    setState(() {
+      hasError = false;
+    });
     String barcode = await scanner.scan();
-    if (barcode == null) {
-      print('nothing return.');
-    } else {
-      this._outputController.text = barcode;
-      print('BarCode Output : ' + barcode);
-      await Provider.of<FieldForceData>(context, listen: false).qrReader(
-        qrData: barcode,
-      );
-      if (Provider.of<FieldForceData>(context, listen: false).qrResult ==
-          'visited') {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => Store(),
-          ),
-        );
-      } else {
-        Navigator.of(context).pop();
+    try {
+      if (barcode == null) {
+        print('nothing return.');
         GlobalAlertDialog.showErrorDialog('Try again', context);
+        setState(() {
+          hasError = true;
+        });
+      } else {
+        this._outputController.text = barcode;
+        print('BarCode Output : ' + barcode);
+        await Provider.of<FieldForceData>(context, listen: false).qrReader(
+          qrData: barcode,
+        );
+        if (Provider.of<FieldForceData>(context, listen: false).qrResult ==
+            'visited') {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => widget.whereTo,
+            ),
+          );
+          setState(() {
+            hasError = false;
+          });
+        } else {
+          GlobalAlertDialog.showErrorDialog('Try again', context);
+          setState(() {
+            hasError = true;
+          });
+        }
       }
+    } catch (error) {
+      setState(() {
+        hasError = true;
+      });
     }
   }
 
@@ -59,9 +76,43 @@ class _QrReaderState extends State<QrReader> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: Colors.white,
       body: Center(
-        child: CircularProgressIndicator(),
+        child: hasError
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    tr('extra.error'),
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18.0,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 30.0,
+                  ),
+                  RaisedButton(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20.0,
+                      vertical: 10.0,
+                    ),
+                    onPressed: _scan,
+                    color: Colors.green,
+                    child: Text(
+                      tr('extra.tryAgain'),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18.0,
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            : CircularProgressIndicator(),
       ),
     );
   }

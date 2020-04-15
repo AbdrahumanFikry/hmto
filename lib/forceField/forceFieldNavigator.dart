@@ -54,7 +54,7 @@ class _ForceFieldNavigatorState extends State<ForceFieldNavigator> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          'Check your internet connection',
+                          tr('extra.check'),
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 20.0,
@@ -69,7 +69,7 @@ class _ForceFieldNavigatorState extends State<ForceFieldNavigator> {
                             vertical: 10.0,
                           ),
                           child: Text(
-                            'Refresh',
+                            tr('extra.tryAgain'),
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 18.0,

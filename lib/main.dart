@@ -5,7 +5,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:senior/auth/loginScreen.dart';
 import 'package:senior/forceField/forceFieldNavigator.dart';
-import 'package:senior/forceField/store.dart';
 import 'package:senior/providers/authenticationProvider.dart';
 import 'package:senior/providers/driverProvider.dart';
 import 'package:senior/providers/fieldForceProvider.dart';
@@ -15,12 +14,9 @@ import 'package:senior/providers/seniorProvider.dart';
 import 'package:senior/sells/sellsNavigator.dart';
 import 'package:senior/senior/tabBarForceField.dart';
 import 'package:senior/senior/tabBarSells.dart';
-import 'package:senior/widgets/qrReader.dart';
-
-import 'forceField/addStore.dart';
 
 main() {
-  runApp(
+  runApp( 
     EasyLocalization(
       child: MyApp(),
       supportedLocales: [
