@@ -1,8 +1,5 @@
 import 'dart:async';
-import 'dart:typed_data';
-import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
@@ -26,8 +23,11 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
 
   createMarker(context) {
     if (customIcon == null) {
-      ImageConfiguration configuration = createLocalImageConfiguration(context);
-      BitmapDescriptor.fromAssetImage(configuration, 'assets/marker.png')
+      ImageConfiguration configuration = createLocalImageConfiguration(
+        context,
+        size: Size.square(12.0),
+      );
+      BitmapDescriptor.fromAssetImage(configuration, 'assets/add.png')
           .then((icon) {
         setState(() {
           customIcon = icon;
