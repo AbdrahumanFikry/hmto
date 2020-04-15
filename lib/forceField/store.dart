@@ -34,64 +34,64 @@ class Store extends StatelessWidget {
     ),
   ];
 
-  void percentChanger(BuildContext context, int index) {
-    showModalBottomSheet(
-      context: context,
-      builder: (builder) {
-        return competitors[index];
-      },
-    );
-  }
+//  void percentChanger(BuildContext context, int index) {
+//    showModalBottomSheet(
+//      context: context,
+//      builder: (builder) {
+//        return competitors[index];
+//      },
+//    );
+//  }
 
-  void _showModalSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (builder) {
-        return Container(
-          height: 400,
-          child:  Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              //crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                SizedBox(height: 20.0,),
-                Text(
-                  'Change percent',
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                Spacer(),
-                Container(
-                  height: 280,
-                  width: double.infinity,
-                  child: ListView.builder(
-                    itemCount: competitorsName.length,
-                    itemBuilder: (ctx, index) {
-                      return RaisedButton(
-                        onPressed: () => percentChanger(context, index),
-                        color: Colors.green,
-                        child: Text(
-                          competitorsName[index],
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-
-//          padding: EdgeInsets.all(40.0),
-        );
-      },
-    );
-  }
+//  void _showModalSheet(BuildContext context) {
+//    showModalBottomSheet(
+//      context: context,
+//      builder: (builder) {
+//        return Container(
+//          height: 400,
+//          child:  Column(
+//              mainAxisAlignment: MainAxisAlignment.center,
+//              //crossAxisAlignment: CrossAxisAlignment.stretch,
+//              children: <Widget>[
+//                SizedBox(height: 20.0,),
+//                Text(
+//                  'Change percent',
+//                  style: TextStyle(
+//                    fontSize: 20.0,
+//                    fontWeight: FontWeight.bold,
+//                    color: Colors.blue,
+//                  ),
+//                  textAlign: TextAlign.center,
+//                ),
+//                Spacer(),
+//                Container(
+//                  height: 280,
+//                  width: double.infinity,
+//                  child: ListView.builder(
+//                    itemCount: competitorsName.length,
+//                    itemBuilder: (ctx, index) {
+//                      return RaisedButton(
+//                        onPressed: () => percentChanger(context, index),
+//                        color: Colors.green,
+//                        child: Text(
+//                          competitorsName[index],
+//                          style: TextStyle(
+//                            fontSize: 20.0,
+//                            fontWeight: FontWeight.bold,
+//                          ),
+//                        ),
+//                      );
+//                    },
+//                  ),
+//                ),
+//              ],
+//            ),
+//
+////          padding: EdgeInsets.all(40.0),
+//        );
+//      },
+//    );
+//  }
 
   @override
   Widget build(BuildContext context) {
@@ -171,7 +171,6 @@ class Store extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   Row(
-
                     children: <Widget>[
                       Icon(FontAwesomeIcons.phone),
                       Padding(
@@ -219,105 +218,100 @@ class Store extends StatelessWidget {
               ),
             ),
             Divider(),
-            GestureDetector(
-              onTap: () {
-                _showModalSheet(context);
-              },
-              child: PieChart(
-                colorList: [
-                  Colors.purple,
-                  Colors.blue,
-                  Colors.orange,
-                ],
-                legendPosition: LegendPosition.left,
-                chartRadius: 250 * screenSize.aspectRatio,
-                legendStyle:
-                    TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
-                chartValueStyle:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
-                dataMap: {
-                  'Cabury': 50,
-                  'Our product': 20,
-                  'Shamaadn': 30,
-                },
-              ),
-            ),
-            Divider(),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    'hmto',
-                    style: TextStyle(
-                      fontSize: 21.0,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 20.0,
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    child: TextField(
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.only(
-                          right: 100.0,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(
-                            5.0,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            ListView.builder(
-              itemCount: 3,
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemBuilder: (ctx, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        'others',
-                        style: TextStyle(
-                          fontSize: 21.0,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(
-                        width: 20.0,
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        child: TextField(
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.all(
-                              16.0,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                                5.0,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
+            PieChart(
+              colorList: [
+                Colors.purple,
+                Colors.blue,
+                Colors.orange,
+              ],
+              legendPosition: LegendPosition.left,
+              chartRadius: 250 * screenSize.aspectRatio,
+              legendStyle:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+              chartValueStyle:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+              dataMap: {
+                'Cabury': 50,
+                'Our product': 20,
+                'Shamaadn': 30,
               },
             ),
+//            Divider(),
+//            Padding(
+//              padding: const EdgeInsets.all(8.0),
+//              child: Row(
+//                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                children: <Widget>[
+//                  Text(
+//                    'hmto',
+//                    style: TextStyle(
+//                      fontSize: 21.0,
+//                      color: Colors.black,
+//                      fontWeight: FontWeight.bold,
+//                    ),
+//                  ),
+//                  SizedBox(
+//                    width: 20.0,
+//                  ),
+//                  Container(
+//                    width: MediaQuery.of(context).size.width * 0.5,
+//                    child: TextField(
+//                      decoration: InputDecoration(
+//                        contentPadding: EdgeInsets.only(
+//                          right: 100.0,
+//                        ),
+//                        border: OutlineInputBorder(
+//                          borderRadius: BorderRadius.circular(
+//                            5.0,
+//                          ),
+//                        ),
+//                      ),
+//                    ),
+//                  ),
+//                ],
+//              ),
+//            ),
+//            ListView.builder(
+//              itemCount: 3,
+//              shrinkWrap: true,
+//              physics: NeverScrollableScrollPhysics(),
+//              itemBuilder: (ctx, index) {
+//                return Padding(
+//                  padding: const EdgeInsets.all(8.0),
+//                  child: Row(
+//                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                    children: <Widget>[
+//                      Text(
+//                        'others',
+//                        style: TextStyle(
+//                          fontSize: 21.0,
+//                          color: Colors.black,
+//                          fontWeight: FontWeight.bold,
+//                        ),
+//                      ),
+//                      SizedBox(
+//                        width: 20.0,
+//                      ),
+//                      Container(
+//                        width: MediaQuery.of(context).size.width * 0.5,
+//                        child: TextField(
+//                          decoration: InputDecoration(
+//                            contentPadding: EdgeInsets.all(
+//                              16.0,
+//                            ),
+//                            border: OutlineInputBorder(
+//                              borderRadius: BorderRadius.circular(
+//                                5.0,
+//                              ),
+//                            ),
+//                          ),
+//                        ),
+//                      ),
+//                    ],
+//                  ),
+//                );
+//              },
+//            ),
             Divider(),
             Padding(
               padding: EdgeInsets.symmetric(

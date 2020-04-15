@@ -58,7 +58,7 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
       _markers.clear();
 //      final Marker marker = Marker(icon: BitmapDescriptor.fromBytes(markerIcon));
       final marker = Marker(
-        icon: BitmapDescriptor.fromBytes(markerIcon),
+//        icon: BitmapDescriptor.fromBytes(markerIcon),
         onTap: () {
           print(currentLocation.latitude.toString());
           Navigator.of(context).push(
