@@ -22,18 +22,18 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
   final Map<String, Marker> _markers = {};
   String address;
   var currentLocation = Position();
-  Uint8List markerIcon;
+  BitmapDescriptor customIcon;
 
-//  Completer<GoogleMapController> _controller = Completer();
-
-  Future<Uint8List> getBytesFromAsset(String path, int width) async {
-    ByteData data = await rootBundle.load(path);
-    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
-        targetWidth: width);
-    ui.FrameInfo fi = await codec.getNextFrame();
-    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))
-        .buffer
-        .asUint8List();
+  createMarker(context) {
+    if (customIcon == null) {
+      ImageConfiguration configuration = createLocalImageConfiguration(context);
+      BitmapDescriptor.fromAssetImage(configuration, 'assets/marker.png')
+          .then((icon) {
+        setState(() {
+          customIcon = icon;
+        });
+      });
+    }
   }
 
   Future<String> _getAddress(Position pos) async {
@@ -48,17 +48,14 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
     return "";
   }
 
-  void _getLocation() async {
-    markerIcon = await getBytesFromAsset('assets/addMaker.png', 100);
-    print('::marker:::::::' + markerIcon.length.toString());
+  Future<void> _getLocation() async {
     currentLocation = await Geolocator()
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
     _getAddress(currentLocation);
     setState(() {
       _markers.clear();
-//      final Marker marker = Marker(icon: BitmapDescriptor.fromBytes(markerIcon));
       final marker = Marker(
-//        icon: BitmapDescriptor.fromBytes(markerIcon),
+        icon: customIcon,
         onTap: () {
           print(currentLocation.latitude.toString());
           Navigator.of(context).push(
@@ -75,7 +72,9 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
         position: LatLng(currentLocation.latitude, currentLocation.longitude),
         infoWindow: InfoWindow(title: tr('map.marker_info')),
       );
-      _markers["Current Location"] = marker;
+      setState(() {
+        _markers["Current Location"] = marker;
+      });
       mapController.animateCamera(
         CameraUpdate.newCameraPosition(
           CameraPosition(
@@ -104,6 +103,7 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
 
   @override
   Widget build(BuildContext context) {
+    createMarker(context);
     Provider.of<FieldForceData>(context, listen: false)
         .stores
         .data
@@ -136,31 +136,26 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
                   Positioned(
                     bottom: 80.0,
                     right: 20.0,
-                    child: FloatingActionButton(
-                      onPressed: () {
-                        _getLocation();
-                        _getAddress(currentLocation);
-                      },
-                      tooltip: 'Get Location',
-                      child: Icon(
-                        Icons.location_searching,
-                        color: Colors.white,
-                      ),
-                    ),
+                    child: currentLocation.latitude == null ||
+                            currentLocation.latitude == null
+                        ? CircularProgressIndicator()
+                        : FloatingActionButton(
+                            onPressed: () async {
+                              setState(() {
+                                currentLocation = Position();
+                              });
+                              await _getLocation();
+                              await _getAddress(currentLocation);
+                            },
+                            tooltip: 'Get Location',
+                            child: Icon(
+                              Icons.location_searching,
+                              color: Colors.white,
+                            ),
+                          ),
                   )
                 ],
               ),
-//        floatingActionButton: FloatingActionButton(
-//          onPressed: () {
-//            _getLocation();
-//            _getAddress(currentLocation);
-//          },
-//          tooltip: 'Get Location',
-//          child: Icon(
-//            Icons.location_searching,
-//            color: Colors.white,
-//          ),
-//        ),
       ),
     );
   }
