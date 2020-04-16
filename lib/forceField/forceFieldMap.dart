@@ -135,7 +135,6 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
       );
       _markers[store.id.toString()] = marker;
     });
-    print(":::::::::::::::::::::" + _markers.length.toString());
     return SafeArea(
       child: Scaffold(
         body: currentLocation == null
