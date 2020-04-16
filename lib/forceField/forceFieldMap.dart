@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +19,7 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
   GoogleMapController mapController;
   final Map<String, Marker> _markers = {};
   String address;
+  bool moved = false;
   var currentLocation = Position();
   BitmapDescriptor customIcon;
 
@@ -51,13 +53,30 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
   Future<void> _getLocation() async {
     currentLocation = await Geolocator()
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
+    print("Before :" +
+        currentLocation.latitude.toString() +
+        '::' +
+        currentLocation.longitude.toString());
     _getAddress(currentLocation);
     setState(() {
       _markers.clear();
       final marker = Marker(
+        draggable: true,
+        onDragEnd: ((value) {
+          setState(() {
+            moved = true;
+          });
+          currentLocation = Position(
+            latitude: value.latitude,
+            longitude: value.longitude,
+          );
+        }),
         icon: customIcon,
         onTap: () {
-          print(currentLocation.latitude.toString());
+          print('After :' +
+              currentLocation.latitude.toString() +
+              '::' +
+              currentLocation.longitude.toString());
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => AdsAddStore(
@@ -153,7 +172,40 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
                               color: Colors.white,
                             ),
                           ),
-                  )
+                  ),
+                  Positioned(
+                    top: 10.0,
+                    left: 10,
+                    child: moved
+                        ? SizedBox()
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              SizedBox(
+                                width: 5.0,
+                              ),
+                              Icon(
+                                FontAwesomeIcons.solidLightbulb,
+                                color: Colors.yellow,
+                                size: 20.0,
+                              ),
+                              SizedBox(
+                                width: 5.0,
+                              ),
+                              Text(
+                                tr('extra.mapHint'),
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                maxLines: 2,
+                                softWrap: true,
+                                textAlign: TextAlign.right,
+                              ),
+                            ],
+                          ),
+                  ),
                 ],
               ),
       ),

@@ -77,7 +77,7 @@ class _ForceFieldProfileState extends State<ForceFieldProfile>
                       collapseMode: CollapseMode.parallax,
                       background: Consumer<Auth>(
                         builder: (context, auth, _) => AccountInfo(
-                          name: auth.userName,
+                          name: auth.userName == null ? 'user' : auth.userName,
                         ),
                       ),
                     ),
