@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:senior/models/stores.dart';
 import 'dart:convert';
 import '../models/httpExceptionModel.dart';
-import '../models/questions.dart';
+import '../models/dataForNewShop.dart';
 import 'package:dio/dio.dart';
 import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,14 +17,15 @@ class FieldForceData with ChangeNotifier {
   String qrResult;
 
   var dio = Dio();
-  QuestionsList questionsList;
+  DataForNewShop dataForNewShop;
   List<Question> trueAndFalse;
   List<Question> longAnswerQuestion;
+  List<Competitors> competitors;
   Stores stores;
 
   //--------------------------- Fetch questions --------------------------------
   Future<void> fetchQuestions() async {
-    const url = 'https://api.hmto-eleader.com/api/questions';
+    const url = 'https://api.hmto-eleader.com/api/newStore';
     try {
       await fetchUserData();
       final response = await http.get(url, headers: {
@@ -33,11 +34,12 @@ class FieldForceData with ChangeNotifier {
       final Map responseData = json.decode(response.body);
       if (response.statusCode >= 200 && response.statusCode < 300) {
         print('::::::::::::::::' + responseData.toString());
-        questionsList = QuestionsList.fromJson(responseData);
-        trueAndFalse = questionsList.questions
+        dataForNewShop = DataForNewShop.fromJson(responseData);
+        competitors = dataForNewShop.data.competitors;
+        trueAndFalse = dataForNewShop.data.question
             .where((i) => i.type == 'falseOrTrue')
             .toList();
-        longAnswerQuestion = questionsList.questions
+        longAnswerQuestion = dataForNewShop.data.question
             .where((i) => i.type != 'falseOrTrue')
             .toList();
         return true;
@@ -66,13 +68,14 @@ class FieldForceData with ChangeNotifier {
     String landmark,
     String position,
     String answers,
+    String competitorsData,
   }) async {
     await fetchUserData();
     const url = 'https://api.hmto-eleader.com/api/add_field_force_shop';
     try {
       print('::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: '
           '\n$shopName\n$customerName\n$customerPhone\n$sellsName\n$sellsPhone\n'
-          '$rate\n$answers\n$lat\n$long\n$landmark\n$position\n$businessId\n$userId\n$image1\n$image2\n$image3\n$image4');
+          '$rate\n$answers\n$competitorsData\n$lat\n$long\n$landmark\n$position\n$businessId\n$userId\n$image1\n$image2\n$image3\n$image4');
       var formData = FormData();
       formData.fields..add(MapEntry('business_id', businessId.toString()));
       formData.fields..add(MapEntry('supplier_business_name', shopName));
@@ -111,6 +114,7 @@ class FieldForceData with ChangeNotifier {
       formData.fields..add(MapEntry('position', position));
       formData.fields..add(MapEntry('created_by', userId.toString()));
       formData.fields..add(MapEntry('questionsAnswer', answers));
+      formData.fields..add(MapEntry('competitors', competitorsData));
       var response = await dio.post(
         url,
         data: formData,
@@ -132,6 +136,7 @@ class FieldForceData with ChangeNotifier {
       );
       print(':::::::::::::::' + response.toString());
       notifyListeners();
+      await fetchStores();
       return true;
     } catch (error) {
       if (!error.toString().contains(
@@ -192,6 +197,7 @@ class FieldForceData with ChangeNotifier {
   //----------------------------- Fetch stores ---------------------------------
   Future<void> fetchStores() async {
     await fetchUserData();
+    stores = null;
     final url = 'https://api.hmto-eleader.com/api/ownstores/$userId';
     try {
       final response = await http.get(url, headers: {
