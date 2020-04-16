@@ -47,26 +47,29 @@ class StoresScreen extends StatelessWidget {
                   fit: BoxFit.cover,
                 ),
               ),
-              onTap: () {
-                isSells
-                    ? Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => QrReader(whereTo: TestStore()),
-                        ),
-                      )
-                    : isDriver
-                        ? Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => DriverStore(),
-                            ),
-                          )
-                        : Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) => QrReader(
-                                      whereTo: Store(),
-                                    )),
-                          );
-              },
+              onTap: data[index].isVisited
+                  ? () {}
+                  : () {
+                      isSells
+                          ? Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    QrReader(whereTo: TestStore()),
+                              ),
+                            )
+                          : isDriver
+                              ? Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => DriverStore(),
+                                  ),
+                                )
+                              : Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (context) => QrReader(
+                                            whereTo: Store(),
+                                          )),
+                                );
+                    },
             ),
             Divider(
               height: 2,
