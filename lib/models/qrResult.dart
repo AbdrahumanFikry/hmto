@@ -1,19 +1,32 @@
-class Stores {
-  List<Data> data;
+import '../models/dataForNewShop.dart';
 
-  Stores({this.data});
+class QrResult {
+  StoreInfo storeInfo;
+  List<Competitors> competitors;
+  List<Question> question;
 
-  Stores.fromJson(Map<String, dynamic> json) {
-    if (json['data'] != null) {
-      data = new List<Data>();
-      json['data'].forEach((v) {
-        data.add(new Data.fromJson(v));
+  QrResult({this.storeInfo, this.competitors, this.question});
+
+  QrResult.fromJson(Map<String, dynamic> json) {
+    storeInfo = json['storeInfo'] != null
+        ? new StoreInfo.fromJson(json['storeInfo'])
+        : null;
+    if (json['competitors'] != null) {
+      competitors = new List<Competitors>();
+      json['competitors'].forEach((v) {
+        competitors.add(new Competitors.fromJson(v));
+      });
+    }
+    if (json['question'] != null) {
+      question = new List<Question>();
+      json['question'].forEach((v) {
+        question.add(new Question.fromJson(v));
       });
     }
   }
 }
 
-class Data {
+class StoreInfo {
   int id;
   int businessId;
   String type;
@@ -32,7 +45,7 @@ class Data {
   String imageStoreFront;
   String isVisited;
 
-  Data(
+  StoreInfo(
       {this.id,
       this.businessId,
       this.type,
@@ -51,7 +64,7 @@ class Data {
       this.imageStoreFront,
       this.isVisited});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  StoreInfo.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     businessId = json['business_id'];
     type = json['type'];

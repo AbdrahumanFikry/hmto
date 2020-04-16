@@ -4,7 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qrscan/qrscan.dart' as scanner;
+import 'package:senior/forceField/store.dart';
 import 'package:senior/providers/fieldForceProvider.dart';
+import 'package:senior/sells/testStore.dart';
 import 'package:senior/widgets/alertDialog.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -42,22 +44,33 @@ class _QrReaderState extends State<QrReader> {
         await Provider.of<FieldForceData>(context, listen: false).qrReader(
           qrData: barcode,
         );
-        if (Provider.of<FieldForceData>(context, listen: false).qrResult ==
-            'visited') {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) => widget.whereTo,
-            ),
-          );
-          setState(() {
-            hasError = false;
-          });
-        } else {
-          GlobalAlertDialog.showErrorDialog('Try again', context);
-          setState(() {
-            hasError = true;
-          });
-        }
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => widget.whereTo != Store()
+                ? Consumer<FieldForceData>(
+                    builder: (context, data, child) => Store(
+                      id: data.qrResult.storeInfo.id,
+                      imageIn: data.qrResult.storeInfo.imageIn,
+                      imageOut: data.qrResult.storeInfo.imageOut,
+                      imageStoreFront: data.qrResult.storeInfo.imageStoreFront,
+                      imageStoreAds: data.qrResult.storeInfo.imageStoreAds,
+                      customerName: data.qrResult.storeInfo.customerName,
+                      landmark: data.qrResult.storeInfo.landmark,
+                      mobile: data.qrResult.storeInfo.mobile,
+                      rate: data.qrResult.storeInfo.rate,
+                      storeName: data.qrResult.storeInfo.storeName,
+                      competitors: data.competitors,
+                      products: data.products,
+                      longAnswerQuestion: data.longAnswerQuestion,
+                      trueAndFalse: data.trueAndFalse,
+                    ),
+                  )
+                : TestStore(),
+          ),
+        );
+        setState(() {
+          hasError = false;
+        });
       }
     } catch (error) {
       setState(() {

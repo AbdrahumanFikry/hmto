@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:senior/driver/driverStore.dart';
 import 'package:senior/sells/testStore.dart';
@@ -25,52 +26,57 @@ class StoresScreen extends StatelessWidget {
         return Column(
           children: <Widget>[
             ListTile(
-              subtitle: Text(
-                data[index].landmark,
-                overflow: TextOverflow.ellipsis,
-              ),
-              title: Text(data[index].storeName),
-              trailing: Text(
-                data[index].isVisited == true
-                    ? tr('field_force_profile.status')
-                    : '',
-                style: TextStyle(color: Colors.blue),
-              ),
-              leading: ClipRRect(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(10),
+                subtitle: Text(
+                  data[index].landmark,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                child: Image.network(
-                  data[index].imageIn,
-                  height: 50.0,
-                  width: 50.0,
-                  fit: BoxFit.cover,
+                title: Text(data[index].storeName),
+                trailing: Text(
+                  data[index].isVisited == 'true'
+                      ? tr('field_force_profile.status')
+                      : '',
+                  style: TextStyle(color: Colors.blue),
                 ),
-              ),
-              onTap: data[index].isVisited
-                  ? () {}
-                  : () {
-                      isSells
-                          ? Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    QrReader(whereTo: TestStore()),
+                leading: ClipRRect(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                  child: CachedNetworkImage(
+                    imageUrl: data[index].imageIn,
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                onTap: data[index].isVisited == 'true'
+                    ? () {}
+                    : () {
+                        if (isSells) {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => QrReader(
+                                whereTo: TestStore(),
                               ),
-                            )
-                          : isDriver
-                              ? Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => DriverStore(),
-                                  ),
-                                )
-                              : Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                      builder: (context) => QrReader(
-                                            whereTo: Store(),
-                                          )),
-                                );
-                    },
-            ),
+                            ),
+                          );
+                        } else {
+                          if (isDriver) {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => DriverStore(),
+                              ),
+                            );
+                          } else {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => QrReader(
+                                  whereTo: Store(),
+                                ),
+                              ),
+                            );
+                          }
+                        }
+                      }),
             Divider(
               height: 2,
               indent: 0,

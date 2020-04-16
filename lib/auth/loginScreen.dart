@@ -151,9 +151,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       new Expanded(
-                        child: TextField(
+                        child: TextFormField(
                           textAlign: TextAlign.center,
-                          onChanged: (value) {
+                          keyboardType: TextInputType.emailAddress,
+                          onSaved: (value) {
                             _email = value;
                           },
                           decoration: InputDecoration(
@@ -194,9 +195,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       new Expanded(
-                        child: TextField(
+                        child: TextFormField(
                           obscureText: true,
-                          onChanged: (value) {
+                          onSaved: (value) {
                             _password = value;
                           },
                           textAlign: TextAlign.center,

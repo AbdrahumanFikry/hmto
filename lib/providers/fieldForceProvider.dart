@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:senior/models/qrResult.dart';
 import 'package:senior/models/stores.dart';
 import 'dart:convert';
 import '../models/httpExceptionModel.dart';
@@ -14,13 +15,14 @@ class FieldForceData with ChangeNotifier {
   String userName;
   int businessId;
   String progress = '0';
-  String qrResult;
 
   var dio = Dio();
   DataForNewShop dataForNewShop;
+  QrResult qrResult;
   List<Question> trueAndFalse;
   List<Question> longAnswerQuestion;
   List<Competitors> competitors;
+  List<Question> products;
   Stores stores;
 
   //--------------------------- Fetch questions --------------------------------
@@ -41,6 +43,9 @@ class FieldForceData with ChangeNotifier {
             .toList();
         longAnswerQuestion = dataForNewShop.data.question
             .where((i) => i.type != 'falseOrTrue')
+            .toList();
+        products = dataForNewShop.data.question
+            .where((i) => i.type == 'product')
             .toList();
         return true;
       } else {
@@ -184,10 +189,17 @@ class FieldForceData with ChangeNotifier {
       final Map responseData = json.decode(response.body);
       if (response.statusCode >= 200 && response.statusCode < 300) {
         print('::::::::::::::::' + responseData.toString());
-        qrResult = responseData['status'];
+        qrResult = QrResult.fromJson(responseData);
+        competitors = qrResult.competitors;
+        trueAndFalse =
+            qrResult.question.where((i) => i.type == 'falseOrTrue').toList();
+        longAnswerQuestion = qrResult.question
+            .where((i) => i.type != 'product' && i.type != 'falseOrTrue')
+            .toList();
+        products = qrResult.question.where((i) => i.type == 'product').toList();
         return true;
       } else {
-        throw HttpException(message: responseData['error']);
+        throw HttpException(message: responseData['message']);
       }
     } catch (error) {
       throw error;

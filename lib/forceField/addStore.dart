@@ -653,7 +653,7 @@ class _AdsAddStoreState extends State<AdsAddStore> {
                                         );
                                       }
 
-                                      return Question(
+                                      return QuestionHandler(
                                         index: index + 1,
                                         question:
                                             data.longAnswerQuestion[index].name,

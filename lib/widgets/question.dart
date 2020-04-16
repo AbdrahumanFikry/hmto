@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class Question extends StatelessWidget {
+class QuestionHandler extends StatelessWidget {
   final int index;
   final String question;
   final FormFieldSetter<String> onSaved;
 
-  Question({
+  QuestionHandler({
     this.index,
     this.question,
     this.onSaved,
