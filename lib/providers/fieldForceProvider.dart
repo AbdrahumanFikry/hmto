@@ -314,8 +314,8 @@ class FieldForceData with ChangeNotifier {
     }
   }
 
-  //------------------------------------------Fetch Target---------------------------
-  Future <void> fetchTarget()async{
+  //---------------------------- Fetch Target ----------------------------------
+  Future<void> fetchTarget() async {
     await fetchUserData();
     final url = 'https://api.hmto-eleader.com/api/analysis/$userId';
     try {

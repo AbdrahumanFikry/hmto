@@ -8,15 +8,6 @@ class TargetForceField {
     message = json['message'];
     data = json['data'] != null ? new Data.fromJson(json['data']) : null;
   }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['message'] = this.message;
-    if (this.data != null) {
-      data['data'] = this.data.toJson();
-    }
-    return data;
-  }
 }
 
 class Data {
@@ -30,13 +21,5 @@ class Data {
     targetPer = json['TargetPer'];
     visited = json['Visited'];
     newStorePer = json['newStorePer'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['TargetPer'] = this.targetPer;
-    data['Visited'] = this.visited;
-    data['newStorePer'] = this.newStorePer;
-    return data;
   }
 }

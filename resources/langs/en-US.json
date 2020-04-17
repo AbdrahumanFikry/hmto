@@ -110,6 +110,7 @@
     "tryAgain": "Try Again?",
     "loginError": "email or password is not correct",
     "check": "Check your internet connection",
-    "mapHint": "Long Press at add marker to move it"
+    "mapHint": "Long Press at add marker to move it",
+    "noTarget": "Target did not set yet"
   }
 }
