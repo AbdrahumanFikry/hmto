@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:senior/models/competitorPercent.dart';
 import 'package:senior/models/qrResult.dart';
 import 'package:senior/models/stores.dart';
 import 'dart:convert';
@@ -15,7 +16,7 @@ class FieldForceData with ChangeNotifier {
   String userName;
   int businessId;
   String progress = '0';
-
+  double maxValue = 100.0;
   var dio = Dio();
   DataForNewShop dataForNewShop;
   QrResult qrResult;
@@ -23,6 +24,7 @@ class FieldForceData with ChangeNotifier {
   List<Question> longAnswerQuestion;
   List<Competitors> competitors;
   List<Question> products;
+  List<CompetitorPercents> competitorsPercents = [];
   Stores stores;
 
   //--------------------------- Fetch questions --------------------------------
@@ -47,6 +49,7 @@ class FieldForceData with ChangeNotifier {
         products = dataForNewShop.data.question
             .where((i) => i.type == 'product')
             .toList();
+        notifyListeners();
         return true;
       } else {
         throw HttpException(message: responseData['error']);
@@ -191,12 +194,24 @@ class FieldForceData with ChangeNotifier {
         print('::::::::::::::::' + responseData.toString());
         qrResult = QrResult.fromJson(responseData);
         competitors = qrResult.competitors;
+        final List<CompetitorPercents> loadedItems = [];
+        competitors.forEach((competitor) {
+          loadedItems.add(
+            CompetitorPercents(
+              competitorId: competitor.competitorId,
+              sallesRateStock: '0',
+              sallesRateMoney: '0.0',
+            ),
+          );
+        });
+        competitorsPercents = loadedItems;
         trueAndFalse =
             qrResult.question.where((i) => i.type == 'falseOrTrue').toList();
         longAnswerQuestion = qrResult.question
             .where((i) => i.type != 'product' && i.type != 'falseOrTrue')
             .toList();
         products = qrResult.question.where((i) => i.type == 'product').toList();
+        notifyListeners();
         return true;
       } else {
         throw HttpException(message: responseData['message']);
@@ -220,6 +235,74 @@ class FieldForceData with ChangeNotifier {
       if (response.statusCode >= 200 && response.statusCode < 300) {
         print('::::::::::::::::' + responseData.toString());
         stores = Stores.fromJson(responseData);
+        return true;
+      } else {
+        throw HttpException(message: responseData['error']);
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  //--------------------------- Change percents --------------------------------
+  void changePercent({
+    int id,
+    String percent,
+    String amount,
+  }) async {
+    final index = competitorsPercents.indexWhere(
+      (item) => item.competitorId == id,
+    );
+    if (index != -1) {
+      competitorsPercents[index].sallesRateStock = percent;
+      competitorsPercents[index].sallesRateMoney = amount;
+    } else {
+      competitorsPercents.add(
+        CompetitorPercents(
+          competitorId: id,
+          sallesRateStock: percent,
+          sallesRateMoney: amount,
+        ),
+      );
+    }
+    double sum = 0;
+    competitorsPercents.forEach((competitor) {
+      sum = sum + double.tryParse(competitor.sallesRateStock);
+    });
+    maxValue = 100.0 - sum;
+    notifyListeners();
+  }
+
+  //----------------------------- Add new visit --------------------------------
+  Future<void> addNewVisit({
+    int id,
+    String answers,
+  }) async {
+    await fetchUserData();
+    const url = 'https://api.hmto-eleader.com/api/addnewvisit';
+    try {
+      var body = {
+        "contact_id": id.toString(),
+        "business_id": "$businessId",
+        "created_by": "$userId",
+        "questionsAnswer": answers,
+        "competitors": json.encode({"data": competitorsPercents}),
+      };
+
+      Map<String, String> headers = {
+        'Authorization': 'Bearer $token',
+      };
+      await fetchUserData();
+      final response = await http.post(
+        url,
+        headers: headers,
+        body: body,
+      );
+      final Map responseData = json.decode(response.body);
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        print('::::::::::::::::' + responseData.toString());
+        stores = null;
+        notifyListeners();
         return true;
       } else {
         throw HttpException(message: responseData['error']);

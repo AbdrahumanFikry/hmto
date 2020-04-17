@@ -40,21 +40,6 @@ class AccountInfo extends StatelessWidget {
               height: 120,
               fit: BoxFit.cover,
             ),
-//            CachedNetworkImage(
-//              placeholder: (BuildContext context, String url) {
-//                return SizedBox(
-//                  width: 100,
-//                  height: 100,
-//                  child: Center(
-//                    child: CircularProgressIndicator(),
-//                  ),
-//                );
-//              },
-//              fit: BoxFit.cover,
-//              imageUrl: 'assets/user.png',
-//              width: 100,
-//              height: 100,
-//            ),
           ),
         ),
         Padding(

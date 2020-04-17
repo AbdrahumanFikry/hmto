@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pie_chart/pie_chart.dart';
+import 'package:provider/provider.dart';
+import 'package:senior/forceField/forceFieldNavigator.dart';
 import 'package:senior/widgets/alertDialog.dart';
 import '../widgets/trueAndFalse.dart';
 import '../widgets/persent.dart';
@@ -13,6 +15,7 @@ import '../models/dataForNewShop.dart';
 import '../models/answers.dart';
 import '../widgets/question.dart';
 import 'dart:convert';
+import '../providers/fieldForceProvider.dart';
 
 class Store extends StatefulWidget {
   final int id;
@@ -32,15 +35,15 @@ class Store extends StatefulWidget {
 
   Store({
     this.id,
-    this.storeName,
-    this.customerName,
-    this.mobile,
-    this.landmark,
-    this.rate,
-    this.imageIn,
-    this.imageOut,
-    this.imageStoreAds,
-    this.imageStoreFront,
+    this.storeName = 'NULL',
+    this.customerName = 'NULL',
+    this.mobile = 'NULL',
+    this.landmark = 'NULL',
+    this.rate = 0,
+    this.imageIn = 'NULL',
+    this.imageOut = 'NULL',
+    this.imageStoreAds = 'NULL',
+    this.imageStoreFront = 'NULL',
     this.trueAndFalse,
     this.longAnswerQuestion,
     this.products,
@@ -68,7 +71,15 @@ class _StoreState extends State<Store> {
         _isLoading = true;
       });
       try {
-        // TODO -----
+        await Provider.of<FieldForceData>(context, listen: false).addNewVisit(
+          id: widget.id,
+          answers: json.encode({"data": questionsAnswer}),
+        );
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (context) => ForceFieldNavigator(),
+            ),
+            (Route<dynamic> route) => false);
         setState(() {
           _isLoading = false;
         });
@@ -92,12 +103,16 @@ class _StoreState extends State<Store> {
       widget.imageStoreFront,
     ];
     widget.competitors.forEach((competitor) {
-      competitorsData[competitor.name] = 10.0;
-//      competitorsPercents.add(
-//        PercentChanger(
-//          initValue: 0.0,
-//        ),
-//      );
+      int index = Provider.of<FieldForceData>(context, listen: false)
+          .competitorsPercents
+          .indexWhere(
+            (item) => item.competitorId == competitor.competitorId,
+          );
+      competitorsData[competitor.name] = double.tryParse(
+        Provider.of<FieldForceData>(context, listen: false)
+            .competitorsPercents[index]
+            .sallesRateStock,
+      );
     });
 
     return SafeArea(
@@ -258,101 +273,55 @@ class _StoreState extends State<Store> {
                         ),
                       ),
                       Divider(),
-                      PieChart(
-                        colorList: [
-                          Colors.purple,
-                          Colors.blue,
-                          Colors.orange,
-                        ],
-                        legendPosition: LegendPosition.left,
-                        chartRadius: 250 * screenSize.aspectRatio,
-                        legendStyle: TextStyle(
-                            color: Colors.black, fontWeight: FontWeight.w700),
-                        chartValueStyle: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.w700),
-                        dataMap: competitorsData,
+                      GestureDetector(
+                        onTap: () => _showModalSheet(context),
+                        child: Consumer<FieldForceData>(
+                          builder: (ctx, data, child) {
+                            widget.competitors.forEach((competitor) {
+                              int index = data.competitorsPercents.indexWhere(
+                                (item) =>
+                                    item.competitorId ==
+                                    competitor.competitorId,
+                              );
+                              competitorsData[competitor.name] =
+                                  double.tryParse(
+                                data.competitorsPercents[index].sallesRateStock,
+                              );
+                            });
+                            return PieChart(
+                              colorList: [
+                                Colors.purple,
+                                Colors.red,
+                                Colors.orange,
+                                Colors.black,
+                                Colors.green,
+                                Colors.pink,
+                                Colors.teal,
+                                Colors.blueGrey,
+                                Colors.grey,
+                                Colors.yellow,
+                                Colors.cyan,
+                                Colors.brown,
+                              ],
+                              legendPosition: LegendPosition.left,
+                              chartRadius: 280 * screenSize.aspectRatio,
+                              legendStyle: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w700),
+                              chartValueStyle: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w700),
+                              dataMap: competitorsData,
+                            );
+                          },
+                        ),
                       ),
-//            Divider(),
-//            Padding(
-//              padding: const EdgeInsets.all(8.0),
-//              child: Row(
-//                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                children: <Widget>[
-//                  Text(
-//                    'hmto',
-//                    style: TextStyle(
-//                      fontSize: 21.0,
-//                      color: Colors.black,
-//                      fontWeight: FontWeight.bold,
-//                    ),
-//                  ),
-//                  SizedBox(
-//                    width: 20.0,
-//                  ),
-//                  Container(
-//                    width: MediaQuery.of(context).size.width * 0.5,
-//                    child: TextField(
-//                      decoration: InputDecoration(
-//                        contentPadding: EdgeInsets.only(
-//                          right: 100.0,
-//                        ),
-//                        border: OutlineInputBorder(
-//                          borderRadius: BorderRadius.circular(
-//                            5.0,
-//                          ),
-//                        ),
-//                      ),
-//                    ),
-//                  ),
-//                ],
-//              ),
-//            ),
-//            ListView.builder(
-//              itemCount: 3,
-//              shrinkWrap: true,
-//              physics: NeverScrollableScrollPhysics(),
-//              itemBuilder: (ctx, index) {
-//                return Padding(
-//                  padding: const EdgeInsets.all(8.0),
-//                  child: Row(
-//                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                    children: <Widget>[
-//                      Text(
-//                        'others',
-//                        style: TextStyle(
-//                          fontSize: 21.0,
-//                          color: Colors.black,
-//                          fontWeight: FontWeight.bold,
-//                        ),
-//                      ),
-//                      SizedBox(
-//                        width: 20.0,
-//                      ),
-//                      Container(
-//                        width: MediaQuery.of(context).size.width * 0.5,
-//                        child: TextField(
-//                          decoration: InputDecoration(
-//                            contentPadding: EdgeInsets.all(
-//                              16.0,
-//                            ),
-//                            border: OutlineInputBorder(
-//                              borderRadius: BorderRadius.circular(
-//                                5.0,
-//                              ),
-//                            ),
-//                          ),
-//                        ),
-//                      ),
-//                    ],
-//                  ),
-//                );
-//              },
-//            ),
                       Divider(),
                       Padding(
                         padding: EdgeInsets.symmetric(
-                            horizontal: 20 * screenSize.aspectRatio,
-                            vertical: 16 * screenSize.aspectRatio),
+                          horizontal: 20 * screenSize.aspectRatio,
+                          vertical: 16 * screenSize.aspectRatio,
+                        ),
                         child: ExpandablePanel(
                           theme: ExpandableThemeData(
                             animationDuration: Duration(milliseconds: 200),
@@ -412,8 +381,9 @@ class _StoreState extends State<Store> {
                       Divider(),
                       Padding(
                         padding: EdgeInsets.symmetric(
-                            horizontal: 20 * screenSize.aspectRatio,
-                            vertical: 16 * screenSize.aspectRatio),
+                          horizontal: 20 * screenSize.aspectRatio,
+                          vertical: 16 * screenSize.aspectRatio,
+                        ),
                         child: ExpandablePanel(
                           theme: ExpandableThemeData(
                             animationDuration: Duration(milliseconds: 200),
@@ -470,10 +440,13 @@ class _StoreState extends State<Store> {
                           ),
                         ),
                       ),
+                      Divider(),
+
                       Padding(
                         padding: EdgeInsets.symmetric(
-                            horizontal: 20 * screenSize.aspectRatio,
-                            vertical: 16 * screenSize.aspectRatio),
+                          horizontal: 20 * screenSize.aspectRatio,
+                          vertical: 16 * screenSize.aspectRatio,
+                        ),
                         child: ExpandablePanel(
                           theme: ExpandableThemeData(
                             animationDuration: Duration(milliseconds: 200),
@@ -514,6 +487,7 @@ class _StoreState extends State<Store> {
                           ),
                         ),
                       ),
+                      Divider(),
                       Padding(
                         padding: const EdgeInsets.all(15.0),
                         child: Container(
@@ -542,62 +516,66 @@ class _StoreState extends State<Store> {
     );
   }
 
-//  void percentChanger(BuildContext context, int index) {
-//    showModalBottomSheet(
-//      context: context,
-//      builder: (builder) {
-//        return competitors[index];
-//      },
-//    );
-//  }
+  void percentChanger(BuildContext context, int id) {
+    showModalBottomSheet(
+      context: context,
+      builder: (builder) {
+        return PercentChanger(
+          initValue: 0,
+          id: id,
+        );
+      },
+    );
+  }
 
-//  void _showModalSheet(BuildContext context) {
-//    showModalBottomSheet(
-//      context: context,
-//      builder: (builder) {
-//        return Container(
-//          height: 400,
-//          child:  Column(
-//              mainAxisAlignment: MainAxisAlignment.center,
-//              //crossAxisAlignment: CrossAxisAlignment.stretch,
-//              children: <Widget>[
-//                SizedBox(height: 20.0,),
-//                Text(
-//                  'Change percent',
-//                  style: TextStyle(
-//                    fontSize: 20.0,
-//                    fontWeight: FontWeight.bold,
-//                    color: Colors.blue,
-//                  ),
-//                  textAlign: TextAlign.center,
-//                ),
-//                Spacer(),
-//                Container(
-//                  height: 280,
-//                  width: double.infinity,
-//                  child: ListView.builder(
-//                    itemCount: competitorsName.length,
-//                    itemBuilder: (ctx, index) {
-//                      return RaisedButton(
-//                        onPressed: () => percentChanger(context, index),
-//                        color: Colors.green,
-//                        child: Text(
-//                          competitorsName[index],
-//                          style: TextStyle(
-//                            fontSize: 20.0,
-//                            fontWeight: FontWeight.bold,
-//                          ),
-//                        ),
-//                      );
-//                    },
-//                  ),
-//                ),
-//              ],
-//            ),
-//
-////          padding: EdgeInsets.all(40.0),
-//        );
-//      },
-//    );
-//  }
+  void _showModalSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (builder) {
+        return Container(
+          height: 400,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            //crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              SizedBox(
+                height: 20.0,
+              ),
+              Text(
+                'Change percent',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              Spacer(),
+              Container(
+                height: 280,
+                width: double.infinity,
+                child: ListView.builder(
+                  itemCount: widget.competitors.length,
+                  itemBuilder: (ctx, index) {
+                    return RaisedButton(
+                      onPressed: () => percentChanger(
+                          context, widget.competitors[index].competitorId),
+                      color: Colors.green,
+                      child: Text(
+                        widget.competitors[index].name,
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 }
