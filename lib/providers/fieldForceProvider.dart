@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:senior/models/competitorPercent.dart';
 import 'package:senior/models/qrResult.dart';
 import 'package:senior/models/stores.dart';
+import 'package:senior/models/target.dart';
 import 'dart:convert';
 import '../models/httpExceptionModel.dart';
 import '../models/dataForNewShop.dart';
@@ -26,6 +27,7 @@ class FieldForceData with ChangeNotifier {
   List<Question> products;
   List<CompetitorPercents> competitorsPercents = [];
   Stores stores;
+  TargetForceField target;
 
   //--------------------------- Fetch questions --------------------------------
   Future<void> fetchQuestions() async {
@@ -303,6 +305,28 @@ class FieldForceData with ChangeNotifier {
         print('::::::::::::::::' + responseData.toString());
         stores = null;
         notifyListeners();
+        return true;
+      } else {
+        throw HttpException(message: responseData['error']);
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  //------------------------------------------Fetch Target---------------------------
+  Future <void> fetchTarget()async{
+    await fetchUserData();
+    final url = 'https://api.hmto-eleader.com/api/analysis/$userId';
+    try {
+      final response = await http.get(url, headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      });
+      final Map responseData = json.decode(response.body);
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        print('::::::::::::::::' + responseData.toString());
+        target = TargetForceField.fromJson(responseData);
         return true;
       } else {
         throw HttpException(message: responseData['error']);
