@@ -23,8 +23,9 @@ class Clicks {
 class _TargetGraphForceFieldState extends State<TargetGraphForceField> {
   @override
   Widget build(BuildContext context) {
+    
     var data = [
-      Clicks(tr('senior_profile.visits'), 60 , Colors.yellow),
+      Clicks(tr('senior_profile.visits'), 60, Colors.yellow),
       Clicks(tr('senior_profile.newStore'), 80, Colors.green),
     ];
     var series = [
@@ -70,29 +71,16 @@ class _TargetGraphForceFieldState extends State<TargetGraphForceField> {
                 ),
               );
             }
-            return Consumer<SeniorFieldForceData>(builder: (context, data, child) {
-              return data.fieldForceSeniorTargetModel.data == null
-                  ? Center(
-                      child: Text(
-                        tr('extra.noTarget'),
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                          fontSize: 18.0,
-                        ),
-                      ),
-                    )
-                  : Scaffold(
-                      body: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            chartWidget,
-                          ],
-                        ),
-                      ),
-                    );
-            });
+            return Scaffold(
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    chartWidget,
+                  ],
+                ),
+              ),
+            );
           }
         });
   }
