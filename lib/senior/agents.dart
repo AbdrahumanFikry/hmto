@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
-import 'package:senior/providers/fieldForceProvider.dart';
+import 'package:senior/providers/seniorFieldForceProvider.dart';
 import 'package:senior/senior/targetGraphSells.dart';
 
 class Agents extends StatelessWidget {
@@ -11,7 +10,7 @@ class Agents extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder(
-        future:  Provider.of<FieldForceData>(context, listen: false).fetchAgents(),
+        future:  Provider.of<SeniorFieldForceData>(context, listen: false).fetchAgents(),
           builder: (context,dataSnapShot){
             if (dataSnapShot.connectionState == ConnectionState.waiting) {
               return Center(
@@ -29,7 +28,7 @@ class Agents extends StatelessWidget {
                   ),
                 );
               }
-              return Consumer<FieldForceData>(builder: (context, data, child){
+              return Consumer<SeniorFieldForceData>(builder: (context, data, child){
                 return data.agentsModel.data.length == null
                     ?Center(
                   child: Text(
@@ -101,6 +100,7 @@ class Agents extends StatelessWidget {
                                     SizedBox(
                                       width: 10.0,
                                     ),
+                                    data.agentsModel.data[index].analysis==null? Text(''):
                                     Text(
                                       tr('senior_profile.one_visit'),
                                       style: TextStyle(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:provider/provider.dart';
 import 'package:senior/providers/fieldForceProvider.dart';
+import 'package:senior/providers/seniorFieldForceProvider.dart';
 
 class TargetGraphForceField extends StatefulWidget {
   @override
@@ -50,7 +51,7 @@ class _TargetGraphForceFieldState extends State<TargetGraphForceField> {
     );
 
     return FutureBuilder(
-        future: Provider.of<FieldForceData>(context, listen: false)
+        future: Provider.of<SeniorFieldForceData>(context, listen: false)
             .fetchTargetSenior(),
         builder: (context, dataSnapShot) {
           if (dataSnapShot.connectionState == ConnectionState.waiting) {
@@ -69,7 +70,7 @@ class _TargetGraphForceFieldState extends State<TargetGraphForceField> {
                 ),
               );
             }
-            return Consumer<FieldForceData>(builder: (context, data, child) {
+            return Consumer<SeniorFieldForceData>(builder: (context, data, child) {
               return data.fieldForceSeniorTargetModel.data == null
                   ? Center(
                       child: Text(
