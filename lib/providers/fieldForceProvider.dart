@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:senior/models/agentsModel.dart';
 import 'package:senior/models/competitorPercent.dart';
 import 'package:senior/models/qrResult.dart';
 import 'package:senior/models/stores.dart';
@@ -10,6 +11,7 @@ import '../models/dataForNewShop.dart';
 import 'package:dio/dio.dart';
 import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../models/fieldForceSeniorTargetModel.dart';
 
 class FieldForceData with ChangeNotifier {
   String token;
@@ -28,6 +30,8 @@ class FieldForceData with ChangeNotifier {
   List<CompetitorPercents> competitorsPercents = [];
   Stores stores;
   TargetForceField target;
+  FieldForceSeniorTargetModel fieldForceSeniorTargetModel;
+  AgentsModel agentsModel;
 
   //--------------------------- Fetch questions --------------------------------
   Future<void> fetchQuestions() async {
@@ -344,6 +348,37 @@ class FieldForceData with ChangeNotifier {
         return true;
       } else {
         throw HttpException(message: responseData['error']);
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  //----------------------Fetch Target Senior------------------------------
+  Future<void> fetchTargetSenior() async {
+    const url = 'https://api.hmto-eleader.com/api/seniorFieldForce/analysis';
+    try {
+      final response = await http.get(url);
+      final responseData = json.decode(response.body);
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        fieldForceSeniorTargetModel = FieldForceSeniorTargetModel.fromJson(responseData);
+        notifyListeners();
+        return fieldForceSeniorTargetModel;
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+  //-------------------------Fetch Agents------------------------------------------
+  Future<void> fetchAgents() async {
+    const url = 'https://api.hmto-eleader.com/api/seniorFieldForce';
+    try {
+      final response = await http.get(url);
+      final responseData = json.decode(response.body);
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        agentsModel = AgentsModel.fromJson(responseData);
+        notifyListeners();
+        return agentsModel;
       }
     } catch (error) {
       throw error;
