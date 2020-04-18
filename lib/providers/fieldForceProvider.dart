@@ -23,7 +23,7 @@ class FieldForceData with ChangeNotifier {
   QrResult qrResult;
   List<Question> trueAndFalse;
   List<Question> longAnswerQuestion;
-  List<Competitors> competitors;
+  List<Competitors> competitors = [];
   List<Question> products;
   List<CompetitorPercents> competitorsPercents = [];
   Stores stores;
@@ -42,14 +42,22 @@ class FieldForceData with ChangeNotifier {
         print('::::::::::::::::' + responseData.toString());
         dataForNewShop = DataForNewShop.fromJson(responseData);
         competitors = dataForNewShop.data.competitors;
+        final List<CompetitorPercents> loadedItems = [];
+        competitors.forEach((competitor) {
+          loadedItems.add(
+            CompetitorPercents(
+              competitorId: competitor.competitorId,
+              sallesRateStock: '0.0',
+              sallesRateMoney: '0',
+            ),
+          );
+        });
+        competitorsPercents = loadedItems;
         trueAndFalse = dataForNewShop.data.question
             .where((i) => i.type == 'falseOrTrue')
             .toList();
         longAnswerQuestion = dataForNewShop.data.question
-            .where((i) => i.type != 'falseOrTrue')
-            .toList();
-        products = dataForNewShop.data.question
-            .where((i) => i.type == 'product')
+            .where((i) => i.type != 'product' && i.type != 'falseOrTrue')
             .toList();
         notifyListeners();
         return true;
@@ -78,14 +86,16 @@ class FieldForceData with ChangeNotifier {
     String landmark,
     String position,
     String answers,
-    String competitorsData,
+//    String competitorsData,
   }) async {
     await fetchUserData();
     const url = 'https://api.hmto-eleader.com/api/add_field_force_shop';
     try {
       print('::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: '
           '\n$shopName\n$customerName\n$customerPhone\n$sellsName\n$sellsPhone\n'
-          '$rate\n$answers\n$competitorsData\n$lat\n$long\n$landmark\n$position\n$businessId\n$userId\n$image1\n$image2\n$image3\n$image4');
+          '$rate\n$answers\n${json.encode({
+        "data": competitorsPercents
+      })}\n$lat\n$long\n$landmark\n$position\n$businessId\n$userId\n$image1\n$image2\n$image3\n$image4');
       var formData = FormData();
       formData.fields..add(MapEntry('business_id', businessId.toString()));
       formData.fields..add(MapEntry('supplier_business_name', shopName));
@@ -105,26 +115,28 @@ class FieldForceData with ChangeNotifier {
       if (image2 != null)
         formData.files.add(MapEntry(
           'image_out',
-          await MultipartFile.fromFile(image1.path,
+          await MultipartFile.fromFile(image2.path,
               filename: image2.path.split("/").last),
         ));
       if (image3 != null)
         formData.files.add(MapEntry(
           'image_storeAds',
-          await MultipartFile.fromFile(image1.path,
+          await MultipartFile.fromFile(image3.path,
               filename: image3.path.split("/").last),
         ));
       if (image4 != null)
         formData.files.add(MapEntry(
           'image_storeFront',
-          await MultipartFile.fromFile(image1.path,
+          await MultipartFile.fromFile(image4.path,
               filename: image4.path.split("/").last),
         ));
       formData.fields..add(MapEntry('landmark', landmark));
       formData.fields..add(MapEntry('position', position));
       formData.fields..add(MapEntry('created_by', userId.toString()));
       formData.fields..add(MapEntry('questionsAnswer', answers));
-      formData.fields..add(MapEntry('competitors', competitorsData));
+      formData.fields
+        ..add(MapEntry(
+            'competitors', json.encode({"data": competitorsPercents})));
       var response = await dio.post(
         url,
         data: formData,
@@ -146,6 +158,8 @@ class FieldForceData with ChangeNotifier {
       );
       print(':::::::::::::::' + response.toString());
       notifyListeners();
+      competitorsPercents = [];
+      maxValue = 100;
       await fetchStores();
       return true;
     } catch (error) {

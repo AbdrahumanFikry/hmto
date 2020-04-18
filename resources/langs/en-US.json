@@ -105,12 +105,14 @@
     "bills": "Bills"
   },
   "extra": {
-    "images": "مطلوب 4 صور",
+    "images": "4 images required",
     "error": "An Error Occurred!",
     "tryAgain": "Try Again?",
     "loginError": "email or password is not correct",
     "check": "Check your internet connection",
     "mapHint": "Long Press at add marker to move it",
-    "noTarget": "Target did not set yet"
+    "noTarget": "Target did not set yet",
+    "refresh": "refresh",
+    "answer": "Type answer here"
   }
 }

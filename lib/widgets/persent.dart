@@ -47,40 +47,40 @@ class _PercentChangerState extends State<PercentChanger> {
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom + 50.0,
       ),
-      child: Provider.of<FieldForceData>(context, listen: false).maxValue == 0.0
-          ? Center(
-              child: Text(
-                '100 %',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
+      child: Form(
+        key: _formKey,
+        child: ListView(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(
+                right: 50.0,
+                left: 50.0,
+                bottom: 20.0,
+              ),
+              child: TextFormField(
+                onSaved: (value) {
+                  setState(() {
+                    amount = value;
+                  });
+                },
+                focusNode: FocusNode(),
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: tr('senior_profile.egp'),
                 ),
               ),
-            )
-          : Form(
-              key: _formKey,
-              child: ListView(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      right: 50.0,
-                      left: 50.0,
-                      bottom: 20.0,
-                    ),
-                    child: TextFormField(
-                      onSaved: (value) {
-                        setState(() {
-                          amount = value;
-                        });
-                      },
-                      focusNode: FocusNode(),
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        labelText: tr('senior_profile.egp'),
+            ),
+            Provider.of<FieldForceData>(context, listen: false).maxValue == 0.0
+                ? Center(
+                    child: Text(
+                      '100 %',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ),
-                  SleekCircularSlider(
+                  )
+                : SleekCircularSlider(
                     onChangeStart: (double value) {
                       print(value.round());
                     },
@@ -101,38 +101,38 @@ class _PercentChangerState extends State<PercentChanger> {
                             .maxValue,
                     initialValue: widget.initValue,
                   ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 50.0,
-                      vertical: 10.0,
-                    ),
-                    child: RaisedButton(
-                      onPressed: () => done(
-                        amount: amount,
-                        context: context,
+            SizedBox(
+              height: 20.0,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 50.0,
+                vertical: 10.0,
+              ),
+              child: RaisedButton(
+                onPressed: () => done(
+                  amount: amount,
+                  context: context,
 //                key: _formKey,
-                        percent: percent,
-                      ),
-                      color: Colors.green,
-                      elevation: 5.0,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 20.0,
-                      ),
-                      child: Text(
-                        tr('sells_profile.status'),
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
+                  percent: percent,
+                ),
+                color: Colors.green,
+                elevation: 5.0,
+                padding: EdgeInsets.symmetric(
+                  horizontal: 20.0,
+                ),
+                child: Text(
+                  tr('sells_profile.status'),
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
                   ),
-                ],
+                ),
               ),
             ),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:senior/forceField/forceFieldMap.dart';
 import 'package:senior/forceField/forceFieldProfile.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:provider/provider.dart';
+import 'package:senior/widgets/errorWidget.dart';
 import '../providers/fieldForceProvider.dart';
 
 class ForceFieldNavigator extends StatefulWidget {
@@ -48,44 +49,13 @@ class _ForceFieldNavigatorState extends State<ForceFieldNavigator> {
                 );
               } else {
                 if (dataSnapShot.hasError) {
-                  return Center(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          tr('extra.check'),
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20.0,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20.0,
-                        ),
-                        RaisedButton(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 20.0,
-                            vertical: 10.0,
-                          ),
-                          child: Text(
-                            tr('extra.tryAgain'),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18.0,
-                            ),
-                          ),
-                          color: Colors.green,
-                          onPressed: () {
-                            setState(() {
-                              Provider.of<FieldForceData>(context,
-                                      listen: false)
-                                  .stores = null;
-                            });
-                          },
-                        )
-                      ],
-                    ),
+                  return ErrorHandler(
+                    toDO: () {
+                      setState(() {
+                        Provider.of<FieldForceData>(context, listen: false)
+                            .stores = null;
+                      });
+                    },
                   );
                 } else {
                   return _pages[index];

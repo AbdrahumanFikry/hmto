@@ -3,13 +3,21 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:provider/provider.dart';
 import 'package:senior/providers/fieldForceProvider.dart';
+import 'package:senior/widgets/errorWidget.dart';
 
-class Target extends StatelessWidget {
+class Target extends StatefulWidget {
+  @override
+  _TargetState createState() => _TargetState();
+}
+
+class _TargetState extends State<Target> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future:
-            Provider.of<FieldForceData>(context, listen: false).fetchTarget(),
+        future: Provider.of<FieldForceData>(context, listen: false).target ==
+                null
+            ? Provider.of<FieldForceData>(context, listen: false).fetchTarget()
+            : null,
         builder: (context, dataSnapShot) {
           if (dataSnapShot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -17,14 +25,13 @@ class Target extends StatelessWidget {
             );
           } else {
             if (dataSnapShot.hasError) {
-              Center(
-                child: Text(
-                  tr('extra.check'),
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20.0,
-                  ),
-                ),
+              return ErrorHandler(
+                toDO: () {
+                  setState(() {
+                    Provider.of<FieldForceData>(context, listen: false).target =
+                        null;
+                  });
+                },
               );
             }
             return Consumer<FieldForceData>(builder: (context, data, child) {
@@ -125,6 +132,30 @@ class Target extends StatelessWidget {
                               progressColor: Colors.yellow,
                             ),
                           ],
+                        ),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        RaisedButton(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 20.0,
+                            vertical: 10.0,
+                          ),
+                          child: Text(
+                            tr('extra.refresh'),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18.0,
+                            ),
+                          ),
+                          color: Colors.green,
+                          onPressed: () {
+                            setState(() {
+                              Provider.of<FieldForceData>(context,
+                                      listen: false)
+                                  .target = null;
+                            });
+                          },
                         ),
                       ],
                     );

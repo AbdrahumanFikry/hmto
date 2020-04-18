@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class QuestionHandler extends StatelessWidget {
   final int index;
@@ -26,7 +27,7 @@ class QuestionHandler extends StatelessWidget {
         TextFormField(
           onSaved: onSaved,
           decoration: InputDecoration(
-            hintText: 'Type answer here',
+            hintText: tr('extra.answer'),
           ),
         ),
         SizedBox(
