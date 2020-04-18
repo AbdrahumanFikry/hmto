@@ -288,30 +288,50 @@ class _StoreState extends State<Store> {
                                 data.competitorsPercents[index].sallesRateStock,
                               );
                             });
-                            return PieChart(
-                              colorList: [
-                                Colors.purple,
-                                Colors.red,
-                                Colors.orange,
-                                Colors.black,
-                                Colors.green,
-                                Colors.pink,
-                                Colors.teal,
-                                Colors.blueGrey,
-                                Colors.grey,
-                                Colors.yellow,
-                                Colors.cyan,
-                                Colors.brown,
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Column(
+                                  children: data.competitorsPercents
+                                      .map(
+                                        (item) => Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 3.0,
+                                          ),
+                                          child: Text(item.sallesRateMoney),
+                                        ),
+                                      )
+                                      .toList(),
+                                ),
+                                SizedBox(
+                                  width: 10.0,
+                                ),
+                                PieChart(
+                                  colorList: [
+                                    Colors.purple,
+                                    Colors.red,
+                                    Colors.orange,
+                                    Colors.black,
+                                    Colors.green,
+                                    Colors.pink,
+                                    Colors.teal,
+                                    Colors.blueGrey,
+                                    Colors.grey,
+                                    Colors.yellow,
+                                    Colors.cyan,
+                                    Colors.brown,
+                                  ],
+                                  legendPosition: LegendPosition.left,
+                                  chartRadius: 230 * screenSize.aspectRatio,
+                                  legendStyle: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w700),
+                                  chartValueStyle: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w700),
+                                  dataMap: competitorsData,
+                                ),
                               ],
-                              legendPosition: LegendPosition.left,
-                              chartRadius: 280 * screenSize.aspectRatio,
-                              legendStyle: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w700),
-                              chartValueStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w700),
-                              dataMap: competitorsData,
                             );
                           },
                         ),

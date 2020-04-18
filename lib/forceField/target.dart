@@ -66,9 +66,14 @@ class _TargetState extends State<Target> {
                               animationDuration: 1000,
                               lineHeight: 25.0,
                               percent: double.parse(
-                                    data.target.data.targetPer,
-                                  ) /
-                                  100,
+                                        data.target.data.targetPer,
+                                      ) >=
+                                      100.0
+                                  ? 1.0
+                                  : double.tryParse(
+                                        data.target.data.targetPer,
+                                      ) /
+                                      100,
                               center: Text("${data.target.data.targetPer}%"),
                               linearStrokeCap: LinearStrokeCap.butt,
                               progressColor: Colors.blue,
@@ -95,9 +100,14 @@ class _TargetState extends State<Target> {
                               animationDuration: 1000,
                               lineHeight: 25.0,
                               percent: double.parse(
-                                    data.target.data.visited,
-                                  ) /
-                                  100,
+                                        data.target.data.visited,
+                                      ) >=
+                                      100.0
+                                  ? 1.0
+                                  : double.parse(
+                                        data.target.data.visited,
+                                      ) /
+                                      100,
                               center: Text("${data.target.data.visited}%"),
                               linearStrokeCap: LinearStrokeCap.butt,
                               progressColor: Colors.red,
@@ -124,9 +134,14 @@ class _TargetState extends State<Target> {
                               animationDuration: 1000,
                               lineHeight: 25.0,
                               percent: double.parse(
-                                    data.target.data.newStorePer,
-                                  ) /
-                                  100,
+                                        data.target.data.newStorePer,
+                                      ) >=
+                                      100.0
+                                  ? 1.0
+                                  : double.parse(
+                                        data.target.data.newStorePer,
+                                      ) >=
+                                      100.0 / 100,
                               center: Text("${data.target.data.newStorePer}%"),
                               linearStrokeCap: LinearStrokeCap.butt,
                               progressColor: Colors.yellow,

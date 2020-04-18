@@ -390,172 +390,6 @@ class _AdsAddStoreState extends State<AdsAddStore> {
                                     ),
                                   ),
                                 ),
-//                                Padding(
-//                                  padding: const EdgeInsets.all(8.0),
-//                                  child: Row(
-//                                    mainAxisAlignment:
-//                                        MainAxisAlignment.spaceBetween,
-//                                    children: <Widget>[
-//                                      Expanded(
-//                                        child: Text(
-//                                          tr('new_store.sale_out_hmto'),
-//                                          style: TextStyle(
-//                                            fontSize: 21.0,
-//                                            color: Colors.black,
-//                                            fontWeight: FontWeight.bold,
-//                                          ),
-//                                        ),
-//                                      ),
-//                                      SizedBox(
-//                                        width: 20.0,
-//                                      ),
-//                                      Container(
-//                                        width:
-//                                            MediaQuery.of(context).size.width *
-//                                                0.4,
-//                                        child: TextFormField(
-//                                          onSaved: null,
-//                                          validator: validator,
-//                                          decoration: InputDecoration(
-//                                            border: OutlineInputBorder(
-//                                              borderRadius:
-//                                                  BorderRadius.circular(
-//                                                5.0,
-//                                              ),
-//                                            ),
-//                                          ),
-//                                        ),
-//                                      ),
-//                                    ],
-//                                  ),
-//                                ),
-//                                Consumer<FieldForceData>(
-//                                  builder: (context, data, child) =>
-//                                      ListView.builder(
-//                                    itemCount: data.competitors.length,
-//                                    shrinkWrap: true,
-//                                    physics: NeverScrollableScrollPhysics(),
-//                                    itemBuilder: (ctx, index) {
-//                                      void onSaved(value) {
-//                                        int i = competitors.indexWhere(
-//                                            (elem) =>
-//                                                data.competitors[index]
-//                                                    .competitorId ==
-//                                                elem.competitorId);
-//                                        print(':::::::::::' + i.toString());
-//                                        if (i == -1) {
-//                                          competitors.add(
-//                                            CompetitorPercents(
-//                                              competitorId: data
-//                                                  .competitors[index]
-//                                                  .competitorId,
-//                                              sallesRateStock: value + '%',
-//                                            ),
-//                                          );
-//                                        } else {
-//                                          competitors[i].sallesRateStock =
-//                                              value + '%';
-//                                        }
-//                                      }
-//
-//                                      void onSavedValue(value) {
-//                                        int i = competitors.indexWhere(
-//                                            (elem) =>
-//                                                data.competitors[index]
-//                                                    .competitorId ==
-//                                                elem.competitorId);
-//                                        if (i == -1) {
-//                                          competitors.add(
-//                                            CompetitorPercents(
-//                                              competitorId: data
-//                                                  .competitors[index]
-//                                                  .competitorId,
-//                                              sallesRateMoney: value,
-//                                            ),
-//                                          );
-//                                        } else {
-//                                          competitors[i].sallesRateMoney =
-//                                              value;
-//                                        }
-//                                      }
-//
-//                                      return Padding(
-//                                        padding: const EdgeInsets.all(8.0),
-//                                        child: Row(
-//                                          mainAxisAlignment:
-//                                              MainAxisAlignment.spaceBetween,
-//                                          children: <Widget>[
-//                                            Container(
-//                                              child: Text(
-//                                                data.competitors[index].name,
-//                                                style: TextStyle(
-//                                                  color: Colors.black,
-//                                                  fontSize: 18.0,
-//                                                ),
-//                                                overflow: TextOverflow.ellipsis,
-//                                                maxLines: 1,
-//                                              ),
-//                                              width: MediaQuery.of(context)
-//                                                      .size
-//                                                      .width *
-//                                                  0.3,
-//                                            ),
-//                                            Spacer(),
-//                                            Container(
-//                                              width: MediaQuery.of(context)
-//                                                      .size
-//                                                      .width *
-//                                                  0.3,
-//                                              child: TextFormField(
-//                                                onSaved: onSaved,
-//                                                validator: validator,
-//                                                decoration: InputDecoration(
-//                                                  hintText: 'offer',
-//                                                  contentPadding:
-//                                                      EdgeInsets.all(
-//                                                    16.0,
-//                                                  ),
-//                                                  border: OutlineInputBorder(
-//                                                    borderRadius:
-//                                                        BorderRadius.circular(
-//                                                      5.0,
-//                                                    ),
-//                                                  ),
-//                                                ),
-//                                              ),
-//                                            ),
-//                                            SizedBox(
-//                                              width: 5.0,
-//                                            ),
-//                                            Container(
-//                                              width: MediaQuery.of(context)
-//                                                      .size
-//                                                      .width *
-//                                                  0.3,
-//                                              child: TextFormField(
-//                                                onSaved: onSavedValue,
-//                                                validator: validator,
-//                                                decoration: InputDecoration(
-//                                                  hintText: 'value',
-//                                                  contentPadding:
-//                                                      EdgeInsets.all(
-//                                                    16.0,
-//                                                  ),
-//                                                  border: OutlineInputBorder(
-//                                                    borderRadius:
-//                                                        BorderRadius.circular(
-//                                                      5.0,
-//                                                    ),
-//                                                  ),
-//                                                ),
-//                                              ),
-//                                            ),
-//                                          ],
-//                                        ),
-//                                      );
-//                                    },
-//                                  ),
-//                                ),
                                 Divider(),
                                 GestureDetector(
                                   onTap: () => _showModalSheet(context),
@@ -574,31 +408,54 @@ class _AdsAddStoreState extends State<AdsAddStore> {
                                               .sallesRateStock,
                                         );
                                       });
-                                      return PieChart(
-                                        colorList: [
-                                          Colors.purple,
-                                          Colors.red,
-                                          Colors.orange,
-                                          Colors.black,
-                                          Colors.green,
-                                          Colors.pink,
-                                          Colors.teal,
-                                          Colors.blueGrey,
-                                          Colors.grey,
-                                          Colors.yellow,
-                                          Colors.cyan,
-                                          Colors.brown,
+                                      return Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Column(
+                                            children: data.competitorsPercents
+                                                .map(
+                                                  (item) => Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                      vertical: 3.0,
+                                                    ),
+                                                    child: Text(
+                                                        item.sallesRateMoney),
+                                                  ),
+                                                )
+                                                .toList(),
+                                          ),
+                                          SizedBox(
+                                            width: 10.0,
+                                          ),
+                                          PieChart(
+                                            colorList: [
+                                              Colors.purple,
+                                              Colors.red,
+                                              Colors.orange,
+                                              Colors.black,
+                                              Colors.green,
+                                              Colors.pink,
+                                              Colors.teal,
+                                              Colors.blueGrey,
+                                              Colors.grey,
+                                              Colors.yellow,
+                                              Colors.cyan,
+                                              Colors.brown,
+                                            ],
+                                            legendPosition: LegendPosition.left,
+                                            chartRadius:
+                                                230 * screenSize.aspectRatio,
+                                            legendStyle: TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.w700),
+                                            chartValueStyle: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w700),
+                                            dataMap: competitorsData,
+                                          ),
                                         ],
-                                        legendPosition: LegendPosition.left,
-                                        chartRadius:
-                                            280 * screenSize.aspectRatio,
-                                        legendStyle: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w700),
-                                        chartValueStyle: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w700),
-                                        dataMap: competitorsData,
                                       );
                                     },
                                   ),

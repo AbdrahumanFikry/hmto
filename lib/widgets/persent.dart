@@ -25,10 +25,11 @@ class _PercentChangerState extends State<PercentChanger> {
 
   void done({
     BuildContext context,
-    int percent,
-    String amount,
   }) {
     _formKey.currentState.save();
+
+    print('::::::' + amount);
+    print('::::::' + percent.toString());
     Provider.of<FieldForceData>(context, listen: false).changePercent(
       id: widget.id,
       amount: amount,
@@ -111,10 +112,7 @@ class _PercentChangerState extends State<PercentChanger> {
               ),
               child: RaisedButton(
                 onPressed: () => done(
-                  amount: amount,
                   context: context,
-//                key: _formKey,
-                  percent: percent,
                 ),
                 color: Colors.green,
                 elevation: 5.0,
