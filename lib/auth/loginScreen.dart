@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:senior/forceField/forceFieldNavigator.dart';
 import 'package:senior/providers/authenticationProvider.dart';
 import 'package:senior/sells/sellsNavigator.dart';
+import 'package:senior/sells/startDay.dart';
 import 'package:senior/senior/tabBarForceField.dart';
 import 'package:senior/senior/tabBarSells.dart';
 import '../widgets/alertDialog.dart';
@@ -48,9 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
           case 'salles_man':
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
-                builder: (context) => SellsNavigator(
-                  isDriver: false,
-                ),
+                builder: (context) => StartDay(),
               ),
             );
             break;

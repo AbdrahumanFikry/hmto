@@ -12,6 +12,7 @@ import 'package:senior/providers/location.dart';
 import 'package:senior/providers/sellsProvider.dart';
 import 'package:senior/providers/seniorProvider.dart';
 import 'package:senior/sells/sellsNavigator.dart';
+import 'package:senior/sells/startDay.dart';
 import 'package:senior/senior/tabBarForceField.dart';
 import 'package:senior/senior/tabBarSells.dart';
 
@@ -38,9 +39,7 @@ class MyApp extends StatelessWidget {
         );
         break;
       case 'salles_man':
-        temp = SellsNavigator(
-          isDriver: false,
-        );
+        temp = StartDay();
         break;
       case 'filed_force_man':
         temp = ForceFieldNavigator();
