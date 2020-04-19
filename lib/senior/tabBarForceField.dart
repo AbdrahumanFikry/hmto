@@ -13,15 +13,7 @@ class TabBarForceFieldScreen extends StatelessWidget {
         appBar: AppBar(
           elevation: 0.4,
           backgroundColor: Colors.white,
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
+          leading: new Container(),
           bottom: TabBar(
             tabs: [
               Text(
@@ -43,7 +35,7 @@ class TabBarForceFieldScreen extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-           Agents(),
+            Agents(),
             TargetGraphForceField(),
           ],
         ),

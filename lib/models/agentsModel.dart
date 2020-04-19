@@ -11,31 +11,23 @@ class AgentsModel {
       });
     }
   }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.data != null) {
-      data['data'] = this.data.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
 }
 
 class Data {
   int id;
   String name;
-  Null username;
+  String username;
   String email;
   int businessId;
   Analysis analysis;
 
   Data(
       {this.id,
-        this.name,
-        this.username,
-        this.email,
-        this.businessId,
-        this.analysis});
+      this.name,
+      this.username,
+      this.email,
+      this.businessId,
+      this.analysis});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -47,19 +39,6 @@ class Data {
         ? new Analysis.fromJson(json['analysis'])
         : null;
   }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['username'] = this.username;
-    data['email'] = this.email;
-    data['business_id'] = this.businessId;
-    if (this.analysis != null) {
-      data['analysis'] = this.analysis.toJson();
-    }
-    return data;
-  }
 }
 
 class Analysis {
@@ -70,16 +49,8 @@ class Analysis {
   Analysis({this.visited, this.newStorePer, this.targetPer});
 
   Analysis.fromJson(Map<String, dynamic> json) {
-    visited = json['Visited'];
+    visited = double.tryParse(json['Visited']).round().toString();
     newStorePer = json['newStorePer'];
     targetPer = json['TargetPer'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['Visited'] = this.visited;
-    data['newStorePer'] = this.newStorePer;
-    data['TargetPer'] = this.targetPer;
-    return data;
   }
 }

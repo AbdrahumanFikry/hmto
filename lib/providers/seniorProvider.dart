@@ -4,7 +4,7 @@ import 'package:senior/models/agentsModel.dart';
 import 'package:senior/models/fieldForceSeniorTargetModel.dart';
 import 'package:http/http.dart' as http;
 
-class SeniorFieldForceData with ChangeNotifier {
+class SeniorData with ChangeNotifier {
   FieldForceSeniorTargetModel fieldForceSeniorTarget;
   AgentsModel agents;
 

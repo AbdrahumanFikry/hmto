@@ -39,7 +39,7 @@ class ErrorHandler extends StatelessWidget {
             ),
             color: Colors.green,
             onPressed: toDO,
-          )
+          ),
         ],
       ),
     );
