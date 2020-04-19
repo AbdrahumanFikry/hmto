@@ -10,6 +10,7 @@ import 'package:senior/providers/driverProvider.dart';
 import 'package:senior/providers/fieldForceProvider.dart';
 import 'package:senior/providers/location.dart';
 import 'package:senior/providers/sellsProvider.dart';
+import 'package:senior/providers/seniorFieldForceProvider.dart';
 import 'package:senior/providers/seniorProvider.dart';
 import 'package:senior/sells/sellsNavigator.dart';
 import 'package:senior/sells/startDay.dart';
@@ -72,6 +73,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => FieldForceData(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => SeniorFieldForceData(),
         ),
         ChangeNotifierProvider(
           create: (context) => SellsData(),
