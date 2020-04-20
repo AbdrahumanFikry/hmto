@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:senior/senior/sells.dart';
-import '../senior/targetGraphSells.dart';
+import '../senior/targetGraph.dart';
 import 'cash.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../providers/authenticationProvider.dart';

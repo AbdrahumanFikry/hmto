@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior/providers/seniorProvider.dart';
-import 'package:senior/senior/targetGraphSells.dart';
+import 'package:senior/senior/targetGraph.dart';
 import 'package:senior/widgets/errorWidget.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -11,6 +11,8 @@ class TargetGraphForceField extends StatefulWidget {
 }
 
 class _TargetGraphForceFieldState extends State<TargetGraphForceField> {
+  bool _isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -58,10 +60,13 @@ class _TargetGraphForceFieldState extends State<TargetGraphForceField> {
                           visits: double.tryParse(
                             data.fieldForceSeniorTarget.data.totalVisitedPer,
                           ),
+                          loading: _isLoading,
                           onTab: () async {
+                            _isLoading = true;
                             await Provider.of<SeniorData>(context,
                                     listen: false)
                                 .fetchTargetSenior();
+                            _isLoading = false;
                           },
                         ),
             );

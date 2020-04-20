@@ -18,6 +18,7 @@ class SeniorData with ChangeNotifier {
   //------------------------- Fetch senior target ------------------------------
   Future<void> fetchTargetSenior() async {
     const url = 'https://api.hmto-eleader.com/api/seniorFieldForce/analysis';
+    await fetchUserData();
     try {
       final response = await http.get(url, headers: {
         'Content-Type': 'application/json',
@@ -41,6 +42,7 @@ class SeniorData with ChangeNotifier {
   //---------------------------- Fetch Agents ----------------------------------
   Future<void> fetchAgents() async {
     const url = 'https://api.hmto-eleader.com/api/seniorFieldForce';
+    await fetchUserData();
     try {
       final response = await http.get(url, headers: {
         'Content-Type': 'application/json',
@@ -69,6 +71,7 @@ class SeniorData with ChangeNotifier {
     final extractedUserData =
         json.decode(prefs.getString('userData')) as Map<String, Object>;
     token = extractedUserData['token'];
+    print(token + "\n:::::::");
     userId = extractedUserData['userId'];
     businessId = extractedUserData['businessId'];
     userName = extractedUserData['userName'];

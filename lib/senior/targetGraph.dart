@@ -9,6 +9,7 @@ class TargetGraphSenior extends StatelessWidget {
   final double newStores;
   final bool isFieldForce;
   final Function onTab;
+  final bool loading;
 
   TargetGraphSenior({
     this.cash = 0.0,
@@ -16,6 +17,7 @@ class TargetGraphSenior extends StatelessWidget {
     this.target = 0.0,
     this.newStores = 0.0,
     this.isFieldForce = false,
+    this.loading = false,
     this.onTab,
   });
 
@@ -61,23 +63,25 @@ class TargetGraphSenior extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           chartWidget,
-          RaisedButton(
-            padding: EdgeInsets.symmetric(
-              horizontal: 20.0,
-              vertical: 10.0,
-            ),
-            child: Text(
-              tr('extra.refresh'),
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18.0,
-              ),
-            ),
-            color: Colors.green,
-            onPressed: () {
-              onTab();
-            },
-          ),
+          loading
+              ? CircularProgressIndicator()
+              : RaisedButton(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20.0,
+                    vertical: 10.0,
+                  ),
+                  child: Text(
+                    tr('extra.refresh'),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18.0,
+                    ),
+                  ),
+                  color: Colors.green,
+                  onPressed: () {
+                    onTab();
+                  },
+                ),
         ],
       ),
     );

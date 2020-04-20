@@ -3,7 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:senior/providers/seniorProvider.dart';
-import 'package:senior/senior/targetGraphSells.dart';
+import 'package:senior/senior/targetGraph.dart';
 import 'package:senior/widgets/errorWidget.dart';
 
 class Agents extends StatefulWidget {
@@ -12,6 +12,8 @@ class Agents extends StatefulWidget {
 }
 
 class _AgentsState extends State<Agents> {
+  bool _isLoading = false;
+
   Future<void> onRefresh() async {
     await Provider.of<SeniorData>(context, listen: false).fetchAgents();
   }
@@ -69,34 +71,46 @@ class _AgentsState extends State<Agents> {
                                   children: <Widget>[
                                     ListTile(
                                       title: GestureDetector(
-                                        onTap: () {
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  TargetGraphSenior(
-                                                isFieldForce: true,
-                                                visits: double.tryParse(
-                                                  data.agents.data[index]
-                                                      .analysis.visited,
-                                                ),
-                                                target: double.tryParse(
-                                                  data.agents.data[index]
-                                                      .analysis.targetPer,
-                                                ),
-                                                newStores: double.tryParse(
-                                                  data.agents.data[index]
-                                                      .analysis.newStorePer,
-                                                ),
-                                                onTab: () async {
-                                                  await Provider.of<SeniorData>(
-                                                          context,
-                                                          listen: false)
-                                                      .fetchAgents();
-                                                },
-                                              ),
-                                            ),
-                                          );
-                                        },
+                                        onTap: data.agents.data[index]
+                                                    .analysis ==
+                                                null
+                                            ? () {}
+                                            : () {
+                                                Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        TargetGraphSenior(
+                                                      isFieldForce: true,
+                                                      visits: double.tryParse(
+                                                        data.agents.data[index]
+                                                            .analysis.visited,
+                                                      ),
+                                                      target: double.tryParse(
+                                                        data.agents.data[index]
+                                                            .analysis.targetPer,
+                                                      ),
+                                                      newStores:
+                                                          double.tryParse(
+                                                        data
+                                                            .agents
+                                                            .data[index]
+                                                            .analysis
+                                                            .newStorePer,
+                                                      ),
+                                                      loading: _isLoading,
+                                                      onTab: () async {
+                                                        _isLoading = true;
+                                                        await Provider.of<
+                                                                    SeniorData>(
+                                                                context,
+                                                                listen: false)
+                                                            .fetchAgents();
+                                                        _isLoading = false;
+                                                      },
+                                                    ),
+                                                  ),
+                                                );
+                                              },
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
