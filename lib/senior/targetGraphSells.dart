@@ -46,7 +46,10 @@ class TargetGraphSenior extends StatelessWidget {
     );
 
     var chartWidget = Padding(
-      padding: EdgeInsets.all(32.0),
+      padding: EdgeInsets.symmetric(
+        horizontal: 10.0,
+        vertical: 30,
+      ),
       child: SizedBox(
         height: 200.0,
         child: chart,
