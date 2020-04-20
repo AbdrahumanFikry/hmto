@@ -4,8 +4,14 @@ import 'package:senior/models/agentsModel.dart';
 import 'package:senior/models/fieldForceSeniorTargetModel.dart';
 import 'package:http/http.dart' as http;
 import '../models/httpExceptionModel.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SeniorData with ChangeNotifier {
+  String token;
+  int userId;
+  String userName;
+  int businessId;
+
   FieldForceSeniorTargetModel fieldForceSeniorTarget;
   AgentsModel agents;
 
@@ -13,7 +19,9 @@ class SeniorData with ChangeNotifier {
   Future<void> fetchTargetSenior() async {
     const url = 'https://api.hmto-eleader.com/api/seniorFieldForce/analysis';
     try {
-      final response = await http.get(url);
+      final response = await http.get(url, headers: {
+        'Authorization': 'Bearer $token',
+      });
       final responseData = json.decode(response.body);
       if (response.statusCode >= 200 && response.statusCode < 300) {
         print("Response :" + responseData.toString());
@@ -33,9 +41,9 @@ class SeniorData with ChangeNotifier {
   Future<void> fetchAgents() async {
     const url = 'https://api.hmto-eleader.com/api/seniorFieldForce';
     try {
-      final response = await http.get(
-        url,
-      );
+      final response = await http.get(url, headers: {
+        'Authorization': 'Bearer $token',
+      });
       final responseData = json.decode(response.body);
       if (response.statusCode >= 200 && response.statusCode < 300) {
         print("Response :" + responseData.toString());
@@ -48,5 +56,21 @@ class SeniorData with ChangeNotifier {
     } catch (error) {
       throw error;
     }
+  }
+
+  //----------------------------- Fetch Data -----------------------------------
+  Future<bool> fetchUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (!prefs.containsKey('userData')) {
+      return false;
+    }
+    final extractedUserData =
+        json.decode(prefs.getString('userData')) as Map<String, Object>;
+    token = extractedUserData['token'];
+    userId = extractedUserData['userId'];
+    businessId = extractedUserData['businessId'];
+    userName = extractedUserData['userName'];
+    notifyListeners();
+    return true;
   }
 }

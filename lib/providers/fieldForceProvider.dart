@@ -191,6 +191,7 @@ class FieldForceData with ChangeNotifier {
   //------------------------------ Qr reader -----------------------------------
   Future<void> qrReader({String qrData}) async {
     const url = 'https://api.hmto-eleader.com/api/store/visited';
+    await fetchUserData();
     try {
       var body = json.encode({
         "qrcode": "$qrData",
