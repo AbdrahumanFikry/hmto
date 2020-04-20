@@ -42,9 +42,9 @@ class Auth with ChangeNotifier {
         url,
         body: body,
       );
+      print("Response :" + response.body.toString());
       final Map responseData = json.decode(response.body);
       if (response.statusCode >= 200 && response.statusCode < 300) {
-        print('::::::::::::::::' + responseData.toString());
         _token = responseData['access_token'];
         _userId = responseData['user_id'];
         type = responseData['work_type'];

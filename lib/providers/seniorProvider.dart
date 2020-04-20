@@ -20,11 +20,12 @@ class SeniorData with ChangeNotifier {
     const url = 'https://api.hmto-eleader.com/api/seniorFieldForce/analysis';
     try {
       final response = await http.get(url, headers: {
+        'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       });
+      print("Response :" + response.body.toString());
       final responseData = json.decode(response.body);
       if (response.statusCode >= 200 && response.statusCode < 300) {
-        print("Response :" + responseData.toString());
         fieldForceSeniorTarget =
             FieldForceSeniorTargetModel.fromJson(responseData);
         notifyListeners();
@@ -42,11 +43,12 @@ class SeniorData with ChangeNotifier {
     const url = 'https://api.hmto-eleader.com/api/seniorFieldForce';
     try {
       final response = await http.get(url, headers: {
+        'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       });
+      print("Response :" + response.body.toString());
       final responseData = json.decode(response.body);
       if (response.statusCode >= 200 && response.statusCode < 300) {
-        print("Response :" + responseData.toString());
         agents = AgentsModel.fromJson(responseData);
         notifyListeners();
         return true;

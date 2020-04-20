@@ -37,9 +37,9 @@ class FieldForceData with ChangeNotifier {
       final response = await http.get(url, headers: {
         'Authorization': 'Bearer $token',
       });
+      print("Response :" + response.body.toString());
       final Map responseData = json.decode(response.body);
       if (response.statusCode >= 200 && response.statusCode < 300) {
-        print("Response :" + responseData.toString());
         dataForNewShop = DataForNewShop.fromJson(responseData);
         competitors = dataForNewShop.data.competitors;
         final List<CompetitorPercents> loadedItems = [];
@@ -207,9 +207,9 @@ class FieldForceData with ChangeNotifier {
         body: body,
         headers: headers,
       );
+      print("Response :" + response.body.toString());
       final Map responseData = json.decode(response.body);
       if (response.statusCode >= 200 && response.statusCode < 300) {
-        print("Response :" + responseData.toString());
         qrResult = QrResult.fromJson(responseData);
         competitors = qrResult.competitors;
         final List<CompetitorPercents> loadedItems = [];
@@ -249,9 +249,9 @@ class FieldForceData with ChangeNotifier {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       });
+      print("Response :" + response.body.toString());
       final Map responseData = json.decode(response.body);
       if (response.statusCode >= 200 && response.statusCode < 300) {
-        print("Response :" + responseData.toString());
         stores = Stores.fromJson(responseData);
         return true;
       } else {
@@ -316,9 +316,9 @@ class FieldForceData with ChangeNotifier {
         headers: headers,
         body: body,
       );
+      print("Response :" + response.body.toString());
       final Map responseData = json.decode(response.body);
       if (response.statusCode >= 200 && response.statusCode < 300) {
-        print("Response :" + responseData.toString());
         stores = null;
         notifyListeners();
         return true;
@@ -339,9 +339,9 @@ class FieldForceData with ChangeNotifier {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       });
+      print("Response :" + response.body.toString());
       final Map responseData = json.decode(response.body);
       if (response.statusCode >= 200 && response.statusCode < 300) {
-        print("Response :" + responseData.toString());
         target = TargetForceField.fromJson(responseData);
         return true;
       } else {
