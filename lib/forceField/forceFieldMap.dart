@@ -58,7 +58,8 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
     print("Before :" +
         currentLocation.latitude.toString() +
         '::' +
-        currentLocation.longitude.toString());
+        currentLocation.longitude.toString() +
+        '::');
     _getAddress(currentLocation);
     setState(() {
       _markers.clear();
@@ -72,13 +73,17 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
             latitude: value.latitude,
             longitude: value.longitude,
           );
+          _getAddress(currentLocation);
         }),
         icon: customIcon,
         onTap: () {
           print('After :' +
               currentLocation.latitude.toString() +
               '::' +
-              currentLocation.longitude.toString());
+              currentLocation.longitude.toString() +
+              '::' +
+              address);
+
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => AdsAddStore(

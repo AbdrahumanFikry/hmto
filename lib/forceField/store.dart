@@ -63,7 +63,7 @@ class _StoreState extends State<Store> {
   bool _isLoading = false;
 
   Future<void> finish() async {
-    FocusScope.of(context).requestFocus(new FocusNode());
+//    FocusScope.of(context).requestFocus(new FocusNode());
     final formData = _formKey.currentState;
     if (formData.validate()) {
       formData.save();
@@ -430,7 +430,8 @@ class _StoreState extends State<Store> {
                                       });
                                       questionsAnswer.add(
                                         Answer(
-                                          questionId: widget.products[index].id,
+                                          questionId:
+                                              widget.trueAndFalse[index].id,
                                           answer: 'True',
                                         ),
                                       );
@@ -442,7 +443,8 @@ class _StoreState extends State<Store> {
                                       });
                                       questionsAnswer.add(
                                         Answer(
-                                          questionId: widget.products[index].id,
+                                          questionId:
+                                              widget.trueAndFalse[index].id,
                                           answer: 'False',
                                         ),
                                       );

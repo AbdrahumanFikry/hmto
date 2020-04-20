@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:senior/models/agentsModel.dart';
 import 'package:senior/models/fieldForceSeniorTargetModel.dart';
 import 'package:http/http.dart' as http;
+import '../models/httpExceptionModel.dart';
 
 class SeniorData with ChangeNotifier {
   FieldForceSeniorTargetModel fieldForceSeniorTarget;
@@ -19,7 +20,9 @@ class SeniorData with ChangeNotifier {
         fieldForceSeniorTarget =
             FieldForceSeniorTargetModel.fromJson(responseData);
         notifyListeners();
-        return fieldForceSeniorTarget;
+        return true;
+      } else {
+        throw HttpException(message: responseData['error']);
       }
     } catch (error) {
       throw error;
@@ -36,7 +39,9 @@ class SeniorData with ChangeNotifier {
         print("Response :" + responseData.toString());
         agents = AgentsModel.fromJson(responseData);
         notifyListeners();
-        return agents;
+        return true;
+      } else {
+        throw HttpException(message: responseData['error']);
       }
     } catch (error) {
       throw error;

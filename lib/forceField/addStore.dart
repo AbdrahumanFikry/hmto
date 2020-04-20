@@ -17,6 +17,9 @@ import 'dart:async';
 import 'package:easy_localization/easy_localization.dart';
 import '../providers/fieldForceProvider.dart';
 import '../widgets/persent.dart';
+import 'package:image/image.dart' as Im;
+import 'package:path_provider/path_provider.dart';
+import 'dart:math' as Math;
 
 class AdsAddStore extends StatefulWidget {
   final double lat;
@@ -54,9 +57,27 @@ class _AdsAddStoreState extends State<AdsAddStore> {
 
   Future getImage() async {
     File holder = await ImagePicker.pickImage(
-        source: ImageSource.camera, maxHeight: 512, maxWidth: 512);
+      source: ImageSource.camera,
+      imageQuality: 85,
+    );
     image = holder;
+//    var h = await holder.readAsBytes();
+//    print('Before:::::::' + h.length.toString());
+//    final tempDir = await getTemporaryDirectory();
+//    final path = tempDir.path;
+//    int rand = new Math.Random().nextInt(10000);
+//
+//    Im.Image imageHandler = Im.decodeImage(holder.readAsBytesSync());
+//    image = new File('$path/img_$rand.jpg')
+//      ..writeAsBytesSync(Im.encodeJpg(imageHandler, quality: 85));
+//    var enc = await image.readAsBytes();
+//    print('After::::::::' + enc.length.toString());
   }
+
+//  Future getGallery() async {
+//    File holder = await ImagePicker.pickImage(source: ImageSource.gallery);
+//    image = holder;
+//  }
 
   Future<void> finish() async {
     FocusScope.of(context).requestFocus(new FocusNode());
@@ -115,11 +136,17 @@ class _AdsAddStoreState extends State<AdsAddStore> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    Provider.of<FieldForceData>(context, listen: false).dataForNewShop = null;
+  }
+
+  @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
     competitors =
         Provider.of<FieldForceData>(context, listen: false).competitors;
-    if (Provider.of<FieldForceData>(context, listen: false).competitors !=
+    if (Provider.of<FieldForceData>(context, listen: false).dataForNewShop !=
         null) {
       competitors.forEach((competitor) {
         int index = Provider.of<FieldForceData>(context, listen: false)

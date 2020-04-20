@@ -162,6 +162,7 @@ class FieldForceData with ChangeNotifier {
       notifyListeners();
       competitorsPercents = [];
       maxValue = 100;
+      dataForNewShop = null;
       await fetchStores();
       return true;
     } catch (error) {

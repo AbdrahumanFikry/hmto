@@ -3,8 +3,21 @@ import 'package:senior/senior/sells.dart';
 import '../senior/targetGraphSells.dart';
 import 'cash.dart';
 import 'package:easy_localization/easy_localization.dart';
+import '../providers/authenticationProvider.dart';
+import 'package:provider/provider.dart';
+import '../auth/loginScreen.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class TabBarScreenSells extends StatelessWidget {
+  void _logout(BuildContext context) {
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (context) => LoginScreen(),
+        ),
+        (Route<dynamic> route) => false);
+    Provider.of<Auth>(context, listen: false).logout();
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -21,15 +34,31 @@ class TabBarScreenSells extends StatelessWidget {
           ),
           elevation: 0.4,
           backgroundColor: Colors.white,
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: Colors.black,
+          leading: new Container(),
+          actions: <Widget>[
+            InkWell(
+              onTap: () => _logout(context),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Icon(
+                    FontAwesomeIcons.signOutAlt,
+                    color: Colors.green,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(5.0),
+                    child: Text(
+                      tr('login_screen.logout'),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
+          ],
           bottom: TabBar(
             tabs: [
               Text(

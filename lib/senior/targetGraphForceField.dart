@@ -26,7 +26,6 @@ class _TargetGraphForceFieldState extends State<TargetGraphForceField> {
           );
         } else {
           if (dataSnapShot.hasError) {
-            print('::::::' + dataSnapShot.error.toString());
             return ErrorHandler(
               toDO: () {
                 setState(() {

@@ -11,7 +11,6 @@ import 'package:senior/providers/fieldForceProvider.dart';
 import 'package:senior/providers/location.dart';
 import 'package:senior/providers/sellsProvider.dart';
 import 'package:senior/providers/seniorProvider.dart';
-import 'package:senior/providers/seniorProvider.dart';
 import 'package:senior/sells/sellsNavigator.dart';
 import 'package:senior/sells/startDay.dart';
 import 'package:senior/senior/tabBarForceField.dart';
