@@ -71,7 +71,6 @@ class SeniorData with ChangeNotifier {
     final extractedUserData =
         json.decode(prefs.getString('userData')) as Map<String, Object>;
     token = extractedUserData['token'];
-    print(token + "\n:::::::");
     userId = extractedUserData['userId'];
     businessId = extractedUserData['businessId'];
     userName = extractedUserData['userName'];
