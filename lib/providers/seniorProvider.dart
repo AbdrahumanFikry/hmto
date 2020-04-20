@@ -33,7 +33,9 @@ class SeniorData with ChangeNotifier {
   Future<void> fetchAgents() async {
     const url = 'https://api.hmto-eleader.com/api/seniorFieldForce';
     try {
-      final response = await http.get(url);
+      final response = await http.get(
+        url,
+      );
       final responseData = json.decode(response.body);
       if (response.statusCode >= 200 && response.statusCode < 300) {
         print("Response :" + responseData.toString());
