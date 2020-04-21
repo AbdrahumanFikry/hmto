@@ -32,7 +32,6 @@ class SallesData with ChangeNotifier {
   //--------------------------Fetch Start Day Data-----------------------------
   Future<void> fetchStartDayData() async {
     const url = 'https://api.hmto-eleader.com/api/sellsman/account';
-    await fetchUserData();
     try {
       var body = {
         "user_id":userId
@@ -40,6 +39,7 @@ class SallesData with ChangeNotifier {
       Map<String, String> headers = {
         'Authorization': 'Bearer $token',
       };
+      await fetchUserData();
       final response = await http.post(
         url,
         headers: headers,
