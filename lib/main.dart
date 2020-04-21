@@ -15,7 +15,6 @@ import 'package:senior/sells/sellsNavigator.dart';
 import 'package:senior/sells/startDay.dart';
 import 'package:senior/senior/tabBarForceField.dart';
 import 'package:senior/senior/tabBarSells.dart';
-
 main() {
   runApp(
     EasyLocalization(
@@ -77,7 +76,7 @@ class MyApp extends StatelessWidget {
           create: (context) => SeniorData(),
         ),
         ChangeNotifierProvider(
-          create: (context) => SellsData(),
+          create: (context) => SallesData(),
         ),
         ChangeNotifierProvider(
           create: (context) => DriverData(),
