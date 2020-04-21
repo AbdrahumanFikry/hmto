@@ -55,11 +55,11 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
   Future<void> _getLocation() async {
     currentLocation = await Geolocator()
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
-    print("Before :" +
+    print("BeforeRemove:" +
+        'lat :' +
         currentLocation.latitude.toString() +
-        '::' +
-        currentLocation.longitude.toString() +
-        '::');
+        '-long :' +
+        currentLocation.longitude.toString());
     _getAddress(currentLocation);
     setState(() {
       _markers.clear();
@@ -77,11 +77,12 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
         }),
         icon: customIcon,
         onTap: () {
-          print('After :' +
+          print('AfterRemove :' +
+              'lat :' +
               currentLocation.latitude.toString() +
-              '::' +
+              '-long :' +
               currentLocation.longitude.toString() +
-              '::' +
+              '-address :' +
               address);
 
           Navigator.of(context).push(

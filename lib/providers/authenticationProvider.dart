@@ -51,7 +51,7 @@ class Auth with ChangeNotifier {
         userName = responseData['first_name'] + ' ' + responseData['last_name'];
         _businessId = responseData['business_id'];
         print(
-            'userID::::::$_userId\nBusinessId:::::$_businessId\nType:::::$type\nToken:::::$_token\n');
+            'userID     : $_userId\nBusinessId : $_businessId\nType       : $type\nToken      : $_token\n');
         final prefs = await SharedPreferences.getInstance();
         final userData = {
           'token': _token,
