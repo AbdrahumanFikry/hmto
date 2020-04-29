@@ -1,6 +1,7 @@
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:senior/forceField/target.dart';
+import 'package:senior/providers/sellsProvider.dart';
 import 'package:senior/sells/itemTargetScreen.dart';
 import 'package:senior/forceField/storesScreen.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -56,8 +57,12 @@ class _SellsProfileState extends State<SellsProfile>
                     controller: pageController,
                     physics: NeverScrollableScrollPhysics(),
                     children: <Widget>[
-                      StoresScreen(
-                        isSells: true,
+                      Consumer<SellsData>(
+                        builder: (context, data, child) => StoresScreen(
+                          isSells: true,
+                          isDriver: false,
+                          data: data.stores.data,
+                        ),
                       ),
                       Target(),
                       ItemTargetScreen(),

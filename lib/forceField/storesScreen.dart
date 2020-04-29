@@ -41,12 +41,14 @@ class StoresScreen extends StatelessWidget {
                   borderRadius: BorderRadius.all(
                     Radius.circular(10),
                   ),
-                  child: CachedNetworkImage(
-                    imageUrl: data[index].imageIn,
-                    width: 50.0,
-                    height: 50.0,
-                    fit: BoxFit.cover,
-                  ),
+                  child: data[index].imageIn == null
+                      ? null
+                      : CachedNetworkImage(
+                          imageUrl: data[index].imageIn,
+                          width: 50.0,
+                          height: 50.0,
+                          fit: BoxFit.cover,
+                        ),
                 ),
                 onTap: data[index].isVisited == 'true'
                     ? () {}

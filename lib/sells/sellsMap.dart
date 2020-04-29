@@ -4,15 +4,18 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:app_settings/app_settings.dart';
-import 'package:senior/sells/cartScreen.dart';
 import 'package:senior/sells/testStore.dart';
+import 'package:senior/widgets/qrReader.dart';
 import '../providers/location.dart';
 import 'package:easy_localization/easy_localization.dart';
+import '../providers/sellsProvider.dart';
 
 class SellsMap extends StatefulWidget {
   final bool isDriver;
 
-  SellsMap({this.isDriver = false});
+  SellsMap({
+    this.isDriver,
+  });
 
   @override
   _SellsMapState createState() => _SellsMapState();
@@ -22,53 +25,52 @@ class _SellsMapState extends State<SellsMap> {
   GoogleMapController mapController;
   final Map<String, Marker> _markers = {};
   String address;
+  bool moved = false;
   var currentLocation = Position();
+  BitmapDescriptor customIcon;
 
-//  Completer<GoogleMapController> _controller = Completer();
+  createMarker(context) {
+    if (customIcon == null) {
+      ImageConfiguration configuration = createLocalImageConfiguration(
+        context,
+        size: Size.square(12.0),
+      );
+      BitmapDescriptor.fromAssetImage(configuration, 'assets/transport.png')
+          .then((icon) {
+        setState(() {
+          customIcon = icon;
+        });
+      });
+    }
+  }
 
   Future<String> _getAddress(Position pos) async {
     List<Placemark> placeMarks = await Geolocator()
         .placemarkFromCoordinates(pos.latitude, pos.longitude);
     if (placeMarks != null && placeMarks.isNotEmpty) {
       final Placemark pos = placeMarks[0];
-      print(':::::::::::::' + pos.thoroughfare + ', ' + pos.locality);
+//      print(':::::::::::::' + pos.thoroughfare + ', ' + pos.locality);
       address = pos.thoroughfare + ', ' + pos.locality;
       return address;
     }
     return "";
   }
 
-  void _getLocation() async {
+  Future<void> _getLocation() async {
     currentLocation = await Geolocator()
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
+    print("BeforeRemove:" +
+        'lat :' +
+        currentLocation.latitude.toString() +
+        '-long :' +
+        currentLocation.longitude.toString());
+    _getAddress(currentLocation);
     setState(() {
-      _markers.clear();
-      final marker = Marker(
-        onTap: () {
-          widget.isDriver
-              ? Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => CartScreen(
-                      isReady: true,
-                    ),
-                  ),
-                )
-              : Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => TestStore(),
-                  ),
-                );
-        },
-        markerId: MarkerId("curr_loc"),
-        position: LatLng(currentLocation.latitude, currentLocation.longitude),
-        infoWindow: InfoWindow(title: tr('map.marker_info')),
-      );
-      _markers["Current Location"] = marker;
       mapController.animateCamera(
         CameraUpdate.newCameraPosition(
           CameraPosition(
             target: LatLng(currentLocation.latitude, currentLocation.longitude),
-            zoom: 20,
+            zoom: 9,
           ),
         ),
       );
@@ -92,6 +94,25 @@ class _SellsMapState extends State<SellsMap> {
 
   @override
   Widget build(BuildContext context) {
+    createMarker(context);
+    Provider.of<SellsData>(context, listen: false).stores.data.forEach((store) {
+      final marker = Marker(
+        markerId: MarkerId(store.storeName),
+        position:
+            LatLng(double.tryParse(store.lat), double.tryParse(store.long)),
+        infoWindow: InfoWindow(title: store.storeName),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => QrReader(
+                whereTo: TestStore(),
+              ),
+            ),
+          );
+        },
+      );
+      _markers[store.storeName] = marker;
+    });
     return SafeArea(
       child: Scaffold(
         body: currentLocation == null
@@ -108,21 +129,6 @@ class _SellsMapState extends State<SellsMap> {
                     ),
                     markers: _markers.values.toSet(),
                   ),
-                  Positioned(
-                    bottom: 80.0,
-                    right: 20.0,
-                    child: FloatingActionButton(
-                      onPressed: () {
-                        _getLocation();
-                        _getAddress(currentLocation);
-                      },
-                      tooltip: 'Get Location',
-                      child: Icon(
-                        Icons.location_searching,
-                        color: Colors.white,
-                      ),
-                    ),
-                  )
                 ],
               ),
       ),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:senior/models/httpExceptionModel.dart';
 import 'package:senior/models/qrResult.dart';
 import 'package:senior/models/startDaySalles.dart';
+import 'package:senior/models/stores.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SellsData with ChangeNotifier {
@@ -15,6 +16,7 @@ class SellsData with ChangeNotifier {
 
   StartDayData startDayData;
   QrResult qrResult;
+  Stores stores;
 
   //-------------------------- Fetch Data --------------------------------------
   Future<bool> fetchUserData() async {
@@ -99,6 +101,32 @@ class SellsData with ChangeNotifier {
       final Map responseData = json.decode(response.body);
       if (response.statusCode >= 200 && response.statusCode < 300) {
         qrResult = QrResult.fromJson(responseData);
+        notifyListeners();
+        return true;
+      } else {
+        throw HttpException(message: responseData['message']);
+      }
+    } catch (error) {
+      print('Request Error :' + error.toString());
+      throw error;
+    }
+  }
+
+  //------------------------------ Scan store ----------------------------------
+  Future<void> allStores() async {
+    await fetchUserData();
+    const url = 'https://api.hmto-eleader.com/api/sellsman/all-stores';
+    try {
+      final response = await http.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+      print("Response :" + response.body.toString());
+      final Map responseData = json.decode(response.body);
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        stores = Stores.fromJson(responseData);
         notifyListeners();
         return true;
       } else {
