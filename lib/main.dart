@@ -15,6 +15,7 @@ import 'package:senior/sells/sellsNavigator.dart';
 import 'package:senior/sells/startDay.dart';
 import 'package:senior/senior/tabBarForceField.dart';
 import 'package:senior/senior/tabBarSells.dart';
+
 main() {
   runApp(
     EasyLocalization(
@@ -38,7 +39,22 @@ class MyApp extends StatelessWidget {
         );
         break;
       case 'salles_man':
-        temp = StartDay();
+        temp = FutureBuilder(
+          future: Provider.of<SellsData>(context, listen: false).checkDay(),
+          builder: (ctx, snapShot) =>
+              snapShot.connectionState == ConnectionState.waiting
+                  ? Scaffold(
+                      body: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    )
+                  : Provider.of<SellsData>(context, listen: false).date ==
+                          DateTime.now().toIso8601String().substring(0, 10)
+                      ? SellsNavigator(
+                          isDriver: false,
+                        )
+                      : StartDay(),
+        );
         break;
       case 'filed_force_man':
         temp = ForceFieldNavigator();
@@ -76,7 +92,7 @@ class MyApp extends StatelessWidget {
           create: (context) => SeniorData(),
         ),
         ChangeNotifierProvider(
-          create: (context) => SallesData(),
+          create: (context) => SellsData(),
         ),
         ChangeNotifierProvider(
           create: (context) => DriverData(),

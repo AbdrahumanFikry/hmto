@@ -65,6 +65,7 @@ class FieldForceData with ChangeNotifier {
         throw HttpException(message: responseData['error']);
       }
     } catch (error) {
+      print('Request Error :' + error.toString());
       throw error;
     }
   }
@@ -164,11 +165,12 @@ class FieldForceData with ChangeNotifier {
       await fetchStores();
       return true;
     } catch (error) {
+      print('Request Error :' + error.toString());
       if (!error.toString().contains(
           'DioError [DioErrorType.DEFAULT]: FormatException: Unexpected character (at character 1)')) {
         throw error;
       }
-      print(error.toString());
+      print('Request Error :' + error.toString());
     }
   }
 
@@ -235,6 +237,7 @@ class FieldForceData with ChangeNotifier {
         throw HttpException(message: responseData['message']);
       }
     } catch (error) {
+      print('Request Error :' + error.toString());
       throw error;
     }
   }
@@ -258,6 +261,7 @@ class FieldForceData with ChangeNotifier {
         throw HttpException(message: responseData['error']);
       }
     } catch (error) {
+      print('Request Error :' + error.toString());
       throw error;
     }
   }
@@ -326,6 +330,7 @@ class FieldForceData with ChangeNotifier {
         throw HttpException(message: responseData['error']);
       }
     } catch (error) {
+      print('Request Error :' + error.toString());
       throw error;
     }
   }
@@ -348,6 +353,7 @@ class FieldForceData with ChangeNotifier {
         throw HttpException(message: responseData['error']);
       }
     } catch (error) {
+      print('Request Error :' + error.toString());
       throw error;
     }
   }

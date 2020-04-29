@@ -35,6 +35,7 @@ class SeniorData with ChangeNotifier {
         throw HttpException(message: responseData['error']);
       }
     } catch (error) {
+      print('Request Error :' + error.toString());
       throw error;
     }
   }
@@ -58,6 +59,7 @@ class SeniorData with ChangeNotifier {
         throw HttpException(message: responseData['error']);
       }
     } catch (error) {
+      print('Request Error :' + error.toString());
       throw error;
     }
   }

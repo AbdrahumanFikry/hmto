@@ -1,70 +1,46 @@
-class SeniorStartDayModel {
-  List<MyProduct> myProduct;
-  List<MyProduct> productTransferToday;
+class StartDayData {
+  List<CarProduct> productsInOwnCar;
   int ownMoney;
+  bool productTransferredToday;
 
-  SeniorStartDayModel(
-      {this.myProduct, this.productTransferToday, this.ownMoney});
+  StartDayData({
+    this.productsInOwnCar,
+    this.ownMoney,
+    this.productTransferredToday,
+  });
 
-  SeniorStartDayModel.fromJson(Map<String, dynamic> json) {
-    if (json['myProduct'] != null) {
-      myProduct = new List<MyProduct>();
-      json['myProduct'].forEach((v) {
-        myProduct.add(new MyProduct.fromJson(v));
-      });
-    }
-    if (json['productTransferToday'] != null) {
-      productTransferToday = new List<MyProduct>();
-      json['productTransferToday'].forEach((v) {
-        productTransferToday.add(new MyProduct.fromJson(v));
+  StartDayData.fromJson(Map<String, dynamic> json) {
+    if (json['products_in_own_car'] != null) {
+      productsInOwnCar = new List<CarProduct>();
+      json['products_in_own_car'].forEach((v) {
+        productsInOwnCar.add(new CarProduct.fromJson(v));
       });
     }
     ownMoney = json['ownMoney'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.myProduct != null) {
-      data['myProduct'] = this.myProduct.map((v) => v.toJson()).toList();
-    }
-    if (this.productTransferToday != null) {
-      data['productTransferToday'] =
-          this.productTransferToday.map((v) => v.toJson()).toList();
-    }
-    data['ownMoney'] = this.ownMoney;
-    return data;
+    productTransferredToday = json['product_transfered_today'];
   }
 }
 
-class MyProduct {
+class CarProduct {
   int productId;
   String productName;
-  String sku;
+  String serialNumber;
   String quantity;
-  String defaultSellPrice;
+  String priceForEach;
 
-  MyProduct(
-      {this.productId,
-        this.productName,
-        this.sku,
-        this.quantity,
-        this.defaultSellPrice});
+  CarProduct({
+    this.productId,
+    this.productName,
+    this.serialNumber,
+    this.quantity,
+    this.priceForEach,
+  });
 
-  MyProduct.fromJson(Map<String, dynamic> json) {
+  CarProduct.fromJson(Map<String, dynamic> json) {
     productId = json['product_id'];
     productName = json['product_name'];
-    sku = json['Sku'];
+    serialNumber = json['Sku'];
     quantity = json['quantity'];
-    defaultSellPrice = json['default_sell_price'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['product_id'] = this.productId;
-    data['product_name'] = this.productName;
-    data['Sku'] = this.sku;
-    data['quantity'] = this.quantity;
-    data['default_sell_price'] = this.defaultSellPrice;
-    return data;
+    priceForEach = json['default_sell_price'];
   }
 }
