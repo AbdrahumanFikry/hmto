@@ -2,11 +2,13 @@ class StartDayData {
   List<CarProduct> productsInOwnCar;
   int ownMoney;
   bool productTransferredToday;
+  int locationId;
 
   StartDayData({
     this.productsInOwnCar,
     this.ownMoney,
     this.productTransferredToday,
+    this.locationId,
   });
 
   StartDayData.fromJson(Map<String, dynamic> json) {
@@ -18,6 +20,7 @@ class StartDayData {
     }
     ownMoney = json['ownMoney'];
     productTransferredToday = json['product_transfered_today'];
+    locationId = json['location_id'];
   }
 }
 
@@ -25,8 +28,8 @@ class CarProduct {
   int productId;
   String productName;
   String serialNumber;
-  String quantity;
-  String priceForEach;
+  int quantity;
+  double priceForEach;
 
   CarProduct({
     this.productId,
@@ -40,7 +43,17 @@ class CarProduct {
     productId = json['product_id'];
     productName = json['product_name'];
     serialNumber = json['Sku'];
-    quantity = json['quantity'];
-    priceForEach = json['default_sell_price'];
+    quantity = double.tryParse(json['quantity'].toString()).round();
+    priceForEach = double.tryParse(json['default_sell_price'].toString());
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['product_id'] = this.productId;
+    data['product_name'] = this.productName;
+    data['Sku'] = this.serialNumber;
+    data['quantity'] = this.quantity;
+    data['default_sell_price'] = this.priceForEach;
+    return data;
   }
 }

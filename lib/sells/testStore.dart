@@ -4,25 +4,41 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:senior/widgets/properties.dart';
-import 'package:senior/widgets/qrReader.dart';
 
-class TestStore extends StatefulWidget {
-  @override
-  _TestStoreState createState() => _TestStoreState();
-}
+class SellsStore extends StatelessWidget {
+  final int id;
+  final String storeName;
+  final String customerName;
+  final String mobile;
+  final String landmark;
+  final int rate;
+  final String imageIn;
+  final String imageOut;
+  final String imageStoreAds;
+  final String imageStoreFront;
 
-class _TestStoreState extends State<TestStore> {
-  var url =
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQg2kWTuFxohnKTgpKwaQIav4P7pZDbPD-dydM2QdObm93Ia18-';
-  List urls = [
-    'https://assets.website-files.com/5c99f1fbf7d06d48eed8af7b/5cdebf7db9e0bc1fc589f277_eco01.jpg',
-    'https://www.dw.com/image/37077830_303.jpg',
-    'https://madosan.com.tr/assets/uploads/galeri/super-market-hiper-market/6b6ac887-23e6-49ac-b44d-e3d8ff6b52b8-jpg_1560158960.jpg'
-  ];
+  SellsStore({
+    this.id,
+    this.storeName = 'NULL',
+    this.customerName = 'NULL',
+    this.mobile = 'NULL',
+    this.landmark = 'NULL',
+    this.rate = 0,
+    this.imageIn = 'NULL',
+    this.imageOut = 'NULL',
+    this.imageStoreAds = 'NULL',
+    this.imageStoreFront = 'NULL',
+  });
 
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
+    List<String> images = [
+      imageIn,
+      imageOut,
+      imageStoreAds,
+      imageStoreFront,
+    ];
     return SafeArea(
       child: Scaffold(
         body: ListView(
@@ -33,13 +49,13 @@ class _TestStoreState extends State<TestStore> {
             CarouselSlider(
               scrollPhysics: BouncingScrollPhysics(),
               height: 384 * screenSize.aspectRatio,
-              items: urls.map((url) {
+              items: images.map((image) {
                 return Padding(
                   padding: EdgeInsets.all(13 * screenSize.aspectRatio),
                   child: ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(20)),
                     child: CachedNetworkImage(
-                      imageUrl: url,
+                      imageUrl: image,
                       height: 0.3 * screenSize.height,
                       width: screenSize.width,
                       fit: BoxFit.cover,
@@ -54,7 +70,7 @@ class _TestStoreState extends State<TestStore> {
             ),
             Center(
               child: Text(
-                'Test Store',
+                storeName,
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -63,68 +79,88 @@ class _TestStoreState extends State<TestStore> {
             ),
             Padding(
               padding: EdgeInsets.symmetric(
-                  horizontal: 33 * screenSize.aspectRatio,
-                  vertical: 16 * screenSize.aspectRatio),
+                horizontal: 33 * screenSize.aspectRatio,
+                vertical: 16 * screenSize.aspectRatio,
+              ),
               child: ExpandablePanel(
                 theme: ExpandableThemeData(
-                    animationDuration: Duration(milliseconds: 200)),
+                  animationDuration: Duration(
+                    milliseconds: 200,
+                  ),
+                ),
                 header: Text(
                   tr('sells_store.cash'),
                   style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      color: Colors.blue,
-                      fontSize: 33 * screenSize.aspectRatio),
+                    fontWeight: FontWeight.w700,
+                    color: Colors.blue,
+                    fontSize: 33 * screenSize.aspectRatio,
+                  ),
                 ),
                 expanded: Properties(),
               ),
             ),
             Padding(
               padding: EdgeInsets.symmetric(
-                  horizontal: 33 * screenSize.aspectRatio,
-                  vertical: 16 * screenSize.aspectRatio),
+                horizontal: 33 * screenSize.aspectRatio,
+                vertical: 16 * screenSize.aspectRatio,
+              ),
               child: ExpandablePanel(
                 theme: ExpandableThemeData(
-                    animationDuration: Duration(milliseconds: 200)),
+                  animationDuration: Duration(
+                    milliseconds: 200,
+                  ),
+                ),
                 header: Text(
                   tr('sells_store.debit'),
                   style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      color: Colors.blue,
-                      fontSize: 33 * screenSize.aspectRatio),
+                    fontWeight: FontWeight.w700,
+                    color: Colors.blue,
+                    fontSize: 33 * screenSize.aspectRatio,
+                  ),
                 ),
                 expanded: Properties(),
               ),
             ),
             Padding(
               padding: EdgeInsets.symmetric(
-                  horizontal: 33 * screenSize.aspectRatio,
-                  vertical: 16 * screenSize.aspectRatio),
+                horizontal: 33 * screenSize.aspectRatio,
+                vertical: 16 * screenSize.aspectRatio,
+              ),
               child: ExpandablePanel(
                 theme: ExpandableThemeData(
-                    animationDuration: Duration(milliseconds: 200)),
+                  animationDuration: Duration(
+                    milliseconds: 200,
+                  ),
+                ),
                 header: Text(
                   tr('sells_store.return'),
                   style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      color: Colors.blue,
-                      fontSize: 33 * screenSize.aspectRatio),
+                    fontWeight: FontWeight.w700,
+                    color: Colors.blue,
+                    fontSize: 33 * screenSize.aspectRatio,
+                  ),
                 ),
                 expanded: Properties(),
               ),
             ),
             Padding(
               padding: EdgeInsets.symmetric(
-                  horizontal: 33 * screenSize.aspectRatio,
-                  vertical: 16 * screenSize.aspectRatio),
+                horizontal: 33 * screenSize.aspectRatio,
+                vertical: 16 * screenSize.aspectRatio,
+              ),
               child: ExpandablePanel(
                 theme: ExpandableThemeData(
-                    animationDuration: Duration(milliseconds: 200)),
+                  animationDuration: Duration(
+                    milliseconds: 200,
+                  ),
+                ),
                 header: Text(
                   tr('sells_store.summary'),
                   style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      color: Colors.blue,
-                      fontSize: 33 * screenSize.aspectRatio),
+                    fontWeight: FontWeight.w700,
+                    color: Colors.blue,
+                    fontSize: 33 * screenSize.aspectRatio,
+                  ),
                 ),
                 expanded: Column(
                   children: <Widget>[

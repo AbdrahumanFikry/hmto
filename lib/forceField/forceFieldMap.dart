@@ -143,9 +143,7 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => QrReader(
-                whereTo: Store(),
-              ),
+              builder: (context) => QrReaderFieldForce(),
             ),
           );
         },

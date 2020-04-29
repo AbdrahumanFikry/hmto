@@ -5,7 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:senior/sells/testStore.dart';
-import 'package:senior/widgets/qrReader.dart';
+import 'package:senior/widgets/qrReaderSells.dart';
 import '../providers/location.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../providers/sellsProvider.dart';
@@ -104,9 +104,7 @@ class _SellsMapState extends State<SellsMap> {
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => QrReader(
-                whereTo: TestStore(),
-              ),
+              builder: (context) => QrReaderSells(),
             ),
           );
         },

@@ -1,11 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:senior/driver/driverStore.dart';
-import 'package:senior/sells/testStore.dart';
 import 'package:senior/widgets/qrReader.dart';
-import '../forceField/store.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../models/stores.dart';
+import '../widgets/qrReaderSells.dart';
 
 class StoresScreen extends StatelessWidget {
   final bool isSells;
@@ -42,7 +41,7 @@ class StoresScreen extends StatelessWidget {
                     Radius.circular(10),
                   ),
                   child: data[index].imageIn == null
-                      ? null
+                      ? Image.asset('assets/user.png')
                       : CachedNetworkImage(
                           imageUrl: data[index].imageIn,
                           width: 50.0,
@@ -56,9 +55,7 @@ class StoresScreen extends StatelessWidget {
                         if (isSells) {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => QrReader(
-                                whereTo: TestStore(),
-                              ),
+                              builder: (context) => QrReaderSells(),
                             ),
                           );
                         } else {
@@ -71,9 +68,7 @@ class StoresScreen extends StatelessWidget {
                           } else {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => QrReader(
-                                  whereTo: Store(),
-                                ),
+                                builder: (context) => QrReaderFieldForce(),
                               ),
                             );
                           }

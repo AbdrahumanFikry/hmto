@@ -26,16 +26,18 @@ class _PercentChangerState extends State<PercentChanger> {
   void done({
     BuildContext context,
   }) {
-    _formKey.currentState.save();
-
-    print('::::::' + amount);
-    print('::::::' + percent.toString());
-    Provider.of<FieldForceData>(context, listen: false).changePercent(
-      id: widget.id,
-      amount: amount,
-      percent: percent.toString(),
-    );
-    Navigator.of(context).pop();
+    final formData = _formKey.currentState;
+    if (formData.validate()) {
+      formData.save();
+      print('::::::' + amount);
+      print('::::::' + percent.toString());
+      Provider.of<FieldForceData>(context, listen: false).changePercent(
+        id: widget.id,
+        amount: amount,
+        percent: percent.toString(),
+      );
+      Navigator.of(context).pop();
+    }
   }
 
   @override
@@ -59,6 +61,12 @@ class _PercentChangerState extends State<PercentChanger> {
                 bottom: 20.0,
               ),
               child: TextFormField(
+                validator: (value) {
+                  if (value != null) {
+                    return null;
+                  }
+                  return 'this field is requred!';
+                },
                 onSaved: (value) {
                   setState(() {
                     amount = value;

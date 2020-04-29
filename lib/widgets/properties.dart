@@ -79,11 +79,11 @@ class Properties extends StatelessWidget {
       children: <Widget>[
         ListTile(
           onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => QrReader(),
-              ),
-            );
+//            Navigator.of(context).push(
+//              MaterialPageRoute(
+//                builder: (context) => QrReader(),
+//              ),
+//            );
           },
           title: Text('BarCode'),
           leading: Icon(

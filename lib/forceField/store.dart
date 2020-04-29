@@ -17,8 +17,7 @@ import '../widgets/question.dart';
 import 'dart:convert';
 import '../providers/fieldForceProvider.dart';
 
-
-class Store extends StatefulWidget {
+class FieldForceStore extends StatefulWidget {
   final int id;
   final String storeName;
   final String customerName;
@@ -34,7 +33,7 @@ class Store extends StatefulWidget {
   final List<Question> longAnswerQuestion;
   final List<Question> products;
 
-  Store({
+  FieldForceStore({
     this.id,
     this.storeName = 'NULL',
     this.customerName = 'NULL',
@@ -52,10 +51,10 @@ class Store extends StatefulWidget {
   });
 
   @override
-  _StoreState createState() => _StoreState();
+  _FieldForceStoreState createState() => _FieldForceStoreState();
 }
 
-class _StoreState extends State<Store> {
+class _FieldForceStoreState extends State<FieldForceStore> {
   GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   Map<String, double> competitorsData = {};
   List questionsAnswer = new List();

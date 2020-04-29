@@ -29,6 +29,9 @@ class _StartDayState extends State<StartDay> {
       );
     } else {
       GlobalAlertDialog.showErrorDialog(tr('extra.noStartDay'), context);
+      setState(() {
+        Provider.of<SellsData>(context, listen: false).startDayData = null;
+      });
     }
   }
 
@@ -128,7 +131,7 @@ class _StartDayState extends State<StartDay> {
                         ),
                         subtitle: Text(
                           data.startDayData.productsInOwnCar[index].quantity
-                              .split('.')[0],
+                              .toString(),
                           style: TextStyle(fontSize: 16.0),
                         ),
                       );
