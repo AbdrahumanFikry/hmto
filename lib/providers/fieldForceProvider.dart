@@ -162,7 +162,7 @@ class FieldForceData with ChangeNotifier {
       competitorsPercents = [];
       maxValue = 100;
       dataForNewShop = null;
-      await fetchStores();
+      stores = null;
       return true;
     } catch (error) {
       print('Request Error :' + error.toString());

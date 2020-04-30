@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:senior/models/billProduct.dart';
 import 'package:senior/models/httpExceptionModel.dart';
 import 'package:senior/models/qrResult.dart';
 import 'package:senior/models/startDaySalles.dart';
@@ -13,11 +14,13 @@ class SellsData with ChangeNotifier {
   String userName;
   int businessId;
   String date;
+  String locationId;
 
   StartDayData startDayData;
   QrResult qrResult;
   Stores stores;
-  List<CarProduct> bill = [];
+  List<BillProduct> bill = [];
+  List<CarProduct> loadedItems = [];
 
   //-------------------------- Fetch Data --------------------------------------
   Future<bool> fetchUserData() async {
@@ -31,6 +34,10 @@ class SellsData with ChangeNotifier {
     userId = extractedUserData['userId'];
     businessId = extractedUserData['businessId'];
     userName = extractedUserData['userName'];
+    if (!prefs.containsKey('startDayData')) {
+      return false;
+    }
+    locationId = prefs.getString('locationId');
     notifyListeners();
     return true;
   }
@@ -52,6 +59,7 @@ class SellsData with ChangeNotifier {
   Future<void> fetchStartDayData() async {
     await fetchUserData();
     const url = 'https://api.hmto-eleader.com/api/sellsman/account';
+    final prefs = await SharedPreferences.getInstance();
     try {
       var body = {
         "user_id": userId.toString(),
@@ -68,23 +76,13 @@ class SellsData with ChangeNotifier {
       final responseData = json.decode(response.body);
       if (response.statusCode >= 200 && response.statusCode < 300) {
         startDayData = StartDayData.fromJson(responseData);
-        final prefs = await SharedPreferences.getInstance();
-        if (!prefs.containsKey('cartItems')) {
-          final userData = json.encode(
-            {
-              'data': startDayData.productsInOwnCar,
-            },
-          );
-          prefs.setString('cartItems', userData);
-        }
-        if (!prefs.containsKey('locationId')) {
-          final userData = json.encode(
-            {
-              'data': startDayData.locationId,
-            },
-          );
-          prefs.setString('locationId', userData);
-        }
+        final userData = json.encode(
+          {
+            'data': startDayData.productsInOwnCar,
+          },
+        );
+        prefs.setString('cartItems', userData);
+        prefs.setString('locationId', startDayData.locationId.toString());
         notifyListeners();
         return true;
       } else {
@@ -162,35 +160,41 @@ class SellsData with ChangeNotifier {
   }
 
   //--------------------------- Add product to bill ----------------------------
-  void addItemToBill({String serialNumber}) {
-    List<CarProduct> loadedItems = fetchCarProduct();
+  Future<void> addItemToBill({String serialNumber}) async {
+    loadedItems = [];
+    await fetchCarProduct();
     int index = loadedItems.indexWhere((i) => i.serialNumber == serialNumber);
-    if (index != -1) {
-      throw HttpException(message: 'product not fount in the car');
-    } else {
+    int billIndex =
+        bill.indexWhere((i) => i.productId == loadedItems[index].productId);
+    if (billIndex != -1) {
+      throw HttpException(message: 'Already added to bill');
+    }
+    try {
       bill.add(
-        CarProduct(
+        BillProduct(
           productId: loadedItems[index].productId,
-          productName: loadedItems[index].productName,
+          unitPrice: loadedItems[index].priceForEach,
           quantity: 1,
-          priceForEach: loadedItems[index].priceForEach,
-          serialNumber: loadedItems[index].serialNumber,
+          unitPriceBeforeDiscount: loadedItems[index].priceForEach,
+          unitPriceIncTax: loadedItems[index].priceForEach,
         ),
       );
+    } catch (error) {
+      throw HttpException(message: 'product not found in the car');
     }
     returnTotal();
     notifyListeners();
   }
 
   //--------------------- Fetch data from SharedPreferences --------------------
-  fetchCarProduct() async {
+  Future<void> fetchCarProduct() async {
     final prefs = await SharedPreferences.getInstance();
     if (!prefs.containsKey('cartItems')) {
-      return null;
+      return [];
     }
     final responseData =
         json.decode(prefs.getString('cartItems')) as Map<String, dynamic>;
-    final List<CarProduct> loadedItems = [];
+    loadedItems = [];
     responseData['data'].forEach((itemData) {
       loadedItems.add(CarProduct(
         productId: itemData['product_id'],
@@ -200,6 +204,7 @@ class SellsData with ChangeNotifier {
         priceForEach: itemData['default_sell_price'],
       ));
     });
+//    print('Car products :' + json.encode({'carProducts': loadedItems}));
     notifyListeners();
     return loadedItems;
   }
@@ -215,8 +220,9 @@ class SellsData with ChangeNotifier {
   }
 
   //--------------------------- Add amount from bill ---------------------------
-  void addAmountFromBill({int id}) {
-    List<CarProduct> loadedItems = fetchCarProduct();
+  Future<void> addAmountFromBill({int id}) async {
+    loadedItems = [];
+    await fetchCarProduct();
     int billIndex = bill.indexWhere((item) => item.productId == id);
     int carIndex = loadedItems.indexWhere((item) => item.productId == id);
     if (billIndex != -1 &&
@@ -227,7 +233,7 @@ class SellsData with ChangeNotifier {
       notifyListeners();
     } else {
       throw HttpException(
-          message: 'No more ${bill[billIndex].productName} in the car');
+          message: 'No more ${loadedItems[carIndex].productName} in the car');
     }
   }
 
@@ -245,33 +251,79 @@ class SellsData with ChangeNotifier {
   double returnTotal() {
     double sum = 0;
     bill.forEach((item) {
-      sum = sum + (item.priceForEach * item.quantity);
+      sum = sum + (item.unitPrice * item.quantity);
     });
-    notifyListeners();
+//    print('Total price : ' + sum.toString());
     return sum;
   }
 
   //---------------------------- Balance car products---------------------------
   Future<void> finishBill() async {
     try {
-      final List<CarProduct> loadedItems = fetchCarProduct();
-      bill.forEach((item) {
-        loadedItems.removeWhere(
-          (product) => product.productId == item.productId,
-        );
+      loadedItems = [];
+      await fetchCarProduct();
+      bill.forEach((billItem) {
+        int index = loadedItems
+            .indexWhere((cartItem) => cartItem.productId == billItem.productId);
+        if (billItem.quantity == loadedItems[index].quantity) {
+          loadedItems.removeAt(index);
+        } else {
+          loadedItems[index].quantity =
+              loadedItems[index].quantity - billItem.quantity;
+        }
       });
       final prefs = await SharedPreferences.getInstance();
-      if (!prefs.containsKey('cartItems')) {
-        final userData = json.encode(
-          {
-            'data': loadedItems,
-          },
-        );
-        prefs.setString('cartItems', userData);
-      }
+      final userData = json.encode(
+        {
+          'data': loadedItems,
+        },
+      );
+      prefs.setString('cartItems', userData);
+      bill = [];
+      print('Car products :' + json.encode({'carProducts': loadedItems}));
       notifyListeners();
     } catch (error) {
       throw HttpException(message: 'Could not balance products');
+    }
+  }
+
+  //------------------------------- Pay cash -----------------------------------
+  Future<void> payCash({int storeId, double total}) async {
+    await fetchUserData();
+    const url = 'https://api.hmto-eleader.com/api/sellsman/transaction/cache';
+    try {
+      var body = {
+        "created_by": userId.toString(),
+        "business_id": businessId.toString(),
+        "location_id": locationId,
+        "contact_id": storeId.toString(),
+        "total_before_tax": total.toString(),
+        "final_total": total.toString(),
+        "products": json.encode(bill),
+      };
+
+      Map<String, String> headers = {
+        "Authorization": "Bearer $token",
+      };
+//      print('Request body : ' + body);
+      final response = await http.post(
+        url,
+        headers: headers,
+        body: body,
+      );
+      print("Response :" + response.body.toString());
+      final Map responseData = json.decode(response.body);
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        //remove items from car and balance the products
+        await finishBill();
+        notifyListeners();
+        return true;
+      } else {
+        throw HttpException(message: responseData['message']);
+      }
+    } catch (error) {
+      print('Request Error :' + error.toString());
+      throw error;
     }
   }
 }

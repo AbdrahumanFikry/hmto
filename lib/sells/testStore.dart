@@ -96,7 +96,10 @@ class SellsStore extends StatelessWidget {
                     fontSize: 33 * screenSize.aspectRatio,
                   ),
                 ),
-                expanded: Properties(),
+                expanded: Properties(
+                  storeId: id,
+                  isCash: true,
+                ),
               ),
             ),
             Padding(
@@ -118,7 +121,10 @@ class SellsStore extends StatelessWidget {
                     fontSize: 33 * screenSize.aspectRatio,
                   ),
                 ),
-                expanded: Properties(),
+                expanded: Properties(
+                  storeId: id,
+                  isDebit: true,
+                ),
               ),
             ),
             Padding(
@@ -140,7 +146,10 @@ class SellsStore extends StatelessWidget {
                     fontSize: 33 * screenSize.aspectRatio,
                   ),
                 ),
-                expanded: Properties(),
+                expanded: Properties(
+                  storeId: id,
+                  isReturn: true,
+                ),
               ),
             ),
             Padding(

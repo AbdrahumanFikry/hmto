@@ -1,71 +1,149 @@
 import 'package:flutter/material.dart';
-import '../widgets/qrReader.dart';
+import 'package:provider/provider.dart';
+import 'package:senior/providers/sellsProvider.dart';
+import 'package:senior/widgets/alertDialog.dart';
+import 'package:senior/widgets/productBarCodeReader.dart';
 import '../sells/cartScreen.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-class Properties extends StatelessWidget {
-  void goToCartScreen(BuildContext context) {
+class Properties extends StatefulWidget {
+  final int storeId;
+  final bool isCash;
+  final bool isDebit;
+  final bool isReturn;
+
+  Properties({
+    this.storeId,
+    this.isCash = false,
+    this.isDebit = false,
+    this.isReturn = false,
+  });
+
+  @override
+  _PropertiesState createState() => _PropertiesState();
+}
+
+class _PropertiesState extends State<Properties> {
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String number = '';
+
+  void goToCartScreen() {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => CartScreen(),
+        builder: (context) => CartScreen(
+          storeId: widget.storeId,
+          isCash: widget.isCash,
+          isDebit: widget.isDebit,
+          isReturn: widget.isReturn,
+        ),
       ),
     );
   }
 
-  void _showModalSheet(BuildContext context) {
+  void onSave() async {
+    final formData = _formKey.currentState;
+    if (formData.validate()) {
+      formData.save();
+      try {
+        await Provider.of<SellsData>(context, listen: false)
+            .addItemToBill(serialNumber: number);
+        Navigator.of(context).pop();
+      } catch (error) {
+        Navigator.of(context).pop();
+        GlobalAlertDialog.showErrorDialog(error.toString(), context);
+      }
+    }
+  }
+
+  void _showModalSheet() {
     showModalBottomSheet(
       context: context,
       builder: (builder) {
-        return Container(
-          height: 250,
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  margin: const EdgeInsets.only(left: 20.0, right: 20.0),
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                          color: Colors.green,
-                          width: 0.5,
-                          style: BorderStyle.solid),
-                    ),
-                  ),
-                  padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-                  child: new Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      new Padding(
-                        padding: EdgeInsets.only(
-                            top: 10.0, bottom: 10.0, right: 00.0),
-                        child: Icon(
-                          Icons.confirmation_number,
-                          color: Colors.green,
-                        ),
+        return Form(
+          key: _formKey,
+          child: Container(
+            height: 350,
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom + 50.0,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: const EdgeInsets.only(left: 20.0, right: 20.0),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                            color: Colors.green,
+                            width: 0.5,
+                            style: BorderStyle.solid),
                       ),
-                      new Expanded(
-                        child: TextField(
-                          textAlign: TextAlign.center,
-                          onChanged: (value) {
-//                            _email = value;
-                          },
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'serial number',
-                            hintStyle: TextStyle(color: Colors.green),
+                    ),
+                    padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                    child: new Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        new Padding(
+                          padding: EdgeInsets.only(
+                              top: 10.0, bottom: 10.0, right: 00.0),
+                          child: Icon(
+                            Icons.confirmation_number,
+                            color: Colors.green,
                           ),
                         ),
-                      ),
-                    ],
+                        new Expanded(
+                          child: TextFormField(
+                            textAlign: TextAlign.center,
+                            validator: (value) {
+                              if (value == null) {
+                                return 'this field is required!';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              setState(() {
+                                number = value;
+                              });
+                            },
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: tr('other.serial'),
+                              hintStyle: TextStyle(color: Colors.green),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 50.0,
+                      vertical: 10.0,
+                    ),
+                    child: RaisedButton(
+                      onPressed: onSave,
+                      color: Colors.green,
+                      elevation: 5.0,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 20.0,
+                      ),
+                      child: Text(
+                        tr('sells_profile.status'),
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         );
@@ -79,13 +157,15 @@ class Properties extends StatelessWidget {
       children: <Widget>[
         ListTile(
           onTap: () {
-//            Navigator.of(context).push(
-//              MaterialPageRoute(
-//                builder: (context) => QrReader(),
-//              ),
-//            );
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => ProductBarCodeReader(),
+              ),
+            );
           },
-          title: Text('BarCode'),
+          title: Text(
+            tr('other.barCode'),
+          ),
           leading: Icon(
             Icons.code,
             size: 26.0,
@@ -93,16 +173,14 @@ class Properties extends StatelessWidget {
           ),
         ),
         ListTile(
-          onTap: () {
-            _showModalSheet(context);
-          },
+          onTap: _showModalSheet,
           leading: Icon(
             Icons.confirmation_number,
             size: 24.0,
             color: Colors.blue,
           ),
           title: Text(
-            'Serial number',
+            tr('other.serial'),
           ),
         ),
         Padding(
@@ -114,14 +192,21 @@ class Properties extends StatelessWidget {
               color: Colors.green,
               borderRadius: BorderRadius.circular(20.0),
             ),
-            child: FlatButton(
-              onPressed: () => goToCartScreen(context),
-              child: Text(
-                tr('sells_store.check_out') + '   ( 10 items )',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
+            child: Consumer<SellsData>(
+              builder: (context, data, _) => FlatButton(
+                onPressed: goToCartScreen,
+                child: Text(
+                  tr('sells_store.check_out') +
+                      '   ( ' +
+                      tr('store.products') +
+                      ' ' +
+                      data.bill.length.toString() +
+                      ' )',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
