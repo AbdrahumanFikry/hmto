@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:senior/models/billProduct.dart';
 import 'package:senior/models/httpExceptionModel.dart';
+import 'package:senior/models/oldInvoice.dart';
 import 'package:senior/models/qrResult.dart';
 import 'package:senior/models/startDaySalles.dart';
 import 'package:senior/models/stores.dart';
@@ -16,10 +17,10 @@ class SellsData with ChangeNotifier {
   int businessId;
   String date;
   String locationId;
-
   StartDayData startDayData;
   QrResult qrResult;
   Stores stores;
+  OldInvoices oldInvoices;
   List<BillProduct> bill = [];
   List<CarProduct> loadedItems = [];
 
@@ -97,6 +98,7 @@ class SellsData with ChangeNotifier {
 
   //------------------------------ Scan store ----------------------------------
   Future<void> scanStore({String qrData}) async {
+    oldInvoices = null;
     await fetchUserData();
     const url = 'https://api.hmto-eleader.com/api/sellsman/scanStore';
     try {
@@ -359,6 +361,81 @@ class SellsData with ChangeNotifier {
       if (response.statusCode >= 200 && response.statusCode < 300) {
         //remove items from car and balance the products
         await finishBill();
+        notifyListeners();
+        return true;
+      } else {
+        throw HttpException(message: responseData['message']);
+      }
+    } catch (error) {
+      print('Request Error :' + error.toString());
+      throw error;
+    }
+  }
+
+  //--------------------------- Fetch last 3 invoice ---------------------------
+  Future<void> fetchOldInvoices({int storeId}) async {
+    await fetchUserData();
+    const url = 'https://api.hmto-eleader.com/api/sellsman/last-invoice';
+    try {
+      var body = {
+        "location_id": locationId,
+        "contact_id": storeId.toString(),
+      };
+
+      Map<String, String> headers = {
+        "Authorization": "Bearer $token",
+      };
+      print('Request body : ' + json.encode(body));
+      final response = await http.post(
+        url,
+        headers: headers,
+        body: body,
+      );
+      print("Response :" + response.body.toString());
+      final Map responseData = json.decode(response.body);
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        oldInvoices = OldInvoices.fromJson(responseData);
+        notifyListeners();
+        return true;
+      } else {
+        throw HttpException(message: responseData['message']);
+      }
+    } catch (error) {
+      print('Request Error :' + error.toString());
+      throw error;
+    }
+  }
+
+  //--------------------------- return old products ----------------------------
+  Future<void> returnProducts(
+      {int storeId, double total, int invoiceId}) async {
+    await fetchUserData();
+    const url = 'https://api.hmto-eleader.com/api/sellsman/return-sell';
+    try {
+      var body = {
+        "business_id": businessId.toString(),
+        "location_id": locationId,
+        "contact_id": storeId.toString(),
+        "created_by": userId.toString(),
+        "total_before_tax": total.toString(),
+        "final_total": total.toString(),
+        "return_parent_id": invoiceId.toString(),
+        "products": json.encode(bill),
+      };
+
+      Map<String, String> headers = {
+        "Authorization": "Bearer $token",
+      };
+      print('Request body : ' + json.encode(body));
+      final response = await http.post(
+        url,
+        headers: headers,
+        body: body,
+      );
+      print("Response :" + response.body.toString());
+      final Map responseData = json.decode(response.body);
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        //TODO ----------
         notifyListeners();
         return true;
       } else {

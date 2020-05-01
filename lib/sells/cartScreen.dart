@@ -49,11 +49,21 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String paid = '';
+    String title = '';
+    if (isReady) {
+      title = tr('sells_store.check_out');
+    } else if (isCash) {
+      title = tr('sells_store.cash');
+    } else if (isDebit) {
+      title = tr('sells_store.debit');
+    } else {
+      title = tr('sells_store.check_out');
+    }
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          tr('sells_store.check_out'),
+          title,
           style: TextStyle(color: Colors.green),
         ),
         backgroundColor: Colors.white,

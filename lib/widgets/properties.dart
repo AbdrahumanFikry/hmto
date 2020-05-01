@@ -45,8 +45,12 @@ class _PropertiesState extends State<Properties> {
     if (formData.validate()) {
       formData.save();
       try {
-        await Provider.of<SellsData>(context, listen: false)
-            .addItemToBill(serialNumber: number);
+        if (!widget.isReturn) {
+          await Provider.of<SellsData>(context, listen: false)
+              .addItemToBill(serialNumber: number);
+        } else {
+          //TODO -------------
+        }
         Navigator.of(context).pop();
       } catch (error) {
         Navigator.of(context).pop();
@@ -196,10 +200,11 @@ class _PropertiesState extends State<Properties> {
               builder: (context, data, _) => FlatButton(
                 onPressed: goToCartScreen,
                 child: Text(
-                  tr('sells_store.check_out') +
+                  '${widget.isReturn ? tr('sells_store.return') : tr('sells_store.check_out')}' +
                       '   ( ' +
                       tr('store.products') +
                       ' ' +
+                      //TODO ----------
                       data.bill.length.toString() +
                       ' )',
                   style: TextStyle(

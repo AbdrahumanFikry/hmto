@@ -3,9 +3,14 @@ import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:senior/widgets/alertDialog.dart';
+import 'package:senior/widgets/invoices.dart';
 import 'package:senior/widgets/properties.dart';
+import '../providers/sellsProvider.dart';
 
-class SellsStore extends StatelessWidget {
+class SellsStore extends StatefulWidget {
   final int id;
   final String storeName;
   final String customerName;
@@ -31,22 +36,71 @@ class SellsStore extends StatelessWidget {
   });
 
   @override
+  _SellsStoreState createState() => _SellsStoreState();
+}
+
+class _SellsStoreState extends State<SellsStore> {
+  bool isCash = true;
+  int _radioValue = 0;
+  bool isLoading = false;
+
+  void _handleRadioValueChange(int value) {
+    _radioValue = value;
+    setState(() {
+      switch (_radioValue) {
+        case 0:
+          isCash = true;
+          break;
+        case 1:
+          isCash = false;
+          break;
+      }
+    });
+    print(':::::' + isCash.toString());
+  }
+
+  Future<void> fetchOldInvoices() async {
+    try {
+      isLoading = true;
+      await Provider.of<SellsData>(context, listen: false)
+          .fetchOldInvoices(storeId: widget.id);
+      isLoading = false;
+    } catch (error) {
+      GlobalAlertDialog.showErrorDialog(error.toString(), context);
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final oldInvoices = Provider.of<SellsData>(context, listen: false);
     var screenSize = MediaQuery.of(context).size;
     List<String> images = [
-      imageIn,
-      imageOut,
-      imageStoreAds,
-      imageStoreFront,
+      widget.imageIn,
+      widget.imageOut,
+      widget.imageStoreAds,
+      widget.imageStoreFront,
     ];
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(
+            widget.storeName,
+            style: TextStyle(color: Colors.green),
+          ),
+          backgroundColor: Colors.white,
+          elevation: 3.0,
+        ),
         body: ListView(
           children: <Widget>[
             SizedBox(
               height: 20.0,
             ),
             CarouselSlider(
+              autoPlay: true,
               scrollPhysics: BouncingScrollPhysics(),
               height: 384 * screenSize.aspectRatio,
               items: images.map((image) {
@@ -68,15 +122,15 @@ class SellsStore extends StatelessWidget {
             SizedBox(
               height: 20,
             ),
-            Center(
-              child: Text(
-                storeName,
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+//            Center(
+//              child: Text(
+//                widget.storeName,
+//                style: TextStyle(
+//                  fontSize: 22,
+//                  fontWeight: FontWeight.bold,
+//                ),
+//              ),
+//            ),
             Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: 33 * screenSize.aspectRatio,
@@ -89,44 +143,104 @@ class SellsStore extends StatelessWidget {
                   ),
                 ),
                 header: Text(
-                  tr('sells_store.cash'),
+                  tr('sells_store.check_out'),
                   style: TextStyle(
                     fontWeight: FontWeight.w700,
                     color: Colors.blue,
                     fontSize: 33 * screenSize.aspectRatio,
                   ),
                 ),
-                expanded: Properties(
-                  storeId: id,
-                  isCash: true,
+                expanded: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Radio(
+                          value: 0,
+                          groupValue: _radioValue,
+                          onChanged: _handleRadioValueChange,
+                        ),
+                        Text(
+                          tr('sells_store.cash'),
+                          style: new TextStyle(fontSize: 16.0),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Radio(
+                          value: 1,
+                          groupValue: _radioValue,
+                          onChanged: _handleRadioValueChange,
+                        ),
+                        Text(
+                          tr('sells_store.debit'),
+                          style: new TextStyle(
+                            fontSize: 16.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Properties(
+                      storeId: widget.id,
+                      isCash: isCash,
+                      isDebit: !isCash,
+                    ),
+                  ],
                 ),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 33 * screenSize.aspectRatio,
-                vertical: 16 * screenSize.aspectRatio,
-              ),
-              child: ExpandablePanel(
-                theme: ExpandableThemeData(
-                  animationDuration: Duration(
-                    milliseconds: 200,
-                  ),
-                ),
-                header: Text(
-                  tr('sells_store.debit'),
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    color: Colors.blue,
-                    fontSize: 33 * screenSize.aspectRatio,
-                  ),
-                ),
-                expanded: Properties(
-                  storeId: id,
-                  isDebit: true,
-                ),
-              ),
-            ),
+//            Padding(
+//              padding: EdgeInsets.symmetric(
+//                horizontal: 33 * screenSize.aspectRatio,
+//                vertical: 16 * screenSize.aspectRatio,
+//              ),
+//              child: ExpandablePanel(
+//                theme: ExpandableThemeData(
+//                  animationDuration: Duration(
+//                    milliseconds: 200,
+//                  ),
+//                ),
+//                header: Text(
+//                  tr('sells_store.cash'),
+//                  style: TextStyle(
+//                    fontWeight: FontWeight.w700,
+//                    color: Colors.blue,
+//                    fontSize: 33 * screenSize.aspectRatio,
+//                  ),
+//                ),
+//                expanded: Properties(
+//                  storeId: widget.id,
+//                  isCash: true,
+//                ),
+//              ),
+//            ),
+//            Padding(
+//              padding: EdgeInsets.symmetric(
+//                horizontal: 33 * screenSize.aspectRatio,
+//                vertical: 16 * screenSize.aspectRatio,
+//              ),
+//              child: ExpandablePanel(
+//                theme: ExpandableThemeData(
+//                  animationDuration: Duration(
+//                    milliseconds: 200,
+//                  ),
+//                ),
+//                header: Text(
+//                  tr('sells_store.debit'),
+//                  style: TextStyle(
+//                    fontWeight: FontWeight.w700,
+//                    color: Colors.blue,
+//                    fontSize: 33 * screenSize.aspectRatio,
+//                  ),
+//                ),
+//                expanded: Properties(
+//                  storeId: widget.id,
+//                  isDebit: true,
+//                ),
+//              ),
+//            ),
             Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: 33 * screenSize.aspectRatio,
@@ -146,169 +260,207 @@ class SellsStore extends StatelessWidget {
                     fontSize: 33 * screenSize.aspectRatio,
                   ),
                 ),
-                expanded: Properties(
-                  storeId: id,
-                  isReturn: true,
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 33 * screenSize.aspectRatio,
-                vertical: 16 * screenSize.aspectRatio,
-              ),
-              child: ExpandablePanel(
-                theme: ExpandableThemeData(
-                  animationDuration: Duration(
-                    milliseconds: 200,
-                  ),
-                ),
-                header: Text(
-                  tr('sells_store.summary'),
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    color: Colors.blue,
-                    fontSize: 33 * screenSize.aspectRatio,
-                  ),
-                ),
                 expanded: Column(
                   children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Expanded(
-                            child: Text(
-                              tr('sells_store.summary_details.old'),
-                              style: TextStyle(
-                                fontSize: 21.0,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 20.0,
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.5,
-                            child: TextField(
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.only(
-                                  right: 100.0,
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(
-                                    5.0,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                    SizedBox(
+                      height: 10.0,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Expanded(
-                            child: Text(
-                              tr('sells_store.summary_details.paid'),
-                              style: TextStyle(
-                                fontSize: 21.0,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 20.0,
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.5,
-                            child: TextField(
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.only(
-                                  right: 100.0,
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(
-                                    5.0,
+                    oldInvoices.oldInvoices == null
+                        ? isLoading
+                            ? Center(
+                                child: CircularProgressIndicator(),
+                              )
+                            : Row(
+                                children: <Widget>[
+                                  OutlineButton.icon(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 7.0,
+                                      horizontal: 50.0,
+                                    ),
+                                    onPressed: fetchOldInvoices,
+                                    icon: Icon(
+                                      FontAwesomeIcons.fileInvoiceDollar,
+                                      size: 24.0,
+                                      color: Colors.green,
+                                    ),
+                                    label: Text(
+                                      tr('extra.oldInvoice'),
+                                      style: TextStyle(
+                                        color: Colors.green,
+                                        fontSize: 20.0,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                            ),
+                                ],
+                                mainAxisAlignment: MainAxisAlignment.center,
+                              )
+                        : Invoices(
+                            data: oldInvoices.oldInvoices.data,
                           ),
-                        ],
-                      ),
+                    SizedBox(
+                      height: 10.0,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Expanded(
-                            child: Text(
-                              tr('sells_store.summary_details.rest'),
-                              style: TextStyle(
-                                fontSize: 21.0,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 20.0,
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.5,
-                            child: TextField(
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.only(
-                                  right: 100.0,
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(
-                                    5.0,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Container(
-                        height: 60.0,
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                          color: Colors.green,
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        child: FlatButton(
-                          onPressed: () {
-                            //todo----
-                          },
-                          child: Text(
-                            tr('sells_store.done'),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
                   ],
                 ),
               ),
             ),
+//            Padding(
+//              padding: EdgeInsets.symmetric(
+//                horizontal: 33 * screenSize.aspectRatio,
+//                vertical: 16 * screenSize.aspectRatio,
+//              ),
+//              child: ExpandablePanel(
+//                theme: ExpandableThemeData(
+//                  animationDuration: Duration(
+//                    milliseconds: 200,
+//                  ),
+//                ),
+//                header: Text(
+//                  tr('sells_store.summary'),
+//                  style: TextStyle(
+//                    fontWeight: FontWeight.w700,
+//                    color: Colors.blue,
+//                    fontSize: 33 * screenSize.aspectRatio,
+//                  ),
+//                ),
+//                expanded: Column(
+//                  children: <Widget>[
+//                    Padding(
+//                      padding: const EdgeInsets.all(8.0),
+//                      child: Row(
+//                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                        children: <Widget>[
+//                          Expanded(
+//                            child: Text(
+//                              tr('sells_store.summary_details.old'),
+//                              style: TextStyle(
+//                                fontSize: 21.0,
+//                                color: Colors.black,
+//                                fontWeight: FontWeight.bold,
+//                              ),
+//                            ),
+//                          ),
+//                          SizedBox(
+//                            width: 20.0,
+//                          ),
+//                          Container(
+//                            width: MediaQuery.of(context).size.width * 0.5,
+//                            child: TextField(
+//                              decoration: InputDecoration(
+//                                contentPadding: EdgeInsets.only(
+//                                  right: 100.0,
+//                                ),
+//                                border: OutlineInputBorder(
+//                                  borderRadius: BorderRadius.circular(
+//                                    5.0,
+//                                  ),
+//                                ),
+//                              ),
+//                            ),
+//                          ),
+//                        ],
+//                      ),
+//                    ),
+//                    Padding(
+//                      padding: const EdgeInsets.all(8.0),
+//                      child: Row(
+//                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                        children: <Widget>[
+//                          Expanded(
+//                            child: Text(
+//                              tr('sells_store.summary_details.paid'),
+//                              style: TextStyle(
+//                                fontSize: 21.0,
+//                                color: Colors.black,
+//                                fontWeight: FontWeight.bold,
+//                              ),
+//                            ),
+//                          ),
+//                          SizedBox(
+//                            width: 20.0,
+//                          ),
+//                          Container(
+//                            width: MediaQuery.of(context).size.width * 0.5,
+//                            child: TextField(
+//                              decoration: InputDecoration(
+//                                contentPadding: EdgeInsets.only(
+//                                  right: 100.0,
+//                                ),
+//                                border: OutlineInputBorder(
+//                                  borderRadius: BorderRadius.circular(
+//                                    5.0,
+//                                  ),
+//                                ),
+//                              ),
+//                            ),
+//                          ),
+//                        ],
+//                      ),
+//                    ),
+//                    Padding(
+//                      padding: const EdgeInsets.all(8.0),
+//                      child: Row(
+//                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                        children: <Widget>[
+//                          Expanded(
+//                            child: Text(
+//                              tr('sells_store.summary_details.rest'),
+//                              style: TextStyle(
+//                                fontSize: 21.0,
+//                                color: Colors.black,
+//                                fontWeight: FontWeight.bold,
+//                              ),
+//                            ),
+//                          ),
+//                          SizedBox(
+//                            width: 20.0,
+//                          ),
+//                          Container(
+//                            width: MediaQuery.of(context).size.width * 0.5,
+//                            child: TextField(
+//                              decoration: InputDecoration(
+//                                contentPadding: EdgeInsets.only(
+//                                  right: 100.0,
+//                                ),
+//                                border: OutlineInputBorder(
+//                                  borderRadius: BorderRadius.circular(
+//                                    5.0,
+//                                  ),
+//                                ),
+//                              ),
+//                            ),
+//                          ),
+//                        ],
+//                      ),
+//                    ),
+//                    Padding(
+//                      padding: const EdgeInsets.all(20.0),
+//                      child: Container(
+//                        height: 60.0,
+//                        width: MediaQuery.of(context).size.width,
+//                        decoration: BoxDecoration(
+//                          color: Colors.green,
+//                          borderRadius: BorderRadius.circular(20.0),
+//                        ),
+//                        child: FlatButton(
+//                          onPressed: () {
+//                            //todo----
+//                          },
+//                          child: Text(
+//                            tr('sells_store.done'),
+//                            style: TextStyle(
+//                              color: Colors.white,
+//                              fontSize: 20.0,
+//                              fontWeight: FontWeight.bold,
+//                            ),
+//                          ),
+//                        ),
+//                      ),
+//                    )
+//                  ],
+//                ),
+//              ),
+//            ),
           ],
         ),
       ),
