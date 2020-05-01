@@ -7,6 +7,7 @@ import 'package:senior/models/qrResult.dart';
 import 'package:senior/models/startDaySalles.dart';
 import 'package:senior/models/stores.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class SellsData with ChangeNotifier {
   String token;
@@ -167,7 +168,7 @@ class SellsData with ChangeNotifier {
     int billIndex =
         bill.indexWhere((i) => i.productId == loadedItems[index].productId);
     if (billIndex != -1) {
-      throw HttpException(message: 'Already added to bill');
+      throw HttpException(message: tr('errors.exist'));
     }
     try {
       bill.add(
@@ -180,7 +181,7 @@ class SellsData with ChangeNotifier {
         ),
       );
     } catch (error) {
-      throw HttpException(message: 'product not found in the car');
+      throw HttpException(message: tr('errors.notFound'));
     }
     returnTotal();
     notifyListeners();
@@ -233,7 +234,8 @@ class SellsData with ChangeNotifier {
       notifyListeners();
     } else {
       throw HttpException(
-          message: 'No more ${loadedItems[carIndex].productName} in the car');
+        message: 'errors.noMore'.tr(args: [loadedItems[carIndex].productName]),
+      );
     }
   }
 
@@ -283,7 +285,7 @@ class SellsData with ChangeNotifier {
       print('Car products :' + json.encode({'carProducts': loadedItems}));
       notifyListeners();
     } catch (error) {
-      throw HttpException(message: 'Could not balance products');
+      throw HttpException(message: tr('errors.noBalance'));
     }
   }
 
@@ -306,6 +308,47 @@ class SellsData with ChangeNotifier {
         "Authorization": "Bearer $token",
       };
 //      print('Request body : ' + body);
+      final response = await http.post(
+        url,
+        headers: headers,
+        body: body,
+      );
+      print("Response :" + response.body.toString());
+      final Map responseData = json.decode(response.body);
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        //remove items from car and balance the products
+        await finishBill();
+        notifyListeners();
+        return true;
+      } else {
+        throw HttpException(message: responseData['message']);
+      }
+    } catch (error) {
+      print('Request Error :' + error.toString());
+      throw error;
+    }
+  }
+
+  //------------------------------- Pay debit ----------------------------------
+  Future<void> payDebit({int storeId, double total, String paid}) async {
+    await fetchUserData();
+    const url = 'https://api.hmto-eleader.com/api/sellsman/debit';
+    try {
+      var body = {
+        "created_by": userId.toString(),
+        "business_id": businessId.toString(),
+        "location_id": locationId,
+        "contact_id": storeId.toString(),
+        "total_before_tax": total.toString(),
+        "final_total": total.toString(),
+        "products": json.encode(bill),
+        "amout_paid": paid,
+      };
+
+      Map<String, String> headers = {
+        "Authorization": "Bearer $token",
+      };
+      print('Request body : ' + json.encode(body));
       final response = await http.post(
         url,
         headers: headers,

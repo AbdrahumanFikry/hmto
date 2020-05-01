@@ -23,13 +23,18 @@ class CartScreen extends StatelessWidget {
 
   bool isLoading = false;
 
-  Future<void> print(BuildContext context, double total) async {
+//  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  Future<void> finishAndPrintBill(
+      BuildContext context, double total, String paid) async {
     try {
       isLoading = true;
       if (isCash) {
         await Provider.of<SellsData>(context, listen: false)
             .payCash(storeId: storeId, total: total);
       } else if (isDebit) {
+        await Provider.of<SellsData>(context, listen: false)
+            .payDebit(storeId: storeId, total: total, paid: paid);
       } else if (isReturn) {
       } else {
         GlobalAlertDialog.showErrorDialog('Invalid input!', context);
@@ -43,6 +48,7 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String paid = '';
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -159,6 +165,48 @@ class CartScreen extends StatelessWidget {
                       ],
                     ),
                   ),
+                  isDebit
+                      ? Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Expanded(
+                                child: Text(
+                                  tr('sells_store.summary_details.paid'),
+                                  style: TextStyle(
+                                    fontSize: 21.0,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 20.0,
+                              ),
+                              Container(
+                                width: MediaQuery.of(context).size.width * 0.5,
+                                child: TextField(
+                                  onChanged: (value) {
+                                    paid = value;
+                                    print(paid);
+                                  },
+                                  decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.only(
+                                      right: 100.0,
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(
+                                        5.0,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : SizedBox(),
                   Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: isLoading
@@ -173,8 +221,8 @@ class CartScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(20.0),
                             ),
                             child: FlatButton(
-                              onPressed: () =>
-                                  print(context, data.returnTotal()),
+                              onPressed: () => finishAndPrintBill(
+                                  context, data.returnTotal(), paid),
                               child: Text(
                                 tr('sells_store.print'),
                                 style: TextStyle(

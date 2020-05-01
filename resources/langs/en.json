@@ -117,5 +117,11 @@
         "refresh": "refresh",
         "answer": "Type answer here",
         "noStartDay": "You can't start day your balance is Full or your cart is Empty"
+    },
+    "errors": {
+        "notFound": "product not found in the car!",
+        "exist": "Already added to bill!",
+        "noMore": "No more {} in the car!",
+        "noBalance": "Could not balance products!"
     }
 }
