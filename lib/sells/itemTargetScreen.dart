@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:expandable/expandable.dart';
-import '../widgets/qrReader.dart';
 import 'package:easy_localization/easy_localization.dart';
-import '../sells/testStore.dart';
 
 class ItemTargetScreen extends StatelessWidget {
   @override
@@ -108,27 +106,33 @@ class ItemTargetScreen extends StatelessWidget {
           },
         ),
         Padding(
-          padding: const EdgeInsets.only(right:15.0,left: 15.0),
+          padding: const EdgeInsets.only(right: 15.0, left: 15.0),
           child: Divider(),
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text(tr('field_force_profile.special'),style: TextStyle(
-            color: Colors.black,
-            fontSize: 20.0,
-            fontWeight: FontWeight.bold,
-          ),),
+          child: Text(
+            tr('field_force_profile.special'),
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 20.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
         Padding(
           padding: const EdgeInsets.all(15.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text(tr('field_force_profile.pro'),style: TextStyle(
-                color: Colors.black,
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-              ),),
+              Text(
+                tr('field_force_profile.pro'),
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               LinearPercentIndicator(
                 width: 170.0,
                 animation: true,

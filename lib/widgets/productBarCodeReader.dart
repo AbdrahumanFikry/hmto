@@ -9,6 +9,12 @@ import 'package:senior/widgets/alertDialog.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class ProductBarCodeReader extends StatefulWidget {
+  final bool isReturned;
+
+  ProductBarCodeReader({
+    this.isReturned,
+  });
+
   @override
   _ProductBarCodeReaderState createState() => _ProductBarCodeReaderState();
 }
@@ -33,8 +39,13 @@ class _ProductBarCodeReaderState extends State<ProductBarCodeReader> {
       } else {
         this._outputController.text = barcode;
         print('BarCode Output : ' + barcode);
-        await Provider.of<SellsData>(context, listen: false)
-            .addItemToBill(serialNumber: barcode);
+        if (!widget.isReturned) {
+          await Provider.of<SellsData>(context, listen: false)
+              .addItemToBill(serialNumber: barcode);
+        } else {
+          await Provider.of<SellsData>(context, listen: false)
+              .addItemToReturnedInvoice(serialNumber: barcode);
+        }
         Navigator.of(context).pop();
         setState(() {
           hasError = false;

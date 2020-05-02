@@ -162,9 +162,7 @@ class DriverStore extends StatelessWidget {
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => CartScreen(
-                              isReady: true,
-                            ),
+                            builder: (context) => CartScreen(),
                           ),
                         );
                       },

@@ -17,9 +17,9 @@ import 'dart:async';
 import 'package:easy_localization/easy_localization.dart';
 import '../providers/fieldForceProvider.dart';
 import '../widgets/persent.dart';
-import 'package:image/image.dart' as Im;
-import 'package:path_provider/path_provider.dart';
-import 'dart:math' as Math;
+//import 'package:image/image.dart' as Im;
+//import 'package:path_provider/path_provider.dart';
+//import 'dart:math' as Math;
 
 class AdsAddStore extends StatefulWidget {
   final double lat;

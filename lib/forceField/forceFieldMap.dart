@@ -6,7 +6,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:senior/forceField/addStore.dart';
 import 'package:app_settings/app_settings.dart';
-import 'package:senior/forceField/store.dart';
 import 'package:senior/widgets/qrReader.dart';
 import '../providers/location.dart';
 import 'package:easy_localization/easy_localization.dart';

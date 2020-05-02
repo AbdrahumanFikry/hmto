@@ -4,20 +4,14 @@ import 'package:provider/provider.dart';
 import 'package:senior/providers/sellsProvider.dart';
 import 'package:senior/widgets/alertDialog.dart';
 import 'package:senior/widgets/productBarCodeReader.dart';
-import 'package:senior/widgets/testStoreWidget.dart';
+import 'package:senior/widgets/returnsdCartItem.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-class CartScreen extends StatelessWidget {
+class ReturnedCartCart extends StatelessWidget {
   final int storeId;
-  final bool isCash;
-  final bool isDebit;
-  final bool isReturn;
 
-  CartScreen({
+  ReturnedCartCart({
     this.storeId,
-    this.isCash = false,
-    this.isDebit = false,
-    this.isReturn = false,
   });
 
   bool isLoading = false;
@@ -26,20 +20,11 @@ class CartScreen extends StatelessWidget {
 
 //  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  Future<void> finishAndPrintBill(
-      BuildContext context, double total, String paid) async {
+  Future<void> finishAndPrintBill(BuildContext context, double total) async {
     try {
       isLoading = true;
-      if (isCash) {
-        await Provider.of<SellsData>(context, listen: false)
-            .payCash(storeId: storeId, total: total);
-      } else if (isDebit) {
-        await Provider.of<SellsData>(context, listen: false)
-            .payDebit(storeId: storeId, total: total, paid: paid);
-      } else if (isReturn) {
-      } else {
-        GlobalAlertDialog.showErrorDialog('Invalid input!', context);
-      }
+      await Provider.of<SellsData>(context, listen: false)
+          .returnProducts(storeId: storeId, total: total);
       isLoading = false;
     } catch (error) {
       GlobalAlertDialog.showErrorDialog(error.toString(), context);
@@ -49,27 +34,18 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String paid = '';
-    String title = '';
-    if (isCash) {
-      title = tr('sells_store.cash');
-    } else if (isDebit) {
-      title = tr('sells_store.debit');
-    } else {
-      title = tr('sells_store.check_out');
-    }
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          title,
+          tr('sells_store.return'),
           style: TextStyle(color: Colors.green),
         ),
         backgroundColor: Colors.white,
         elevation: 3.0,
       ),
       body: Consumer<SellsData>(
-        builder: (context, data, _) => data.bill.isEmpty
+        builder: (context, data, _) => data.returnedBill.isEmpty
             ? Center(
                 child: Icon(
                   FontAwesomeIcons.dolly,
@@ -85,9 +61,9 @@ class CartScreen extends StatelessWidget {
                   ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: data.bill.length,
+                    itemCount: data.returnedBill.length,
                     itemBuilder: (ctx, index) {
-                      return CartScreenItem(
+                      return ReturnedCartScreenItem(
                         index: index,
                       );
                     },
@@ -99,7 +75,9 @@ class CartScreen extends StatelessWidget {
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => ProductBarCodeReader(),
+                              builder: (context) => ProductBarCodeReader(
+                                isReturned: true,
+                              ),
                             ),
                           );
                         },
@@ -126,129 +104,6 @@ class CartScreen extends StatelessWidget {
                     ],
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          tr('sells_store.total'),
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            color: Colors.black,
-                          ),
-                        ),
-                        Text(
-                          data.returnTotal().toString() +
-                              ' ' +
-                              tr('senior_profile.egp'),
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-//          Padding(
-//            padding: const EdgeInsets.all(8.0),
-//            child: Row(
-//              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//              children: <Widget>[
-//                Text(
-//                  tr('other.sale'),
-//                  style: TextStyle(
-//                    fontSize: 20.0,
-//                    color: Colors.black,
-//                  ),
-//                ),
-//                SizedBox(
-//                  width: 20.0,
-//                ),
-//                Container(
-//                  width: MediaQuery.of(context).size.width * 0.5,
-//                  child: TextField(
-//                    decoration: InputDecoration(
-//                      contentPadding: EdgeInsets.only(
-//                        right: 100.0,
-//                      ),
-//                      border: OutlineInputBorder(
-//                        borderRadius: BorderRadius.circular(
-//                          5.0,
-//                        ),
-//                      ),
-//                    ),
-//                  ),
-//                ),
-//              ],
-//            ),
-//          ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          tr('sells_store.price'),
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            color: Colors.black,
-                          ),
-                        ),
-                        Text(
-                          data.returnTotal().toString() +
-                              ' ' +
-                              tr('senior_profile.egp'),
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  isDebit
-                      ? Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Expanded(
-                                child: Text(
-                                  tr('sells_store.summary_details.paid'),
-                                  style: TextStyle(
-                                    fontSize: 21.0,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 20.0,
-                              ),
-                              Container(
-                                width: MediaQuery.of(context).size.width * 0.5,
-                                child: TextField(
-                                  onChanged: (value) {
-                                    paid = value;
-                                    print(paid);
-                                  },
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.only(
-                                      right: 100.0,
-                                    ),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(
-                                        5.0,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      : SizedBox(),
-                  Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: isLoading
                         ? Center(
@@ -262,8 +117,7 @@ class CartScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(20.0),
                             ),
                             child: FlatButton(
-                              onPressed: () => finishAndPrintBill(
-                                  context, data.returnTotal(), paid),
+                              onPressed: () => finishAndPrintBill(context, 0.0),
                               child: Text(
                                 tr('sells_store.print'),
                                 style: TextStyle(

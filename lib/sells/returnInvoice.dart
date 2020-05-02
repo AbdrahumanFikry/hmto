@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:senior/providers/sellsProvider.dart';
-import 'package:senior/widgets/alertDialog.dart';
 import 'package:senior/widgets/properties.dart';
 import 'package:senior/widgets/readyItem.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -48,6 +47,8 @@ class ReturnInvoice extends StatelessWidget {
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: data.oldInvoices.data[billIndex].products.length,
                     itemBuilder: (ctx, index) {
+                      data.invoiceId =
+                          data.oldInvoices.data[billIndex].transactionId;
                       return ReadyItem(
                         billIndex: billIndex,
                         productIndex: index,
@@ -81,7 +82,7 @@ class ReturnInvoice extends StatelessWidget {
                   Divider(),
                   Properties(
                     storeId: data.oldInvoices.data[billIndex].storeId,
-                    isReturn: true,
+                    isReturned: true,
                   ),
                 ],
               ),

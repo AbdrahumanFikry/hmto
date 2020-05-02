@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior/providers/sellsProvider.dart';
+import 'package:senior/sells/returenedCart.dart';
 import 'package:senior/widgets/alertDialog.dart';
 import 'package:senior/widgets/productBarCodeReader.dart';
 import '../sells/cartScreen.dart';
@@ -10,13 +11,13 @@ class Properties extends StatefulWidget {
   final int storeId;
   final bool isCash;
   final bool isDebit;
-  final bool isReturn;
+  final bool isReturned;
 
   Properties({
     this.storeId,
     this.isCash = false,
     this.isDebit = false,
-    this.isReturn = false,
+    this.isReturned = false,
   });
 
   @override
@@ -28,16 +29,25 @@ class _PropertiesState extends State<Properties> {
   String number = '';
 
   void goToCartScreen() {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => CartScreen(
-          storeId: widget.storeId,
-          isCash: widget.isCash,
-          isDebit: widget.isDebit,
-          isReturn: widget.isReturn,
+    if (!widget.isReturned) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => CartScreen(
+            storeId: widget.storeId,
+            isCash: widget.isCash,
+            isDebit: widget.isDebit,
+          ),
         ),
-      ),
-    );
+      );
+    } else {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => ReturnedCartCart(
+            storeId: widget.storeId,
+          ),
+        ),
+      );
+    }
   }
 
   void onSave() async {
@@ -45,11 +55,12 @@ class _PropertiesState extends State<Properties> {
     if (formData.validate()) {
       formData.save();
       try {
-        if (!widget.isReturn) {
+        if (!widget.isReturned) {
           await Provider.of<SellsData>(context, listen: false)
               .addItemToBill(serialNumber: number);
         } else {
-          //TODO -------------
+          await Provider.of<SellsData>(context, listen: false)
+              .addItemToReturnedInvoice(serialNumber: number);
         }
         Navigator.of(context).pop();
       } catch (error) {
@@ -59,7 +70,7 @@ class _PropertiesState extends State<Properties> {
     }
   }
 
-  void _showModalSheet() {
+  void showModalSheet() {
     showModalBottomSheet(
       context: context,
       builder: (builder) {
@@ -163,7 +174,9 @@ class _PropertiesState extends State<Properties> {
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => ProductBarCodeReader(),
+                builder: (context) => ProductBarCodeReader(
+                  isReturned: widget.isReturned,
+                ),
               ),
             );
           },
@@ -177,7 +190,7 @@ class _PropertiesState extends State<Properties> {
           ),
         ),
         ListTile(
-          onTap: _showModalSheet,
+          onTap: showModalSheet,
           leading: Icon(
             Icons.confirmation_number,
             size: 24.0,
@@ -200,12 +213,11 @@ class _PropertiesState extends State<Properties> {
               builder: (context, data, _) => FlatButton(
                 onPressed: goToCartScreen,
                 child: Text(
-                  '${widget.isReturn ? tr('sells_store.return') : tr('sells_store.check_out')}' +
+                  tr('sells_store.check_out') +
                       '   ( ' +
                       tr('store.products') +
                       ' ' +
-                      //TODO ----------
-                      data.bill.length.toString() +
+                      '${widget.isReturned ? data.returnedBill.length.toString() : data.bill.length.toString()}' +
                       ' )',
                   style: TextStyle(
                     color: Colors.white,

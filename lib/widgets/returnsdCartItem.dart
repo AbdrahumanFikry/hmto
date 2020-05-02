@@ -4,10 +4,10 @@ import 'package:provider/provider.dart';
 import 'package:senior/providers/sellsProvider.dart';
 import 'package:senior/widgets/alertDialog.dart';
 
-class CartScreenItem extends StatelessWidget {
+class ReturnedCartScreenItem extends StatelessWidget {
   final int index;
 
-  CartScreenItem({
+  ReturnedCartScreenItem({
     this.index,
   });
 
@@ -24,10 +24,10 @@ class CartScreenItem extends StatelessWidget {
               Row(
                 children: <Widget>[
                   Text(
-                    data.loadedItems
+                    data.billProducts
                         .firstWhere((item) =>
-                            item.productId == data.bill[index].productId)
-                        .productName,
+                            item.id == data.returnedBill[index].productId)
+                        .product,
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 20.0,
@@ -38,7 +38,8 @@ class CartScreenItem extends StatelessWidget {
               Spacer(),
               InkWell(
                 onTap: () {
-                  data.removeProductFromBill(id: data.bill[index].productId);
+                  data.removeProductFromReturnedInvoice(
+                      id: data.returnedBill[index].productId);
                 },
                 child: Icon(
                   Icons.cancel,
@@ -50,27 +51,27 @@ class CartScreenItem extends StatelessWidget {
           SizedBox(
             height: 10.0,
           ),
-          Row(
-            children: <Widget>[
-              Icon(
-                Icons.monetization_on,
-                color: Colors.green,
-                size: 20.0,
-              ),
-              SizedBox(
-                width: 10.0,
-              ),
-              Text(
-                data.bill[index].unitPrice.toString() +
-                    ' ' +
-                    tr('senior_profile.egp'),
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 16.0,
-                ),
-              ),
-            ],
-          ),
+//          Row(
+//            children: <Widget>[
+//              Icon(
+//                Icons.monetization_on,
+//                color: Colors.green,
+//                size: 20.0,
+//              ),
+//              SizedBox(
+//                width: 10.0,
+//              ),
+//              Text(
+//                data.returnedBill[index].unitPrice.toString() +
+//                    ' ' +
+//                    tr('senior_profile.egp'),
+//                style: TextStyle(
+//                  color: Colors.grey,
+//                  fontSize: 16.0,
+//                ),
+//              ),
+//            ],
+//          ),
           Row(
             children: <Widget>[
               Icon(
@@ -82,7 +83,8 @@ class CartScreenItem extends StatelessWidget {
                 width: 10.0,
               ),
               Text(
-                '${tr('other.qty')} :' + data.bill[index].quantity.toString(),
+                '${tr('other.qty')} :' +
+                    data.returnedBill[index].quantity.toString(),
                 style: TextStyle(
                   color: Colors.grey,
                   fontSize: 16.0,
@@ -95,8 +97,9 @@ class CartScreenItem extends StatelessWidget {
                   color: Colors.green,
                 ),
                 onPressed: () {
-                  if (data.bill[index].quantity != 1) {
-                    data.removeAmountFromBill(id: data.bill[index].productId);
+                  if (data.returnedBill[index].quantity != 1) {
+                    data.removeAmountFromReturnedInvoice(
+                        id: data.returnedBill[index].productId);
                   }
                 },
               ),
@@ -110,8 +113,8 @@ class CartScreenItem extends StatelessWidget {
                 ),
                 onPressed: () async {
                   try {
-                    await data.addAmountFromBill(
-                        id: data.bill[index].productId);
+                    await data.addAmountFromReturnedInvoice(
+                        id: data.returnedBill[index].productId);
                   } catch (error) {
                     GlobalAlertDialog.showErrorDialog(
                         error.toString(), context);

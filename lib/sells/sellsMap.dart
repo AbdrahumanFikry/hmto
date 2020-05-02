@@ -4,10 +4,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:app_settings/app_settings.dart';
-import 'package:senior/sells/testStore.dart';
 import 'package:senior/widgets/qrReaderSells.dart';
 import '../providers/location.dart';
-import 'package:easy_localization/easy_localization.dart';
 import '../providers/sellsProvider.dart';
 
 class SellsMap extends StatefulWidget {

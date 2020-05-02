@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:senior/models/oldInvoice.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:senior/sells/cartScreen.dart';
+import '../providers/sellsProvider.dart';
 import 'package:senior/sells/returnInvoice.dart';
 
 class Invoices extends StatelessWidget {
@@ -24,6 +25,8 @@ class Invoices extends StatelessWidget {
             horizontal: 10.0,
           ),
           onPressed: () {
+            Provider.of<SellsData>(context, listen: false).billProducts =
+                data[index].products;
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => ReturnInvoice(

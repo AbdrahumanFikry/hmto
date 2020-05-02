@@ -5,6 +5,7 @@ import 'package:senior/models/billProduct.dart';
 import 'package:senior/models/httpExceptionModel.dart';
 import 'package:senior/models/oldInvoice.dart';
 import 'package:senior/models/qrResult.dart';
+import 'package:senior/models/reternedProduct.dart';
 import 'package:senior/models/startDaySalles.dart';
 import 'package:senior/models/stores.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,12 +18,16 @@ class SellsData with ChangeNotifier {
   int businessId;
   String date;
   String locationId;
+  bool invoiceError = false;
+  int invoiceId = 0;
   StartDayData startDayData;
   QrResult qrResult;
   Stores stores;
   OldInvoices oldInvoices;
   List<BillProduct> bill = [];
   List<CarProduct> loadedItems = [];
+  List<Products> billProducts = [];
+  List<ReturnedProduct> returnedBill = [];
 
   //-------------------------- Fetch Data --------------------------------------
   Future<bool> fetchUserData() async {
@@ -64,7 +69,7 @@ class SellsData with ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     try {
       var body = {
-        "user_id": userId.toString(),
+        "user_id": '29',
       };
       Map<String, String> headers = {
         'Authorization': 'Bearer $token',
@@ -395,20 +400,22 @@ class SellsData with ChangeNotifier {
       final Map responseData = json.decode(response.body);
       if (response.statusCode >= 200 && response.statusCode < 300) {
         oldInvoices = OldInvoices.fromJson(responseData);
+        invoiceError = false;
         notifyListeners();
         return true;
       } else {
+        invoiceError = true;
         throw HttpException(message: responseData['message']);
       }
     } catch (error) {
+      invoiceError = true;
       print('Request Error :' + error.toString());
       throw error;
     }
   }
 
   //--------------------------- return old products ----------------------------
-  Future<void> returnProducts(
-      {int storeId, double total, int invoiceId}) async {
+  Future<void> returnProducts({int storeId, double total}) async {
     await fetchUserData();
     const url = 'https://api.hmto-eleader.com/api/sellsman/return-sell';
     try {
@@ -420,7 +427,7 @@ class SellsData with ChangeNotifier {
         "total_before_tax": total.toString(),
         "final_total": total.toString(),
         "return_parent_id": invoiceId.toString(),
-        "products": json.encode(bill),
+        "products": json.encode(returnedBill),
       };
 
       Map<String, String> headers = {
@@ -435,7 +442,7 @@ class SellsData with ChangeNotifier {
       print("Response :" + response.body.toString());
       final Map responseData = json.decode(response.body);
       if (response.statusCode >= 200 && response.statusCode < 300) {
-        //TODO ----------
+        await finishReturnedInvoice();
         notifyListeners();
         return true;
       } else {
@@ -444,6 +451,118 @@ class SellsData with ChangeNotifier {
     } catch (error) {
       print('Request Error :' + error.toString());
       throw error;
+    }
+  }
+
+  //------------------- Add product to returned invoice ------------------------
+  Future<void> addItemToReturnedInvoice({String serialNumber}) async {
+    loadedItems = [];
+    await fetchCarProduct();
+    int index = loadedItems.indexWhere((i) => i.serialNumber == serialNumber);
+    if (index != -1) {
+      int billIndex = returnedBill
+          .indexWhere((i) => i.productId == loadedItems[index].productId);
+      if (billIndex != -1) {
+        throw HttpException(message: tr('errors.exist'));
+      } else {
+        int oldInvoiceIndex = billProducts
+            .indexWhere((item) => item.id == loadedItems[index].productId);
+        if (oldInvoiceIndex != -1) {
+          try {
+            returnedBill.add(
+              ReturnedProduct(
+                productId: billProducts[oldInvoiceIndex].id,
+                quantity: 1,
+              ),
+            );
+          } catch (error) {
+            throw HttpException(message: tr('errors.notFound'));
+          }
+        } else {
+          throw HttpException(message: tr('errors.notFound'));
+        }
+      }
+    } else {
+      throw HttpException(message: tr('errors.notFound'));
+    }
+    returnTotal();
+    notifyListeners();
+  }
+
+  //------------------ Remove amount from returned invoice ---------------------
+  void removeAmountFromReturnedInvoice({int id}) {
+    int index = returnedBill.indexWhere((item) => item.productId == id);
+    if (index != -1 && returnedBill[index].quantity != 1) {
+      returnedBill[index].quantity--;
+      returnTotal();
+      notifyListeners();
+    }
+  }
+
+  //------------------ Add amount from returned invoice ------------------------
+  Future<void> addAmountFromReturnedInvoice({int id}) async {
+    int billIndex = returnedBill.indexWhere((item) => item.productId == id);
+    int oldInvoiceIndex = billProducts.indexWhere((item) => item.id == id);
+    if (billIndex != -1 &&
+        oldInvoiceIndex != -1 &&
+        billProducts[oldInvoiceIndex].quantity >
+            returnedBill[billIndex].quantity) {
+      returnedBill[billIndex].quantity++;
+      returnTotal();
+      notifyListeners();
+    } else {
+      throw HttpException(
+        message:
+            'errors.noMore'.tr(args: [billProducts[oldInvoiceIndex].product]),
+      );
+    }
+  }
+
+  //------------------ Remove product from returned invoice --------------------
+  void removeProductFromReturnedInvoice({int id}) {
+    int index = returnedBill.indexWhere((item) => item.productId == id);
+    if (index != -1) {
+      returnedBill.removeAt(index);
+      returnTotal();
+      notifyListeners();
+    }
+  }
+
+  //---------------------------- Balance car products --------------------------
+  Future<void> finishReturnedInvoice() async {
+    try {
+      loadedItems = [];
+      await fetchCarProduct();
+      returnedBill.forEach((billItem) {
+        int index = loadedItems
+            .indexWhere((cartItem) => cartItem.productId == billItem.productId);
+        if (index != -1) {
+          loadedItems[index].quantity =
+              loadedItems[index].quantity + billItem.quantity;
+        } else {
+          loadedItems.add(
+            CarProduct(
+              productId: billItem.productId,
+              quantity: billItem.quantity,
+              serialNumber: '****',
+              priceForEach: 0.0,
+              productName: tr('sells_store.return'),
+            ),
+          );
+        }
+      });
+      final prefs = await SharedPreferences.getInstance();
+      final userData = json.encode(
+        {
+          'data': loadedItems,
+        },
+      );
+      prefs.setString('cartItems', userData);
+      returnedBill = [];
+      print('Car products :' + json.encode({'carProducts': loadedItems}));
+      notifyListeners();
+    } catch (error) {
+      throw HttpException(message: tr('errors.noBalance'));
     }
   }
 }
