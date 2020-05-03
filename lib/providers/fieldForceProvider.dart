@@ -92,7 +92,7 @@ class FieldForceData with ChangeNotifier {
     await fetchUserData();
     const url = 'https://api.hmto-eleader.com/api/add_field_force_shop';
     try {
-      print('::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: '
+      print('Request Body : '
           '\n$shopName\n$customerName\n$customerPhone\n$sellsName\n$sellsPhone\n'
           '$rate\n$answers\n${json.encode({
         "data": competitorsPercents

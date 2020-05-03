@@ -130,8 +130,10 @@ class _StartDayState extends State<StartDay> {
                           style: TextStyle(fontSize: 16.0),
                         ),
                         subtitle: Text(
-                          data.startDayData.productsInOwnCar[index].quantity
-                              .toString(),
+                          tr('other.qty') +
+                              ' : ' +
+                              data.startDayData.productsInOwnCar[index].quantity
+                                  .toString(),
                           style: TextStyle(fontSize: 16.0),
                         ),
                       );

@@ -6,6 +6,7 @@ import 'package:senior/widgets/alertDialog.dart';
 import 'package:senior/widgets/productBarCodeReader.dart';
 import 'package:senior/widgets/testStoreWidget.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:esc_pos_printer/esc_pos_printer.dart';
 
 class CartScreen extends StatelessWidget {
   final int storeId;
@@ -24,8 +25,6 @@ class CartScreen extends StatelessWidget {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String number = '';
 
-//  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   Future<void> finishAndPrintBill(
       BuildContext context, double total, String paid) async {
     try {
@@ -36,7 +35,6 @@ class CartScreen extends StatelessWidget {
       } else if (isDebit) {
         await Provider.of<SellsData>(context, listen: false)
             .payDebit(storeId: storeId, total: total, paid: paid);
-      } else if (isReturn) {
       } else {
         GlobalAlertDialog.showErrorDialog('Invalid input!', context);
       }

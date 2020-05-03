@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -134,20 +135,27 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
         .stores
         .data
         .forEach((store) {
-      final marker = Marker(
-        markerId: MarkerId(store.id.toString()),
-        position:
-            LatLng(double.tryParse(store.lat), double.tryParse(store.long)),
-        infoWindow: InfoWindow(title: store.storeName),
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => QrReaderFieldForce(),
-            ),
-          );
-        },
-      );
-      _markers[store.id.toString()] = marker;
+      if (store.lat != null && store.long != null && store.id != null) {
+        final marker = Marker(
+          markerId: MarkerId(store.id.toString()),
+          position: LatLng(
+              double.tryParse(store.lat) == null
+                  ? 120.000
+                  : double.tryParse(store.lat),
+              double.tryParse(store.long) == null
+                  ? 120.000
+                  : double.tryParse(store.long)),
+          infoWindow: InfoWindow(title: store.storeName),
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => QrReaderFieldForce(),
+              ),
+            );
+          },
+        );
+        _markers[store.id.toString()] = marker;
+      }
     });
     return SafeArea(
       child: Scaffold(

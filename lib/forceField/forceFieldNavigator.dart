@@ -18,6 +18,7 @@ class _ForceFieldNavigatorState extends State<ForceFieldNavigator> {
 
   @override
   void initState() {
+    Provider.of<FieldForceData>(context, listen: false).stores = null;
     _pages = [
       ForceFieldMap(),
       ForceFieldProfile(),

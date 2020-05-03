@@ -45,6 +45,8 @@ dependencies:
   location: ^2.5.4
   charts_flutter: ^0.9.0
   dio: ^3.0.4
+  esc_pos_printer: ^3.1.6
+
 
 
 

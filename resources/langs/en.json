@@ -122,7 +122,8 @@
     "errors": {
         "notFound": "product not found in the car!",
         "exist": "Already added to bill!",
-        "noMore": "No more {} in the car!",
-        "noBalance": "Could not balance products!"
+        "noMore": "You have reached the high limit of {} in your car!",
+        "noBalance": "Could not balance products!",
+        "lessData": "Data is not ready!"
     }
 }

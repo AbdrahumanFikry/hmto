@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 class InputWidget extends StatelessWidget {
   final String labelText;
   final FormFieldSetter<String> onSaved;
+  final FormFieldValidator<String> validator;
 
   InputWidget({
     this.onSaved,
     this.labelText,
+    @required this.validator,
   });
 
   @override
@@ -16,12 +18,7 @@ class InputWidget extends StatelessWidget {
         8.0,
       ),
       child: TextFormField(
-        validator: (value) {
-          if (value == null) {
-            return 'this field is requred!';
-          }
-          return null;
-        },
+        validator: validator,
         onSaved: onSaved,
         decoration: InputDecoration(
           labelText: labelText,

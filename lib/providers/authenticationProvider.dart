@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'dart:convert';
 import '../models/httpExceptionModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../providers/fieldForceProvider.dart';
+import '../providers/sellsProvider.dart';
 
 class Auth with ChangeNotifier {
   String _token;
@@ -91,13 +94,13 @@ class Auth with ChangeNotifier {
 
   //------------------------------- Logout -------------------------------------
   Future<void> logout() async {
+    final prefs = await SharedPreferences.getInstance();
     _token = null;
     _userId = null;
     type = null;
     userName = null;
     _businessId = null;
+    await prefs.clear();
     notifyListeners();
-    final prefs = await SharedPreferences.getInstance();
-    prefs.clear();
   }
 }

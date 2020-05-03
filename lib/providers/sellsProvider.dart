@@ -69,7 +69,7 @@ class SellsData with ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     try {
       var body = {
-        "user_id": '29',
+        "user_id": userId.toString(),
       };
       Map<String, String> headers = {
         'Authorization': 'Bearer $token',
