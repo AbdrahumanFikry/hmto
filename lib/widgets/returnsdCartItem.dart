@@ -113,7 +113,7 @@ class ReturnedCartScreenItem extends StatelessWidget {
                 ),
                 onPressed: () async {
                   try {
-                    await data.addAmountFromReturnedInvoice(
+                    await data.addAmountToReturnedInvoice(
                         id: data.returnedBill[index].productId);
                   } catch (error) {
                     GlobalAlertDialog.showErrorDialog(

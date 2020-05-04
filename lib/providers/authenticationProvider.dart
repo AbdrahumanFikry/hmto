@@ -51,7 +51,12 @@ class Auth with ChangeNotifier {
         _token = responseData['access_token'];
         _userId = responseData['user_id'];
         type = responseData['work_type'];
-        userName = responseData['first_name'] + ' ' + responseData['last_name'];
+        userName = responseData['first_name'] == null
+            ? ''
+            : responseData['first_name'] + ' ' + responseData['last_name'] ==
+                    null
+                ? ''
+                : responseData['last_name'];
         _businessId = responseData['business_id'];
         print(
             'userID     : $_userId\nBusinessId : $_businessId\nType       : $type\nToken      : $_token\n');

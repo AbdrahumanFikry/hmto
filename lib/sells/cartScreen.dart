@@ -97,7 +97,9 @@ class CartScreen extends StatelessWidget {
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => ProductBarCodeReader(),
+                              builder: (context) => ProductBarCodeReader(
+                                isReturned: isReturn,
+                              ),
                             ),
                           );
                         },
@@ -287,6 +289,8 @@ class CartScreen extends StatelessWidget {
         await Provider.of<SellsData>(context, listen: false)
             .addItemToBill(serialNumber: number);
         Navigator.of(context).pop();
+        GlobalAlertDialog.showQuantityDialog(
+            context: context, serialNumber: number);
       } catch (error) {
         Navigator.of(context).pop();
         GlobalAlertDialog.showErrorDialog(error.toString(), context);

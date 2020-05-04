@@ -110,8 +110,7 @@ class CartScreenItem extends StatelessWidget {
                 ),
                 onPressed: () async {
                   try {
-                    await data.addAmountFromBill(
-                        id: data.bill[index].productId);
+                    await data.addAmountToBill(id: data.bill[index].productId);
                   } catch (error) {
                     GlobalAlertDialog.showErrorDialog(
                         error.toString(), context);

@@ -58,11 +58,15 @@ class _PropertiesState extends State<Properties> {
         if (!widget.isReturned) {
           await Provider.of<SellsData>(context, listen: false)
               .addItemToBill(serialNumber: number);
+          Navigator.of(context).pop();
+
+          GlobalAlertDialog.showQuantityDialog(
+              context: context, serialNumber: number);
         } else {
           await Provider.of<SellsData>(context, listen: false)
               .addItemToReturnedInvoice(serialNumber: number);
+          Navigator.of(context).pop();
         }
-        Navigator.of(context).pop();
       } catch (error) {
         Navigator.of(context).pop();
         GlobalAlertDialog.showErrorDialog(error.toString(), context);

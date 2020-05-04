@@ -42,11 +42,14 @@ class _ProductBarCodeReaderState extends State<ProductBarCodeReader> {
         if (!widget.isReturned) {
           await Provider.of<SellsData>(context, listen: false)
               .addItemToBill(serialNumber: barcode);
+          Navigator.of(context).pop();
+          GlobalAlertDialog.showQuantityDialog(
+              context: context, serialNumber: barcode);
         } else {
           await Provider.of<SellsData>(context, listen: false)
               .addItemToReturnedInvoice(serialNumber: barcode);
+          Navigator.of(context).pop();
         }
-        Navigator.of(context).pop();
         setState(() {
           hasError = false;
         });

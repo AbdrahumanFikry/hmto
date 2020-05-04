@@ -23,6 +23,7 @@ class SellsData with ChangeNotifier {
   StartDayData startDayData;
   QrResult qrResult;
   Stores stores;
+  double range = 0.0;
   OldInvoices oldInvoices;
   List<BillProduct> bill = [];
   List<CarProduct> loadedItems = [];
@@ -228,7 +229,7 @@ class SellsData with ChangeNotifier {
   }
 
   //--------------------------- Add amount from bill ---------------------------
-  Future<void> addAmountFromBill({int id}) async {
+  Future<void> addAmountToBill({int id}) async {
     loadedItems = [];
     await fetchCarProduct();
     int billIndex = bill.indexWhere((item) => item.productId == id);
@@ -237,6 +238,28 @@ class SellsData with ChangeNotifier {
         carIndex != -1 &&
         loadedItems[carIndex].quantity > bill[billIndex].quantity) {
       bill[billIndex].quantity++;
+      returnTotal();
+      notifyListeners();
+    } else {
+      throw HttpException(
+        message: 'errors.noMore'.tr(args: [loadedItems[carIndex].productName]),
+      );
+    }
+  }
+
+  //---------------------- Add Range amount from bill --------------------------
+  Future<void> addRangeAmountToBill({String serialNumber}) async {
+    loadedItems = [];
+    await fetchCarProduct();
+    int carIndex =
+        loadedItems.indexWhere((item) => item.serialNumber == serialNumber);
+    int billIndex = bill.indexWhere(
+        (item) => item.productId == loadedItems[carIndex].productId);
+    if (billIndex != -1 &&
+        carIndex != -1 &&
+        loadedItems[carIndex].quantity > bill[billIndex].quantity) {
+      bill[billIndex].quantity = range.round();
+      resetRange();
       returnTotal();
       notifyListeners();
     } else {
@@ -499,8 +522,8 @@ class SellsData with ChangeNotifier {
     }
   }
 
-  //------------------ Add amount from returned invoice ------------------------
-  Future<void> addAmountFromReturnedInvoice({int id}) async {
+  //-------------------- Add amount to returned invoice ------------------------
+  Future<void> addAmountToReturnedInvoice({int id}) async {
     int billIndex = returnedBill.indexWhere((item) => item.productId == id);
     int oldInvoiceIndex = billProducts.indexWhere((item) => item.id == id);
     if (billIndex != -1 &&
@@ -508,6 +531,32 @@ class SellsData with ChangeNotifier {
         billProducts[oldInvoiceIndex].quantity >
             returnedBill[billIndex].quantity) {
       returnedBill[billIndex].quantity++;
+      returnTotal();
+      notifyListeners();
+    } else {
+      throw HttpException(
+        message:
+            'errors.noMore'.tr(args: [billProducts[oldInvoiceIndex].product]),
+      );
+    }
+  }
+
+  //----------------- Add range amount to returned invoice ---------------------
+  Future<void> addRangeAmountToReturnedInvoice({String serialNumber}) async {
+    loadedItems = [];
+    await fetchCarProduct();
+    int carIndex =
+        loadedItems.indexWhere((item) => item.serialNumber == serialNumber);
+    int billIndex = returnedBill.indexWhere(
+        (item) => item.productId == loadedItems[carIndex].productId);
+    int oldInvoiceIndex = billProducts
+        .indexWhere((item) => item.id == loadedItems[carIndex].productId);
+    if (billIndex != -1 &&
+        oldInvoiceIndex != -1 &&
+        billProducts[oldInvoiceIndex].quantity >
+            returnedBill[billIndex].quantity) {
+      returnedBill[billIndex].quantity = range.round();
+      resetRange();
       returnTotal();
       notifyListeners();
     } else {
@@ -528,7 +577,19 @@ class SellsData with ChangeNotifier {
     }
   }
 
-  //---------------------------- Balance car products --------------------------
+  //----------------------------- Change range ---------------------------------
+  void changeRange({double value}) {
+    range = value;
+    notifyListeners();
+  }
+
+//-------------------------------- Reset range ---------------------------------
+  void resetRange() {
+    range = 0.0;
+    notifyListeners();
+  }
+
+//---------------------------- Balance car products --------------------------
   Future<void> finishReturnedInvoice() async {
     try {
       loadedItems = [];
