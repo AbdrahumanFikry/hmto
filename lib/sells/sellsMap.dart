@@ -94,20 +94,27 @@ class _SellsMapState extends State<SellsMap> {
   Widget build(BuildContext context) {
     createMarker(context);
     Provider.of<SellsData>(context, listen: false).stores.data.forEach((store) {
-      final marker = Marker(
-        markerId: MarkerId(store.storeName),
-        position:
-            LatLng(double.tryParse(store.lat), double.tryParse(store.long)),
-        infoWindow: InfoWindow(title: store.storeName),
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => QrReaderSells(),
-            ),
-          );
-        },
-      );
-      _markers[store.storeName] = marker;
+      if (store.lat != null && store.long != null && store.id != null) {
+        final marker = Marker(
+          markerId: MarkerId(store.storeName),
+          position: LatLng(
+              double.tryParse(store.lat) == null
+                  ? 120.000
+                  : double.tryParse(store.lat),
+              double.tryParse(store.long) == null
+                  ? 120.000
+                  : double.tryParse(store.long)),
+          infoWindow: InfoWindow(title: store.storeName),
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => QrReaderSells(),
+              ),
+            );
+          },
+        );
+        _markers[store.storeName] = marker;
+      }
     });
     return SafeArea(
       child: Scaffold(

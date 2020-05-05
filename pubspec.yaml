@@ -38,14 +38,18 @@ dependencies:
   fl_chart: ^0.8.3
   app_settings: ^3.0.1
   sleek_circular_slider: ^1.0.7
-  shared_preferences: ^0.5.6+2
+  shared_preferences: ^0.5.7
   percent_indicator: ^2.1.1+1
   qrscan: ^0.2.17
   easy_localization: ^2.0.1
   location: ^2.5.4
   charts_flutter: ^0.9.0
   dio: ^3.0.4
-  esc_pos_printer: ^3.1.6
+#  bluetooth_print: ^2.0.0
+#  blue_thermal_printer: ^1.0.9
+
+#  path_provider: ^1.4.0
+#  blue_thermal_printer: ^1.0.0
 
 
 
@@ -53,6 +57,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
 flutter_icons:
   android: true
   ios: true

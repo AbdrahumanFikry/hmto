@@ -51,12 +51,12 @@ class Auth with ChangeNotifier {
         _token = responseData['access_token'];
         _userId = responseData['user_id'];
         type = responseData['work_type'];
-        userName = responseData['first_name'] == null
+        String firstName = responseData['first_name'] == null
             ? ''
-            : responseData['first_name'] + ' ' + responseData['last_name'] ==
-                    null
-                ? ''
-                : responseData['last_name'];
+            : responseData['first_name'];
+        String lastName =
+            responseData['last_name'] == null ? '' : responseData['last_name'];
+        userName = firstName + ' ' + lastName;
         _businessId = responseData['business_id'];
         print(
             'userID     : $_userId\nBusinessId : $_businessId\nType       : $type\nToken      : $_token\n');

@@ -6,7 +6,6 @@ import 'package:senior/widgets/alertDialog.dart';
 import 'package:senior/widgets/productBarCodeReader.dart';
 import 'package:senior/widgets/testStoreWidget.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:esc_pos_printer/esc_pos_printer.dart';
 
 class CartScreen extends StatelessWidget {
   final int storeId;
