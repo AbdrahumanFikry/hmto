@@ -12,9 +12,11 @@ class Properties extends StatefulWidget {
   final bool isCash;
   final bool isDebit;
   final bool isReturned;
+  final String storeName;
 
   Properties({
     this.storeId,
+    this.storeName,
     this.isCash = false,
     this.isDebit = false,
     this.isReturned = false,
@@ -33,6 +35,7 @@ class _PropertiesState extends State<Properties> {
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => CartScreen(
+            storeName: widget.storeName,
             storeId: widget.storeId,
             isCash: widget.isCash,
             isDebit: widget.isDebit,

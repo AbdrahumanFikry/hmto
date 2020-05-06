@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:senior/printers/ScreenPrinter.dart';
 import 'package:senior/providers/sellsProvider.dart';
 import 'package:senior/widgets/alertDialog.dart';
 import 'package:senior/widgets/productBarCodeReader.dart';
 import 'package:senior/widgets/testStoreWidget.dart';
 import 'package:easy_localization/easy_localization.dart';
+import '../providers/authenticationProvider.dart';
 
 class CartScreen extends StatelessWidget {
   final int storeId;
+  final String storeName;
   final bool isCash;
   final bool isDebit;
   final bool isReturn;
 
   CartScreen({
     this.storeId,
+    this.storeName,
     this.isCash = false,
     this.isDebit = false,
     this.isReturn = false,
@@ -26,6 +30,7 @@ class CartScreen extends StatelessWidget {
 
   Future<void> finishAndPrintBill(
       BuildContext context, double total, String paid) async {
+    String sellsName = Provider.of<Auth>(context, listen: false).userName;
     try {
       isLoading = true;
       if (isCash) {
@@ -37,6 +42,19 @@ class CartScreen extends StatelessWidget {
       } else {
         GlobalAlertDialog.showErrorDialog('Invalid input!', context);
       }
+      print('Paid : ' + paid);
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => Consumer<SellsData>(
+            builder: (context, data, _) => PrinterScreen(
+              storeName: storeName,
+              bill: data.printedBill,
+              debit: isDebit ? paid : 'noDebit',
+              sellsName: sellsName,
+            ),
+          ),
+        ),
+      );
       isLoading = false;
     } catch (error) {
       GlobalAlertDialog.showErrorDialog(error.toString(), context);

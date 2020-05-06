@@ -29,6 +29,7 @@ class SellsData with ChangeNotifier {
   List<CarProduct> loadedItems = [];
   List<Products> billProducts = [];
   List<ReturnedProduct> returnedBill = [];
+  List<CarProduct> printedBill = [];
 
   //-------------------------- Fetch Data --------------------------------------
   Future<bool> fetchUserData() async {
@@ -291,6 +292,7 @@ class SellsData with ChangeNotifier {
 
   //---------------------------- Balance car products---------------------------
   Future<void> finishBill() async {
+    await addItemsToPrintedBill();
     try {
       loadedItems = [];
       await fetchCarProduct();
@@ -625,5 +627,29 @@ class SellsData with ChangeNotifier {
     } catch (error) {
       throw HttpException(message: tr('errors.noBalance'));
     }
+  }
+
+  //---------------------- Add product to printed bill -------------------------
+  Future<void> addItemsToPrintedBill() async {
+    printedBill = [];
+    loadedItems = [];
+    await fetchCarProduct();
+    bill.forEach((billItem) {
+      int index = loadedItems
+          .indexWhere((cartItem) => cartItem.productId == billItem.productId);
+      if (index != -1) {
+        printedBill.add(
+          CarProduct(
+            productId: loadedItems[index].productId,
+            serialNumber: loadedItems[index].serialNumber,
+            productName: loadedItems[index].productName,
+            priceForEach: loadedItems[index].priceForEach,
+            quantity: billItem.quantity,
+          ),
+        );
+      }
+    });
+    print('PrintedBillItems : ' + json.encode(printedBill));
+    notifyListeners();
   }
 }

@@ -186,6 +186,7 @@ class _SellsStoreState extends State<SellsStore> {
                     storeId: widget.id,
                     isCash: isCash,
                     isDebit: !isCash,
+                    storeName: widget.storeName,
                   ),
                 ],
               ),

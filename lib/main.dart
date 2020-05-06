@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:senior/auth/loginScreen.dart';
 import 'package:senior/forceField/forceFieldNavigator.dart';
 import 'package:senior/printers/ScreenPrinter.dart';
+
 //import 'package:senior/printer/ScreenPrinter.dart';
 import 'package:senior/printers/bluePrint.dart';
 import 'package:senior/providers/authenticationProvider.dart';

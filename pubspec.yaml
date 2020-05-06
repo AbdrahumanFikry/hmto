@@ -48,8 +48,9 @@ dependencies:
 #  bluetooth_print: ^2.0.0
 #  blue_thermal_printer: ^1.0.9
 
-#  path_provider: ^1.4.0
-#  blue_thermal_printer: ^1.0.0
+  path_provider: ^1.4.0
+  blue_thermal_printer:
+    path: ../blue_thermal_printer-master/blue_thermal_printer-master/
 
 
 
