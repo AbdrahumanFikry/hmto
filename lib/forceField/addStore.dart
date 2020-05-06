@@ -61,6 +61,8 @@ class _AdsAddStoreState extends State<AdsAddStore> {
       File holder = await ImagePicker.pickImage(
         source: ImageSource.camera,
         imageQuality: 85,
+        maxWidth: 700,
+        maxHeight: 512,
       );
       image = holder;
 //    var h = await holder.readAsBytes();

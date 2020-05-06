@@ -246,10 +246,10 @@ class FieldForceData with ChangeNotifier {
   Future<void> fetchStores() async {
     await fetchUserData();
     stores = null;
-    final url = 'https://api.hmto-eleader.com/api/ownstores/$userId';
+    final url = 'https://api.hmto-eleader.com/api/targetStore/$userId';
     try {
       final response = await http.get(url, headers: {
-        'Content-Type': 'application/json',
+        'Accept': 'json',
         'Authorization': 'Bearer $token',
       });
       print("Response :" + response.body.toString());

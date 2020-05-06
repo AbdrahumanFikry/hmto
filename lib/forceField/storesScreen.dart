@@ -19,69 +19,81 @@ class StoresScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: data.length,
-      itemBuilder: (ctx, index) {
-        return Column(
-          children: <Widget>[
-            ListTile(
-                subtitle: Text(
-                  data[index].landmark,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                title: Text(data[index].storeName),
-                trailing: Text(
-                  data[index].isVisited == 'true'
-                      ? tr('field_force_profile.status')
-                      : '',
-                  style: TextStyle(color: Colors.blue),
-                ),
-                leading: ClipRRect(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(10),
-                  ),
-                  child: data[index].imageIn == null
-                      ? Image.asset('assets/user.png')
-                      : CachedNetworkImage(
-                          imageUrl: data[index].imageIn,
-                          width: 50.0,
-                          height: 50.0,
-                          fit: BoxFit.cover,
+    return data.isEmpty
+        ? Center(
+            child: Text(
+              tr('extra.noTarget'),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+                fontSize: 18.0,
+              ),
+            ),
+          )
+        : ListView.builder(
+            itemCount: data.length,
+            itemBuilder: (ctx, index) {
+              return Column(
+                children: <Widget>[
+                  ListTile(
+                      subtitle: Text(
+                        data[index].landmark,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      title: Text(data[index].storeName),
+                      trailing: Text(
+                        data[index].isVisited == 'true'
+                            ? tr('field_force_profile.status')
+                            : '',
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                      leading: ClipRRect(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
                         ),
-                ),
-                onTap: data[index].isVisited == 'true'
-                    ? () {}
-                    : () {
-                        if (isSells) {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => QrReaderSells(),
-                            ),
-                          );
-                        } else {
-                          if (isDriver) {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => DriverStore(),
+                        child: data[index].imageIn == null
+                            ? Image.asset('assets/user.png')
+                            : CachedNetworkImage(
+                                imageUrl: data[index].imageIn,
+                                width: 50.0,
+                                height: 50.0,
+                                fit: BoxFit.cover,
                               ),
-                            );
-                          } else {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => QrReaderFieldForce(),
-                              ),
-                            );
-                          }
-                        }
-                      }),
-            Divider(
-              height: 2,
-              indent: 0,
-              endIndent: 50,
-            )
-          ],
-        );
-      },
-    );
+                      ),
+                      onTap: data[index].isVisited == 'true'
+                          ? () {}
+                          : () {
+                              if (isSells) {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => QrReaderSells(),
+                                  ),
+                                );
+                              } else {
+                                if (isDriver) {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => DriverStore(),
+                                    ),
+                                  );
+                                } else {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          QrReaderFieldForce(),
+                                    ),
+                                  );
+                                }
+                              }
+                            }),
+                  Divider(
+                    height: 2,
+                    indent: 0,
+                    endIndent: 50,
+                  )
+                ],
+              );
+            },
+          );
   }
 }

@@ -23,3 +23,18 @@ class Data {
     newStorePer = json['newStorePer'];
   }
 }
+
+class TargetSells {
+  String target;
+  String completed;
+
+  TargetSells({
+    this.target,
+    this.completed,
+  });
+
+  TargetSells.fromJson(Map<String, dynamic> json) {
+    target = json['Target'];
+    completed = json['targetCompleted'];
+  }
+}

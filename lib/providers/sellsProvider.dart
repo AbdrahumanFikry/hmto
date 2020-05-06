@@ -8,6 +8,8 @@ import 'package:senior/models/qrResult.dart';
 import 'package:senior/models/reternedProduct.dart';
 import 'package:senior/models/startDaySalles.dart';
 import 'package:senior/models/stores.dart';
+import 'package:senior/models/target.dart';
+import 'package:senior/senior/sellsTarget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -30,6 +32,7 @@ class SellsData with ChangeNotifier {
   List<Products> billProducts = [];
   List<ReturnedProduct> returnedBill = [];
   List<CarProduct> printedBill = [];
+  TargetSells target;
 
   //-------------------------- Fetch Data --------------------------------------
   Future<bool> fetchUserData() async {
@@ -651,5 +654,28 @@ class SellsData with ChangeNotifier {
     });
     print('PrintedBillItems : ' + json.encode(printedBill));
     notifyListeners();
+  }
+
+  //---------------------------- Fetch Target ----------------------------------
+  Future<void> fetchTarget() async {
+    await fetchUserData();
+    final url = 'https://api.hmto-eleader.com/api/sellsman/target';
+    try {
+      final response = await http.post(url, headers: {
+//        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      });
+      print("Response :" + response.body.toString());
+      final Map responseData = json.decode(response.body);
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        target = TargetSells.fromJson(responseData);
+        return true;
+      } else {
+        throw HttpException(message: responseData['error']);
+      }
+    } catch (error) {
+      print('Request Error :' + error.toString());
+      throw error;
+    }
   }
 }
