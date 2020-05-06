@@ -50,8 +50,8 @@ class SelectTypeScreen extends StatelessWidget {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => TabBarScreenSells(
-                      isAdmin: false,
-                    ),
+//                      isAdmin: false,
+                        ),
                   ),
                 );
               },

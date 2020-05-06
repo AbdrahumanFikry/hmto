@@ -23,8 +23,8 @@ class _SelectScreenState extends State<SelectScreen> {
         isAdmin: true,
       ),
       TabBarScreenSells(
-        isAdmin: true,
-      )
+//        isAdmin: true,
+          )
     ];
     super.initState();
   }
@@ -73,7 +73,10 @@ class _SelectScreenState extends State<SelectScreen> {
           items: [
             BottomNavigationBarItem(
               icon: Icon(Icons.person_pin),
-              activeIcon: Icon(Icons.person_pin,color: Colors.green,),
+              activeIcon: Icon(
+                Icons.person_pin,
+                color: Colors.green,
+              ),
               title: Text(
                 "FieldForce Senior Target",
                 style: TextStyle(
@@ -84,7 +87,10 @@ class _SelectScreenState extends State<SelectScreen> {
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person),
-              activeIcon: Icon(Icons.person,color: Colors.green,),
+              activeIcon: Icon(
+                Icons.person,
+                color: Colors.green,
+              ),
               title: Text(
                 "Salles Senior Target",
                 style: TextStyle(
@@ -93,8 +99,7 @@ class _SelectScreenState extends State<SelectScreen> {
                 ),
               ),
             ),
-          ]
-      ),
+          ]),
     );
   }
 }

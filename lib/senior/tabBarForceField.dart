@@ -9,7 +9,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class TabBarForceFieldScreen extends StatelessWidget {
   final bool isAdmin;
-  TabBarForceFieldScreen({this.isAdmin=false});
+
+  TabBarForceFieldScreen({
+    this.isAdmin = false,
+  });
+
   void _logout(BuildContext context) {
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
@@ -36,29 +40,30 @@ class TabBarForceFieldScreen extends StatelessWidget {
             ),
           ),
           actions: <Widget>[
-            isAdmin?Container():
-            InkWell(
-              onTap: () => _logout(context),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Icon(
-                    FontAwesomeIcons.signOutAlt,
-                    color: Colors.green,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(5.0),
-                    child: Text(
-                      tr('login_screen.logout'),
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black,
-                      ),
+            isAdmin
+                ? Container()
+                : InkWell(
+                    onTap: () => _logout(context),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Icon(
+                          FontAwesomeIcons.signOutAlt,
+                          color: Colors.green,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(5.0),
+                          child: Text(
+                            tr('login_screen.logout'),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
-            )
+                  )
           ],
           bottom: TabBar(
             tabs: [
