@@ -32,7 +32,7 @@ packages:
   blue_thermal_printer:
     dependency: "direct main"
     description:
-      path: "..\\blue_thermal_printer-master\\blue_thermal_printer-master"
+      path: "..\\printPackage\\blue_thermal_printer-master"
       relative: true
     source: path
     version: "1.0.9"

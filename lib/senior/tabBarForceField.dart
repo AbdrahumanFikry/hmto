@@ -8,6 +8,8 @@ import '../auth/loginScreen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class TabBarForceFieldScreen extends StatelessWidget {
+  final bool isAdmin;
+  TabBarForceFieldScreen({this.isAdmin=false});
   void _logout(BuildContext context) {
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
@@ -25,8 +27,16 @@ class TabBarForceFieldScreen extends StatelessWidget {
         appBar: AppBar(
           elevation: 0.4,
           backgroundColor: Colors.white,
-          leading: new Container(),
+          title: Text(
+            tr('field_force_profile.type'),
+            style: TextStyle(
+              fontSize: 18.0,
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           actions: <Widget>[
+            isAdmin?Container():
             InkWell(
               onTap: () => _logout(context),
               child: Row(
@@ -48,7 +58,7 @@ class TabBarForceFieldScreen extends StatelessWidget {
                   ),
                 ],
               ),
-            ),
+            )
           ],
           bottom: TabBar(
             tabs: [

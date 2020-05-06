@@ -124,9 +124,11 @@ class MyApp extends StatelessWidget {
             scaffoldBackgroundColor: Colors.white,
           ),
           debugShowCheckedModeBanner: false,
-          home: auth.isAuth
+          home:
+          auth.isAuth
               ? navigator(auth.type, context)
-              : FutureBuilder(
+              :
+          FutureBuilder(
                   future: auth.tryAutoLogin(),
                   builder: (ctx, snapShot) =>
                       snapShot.connectionState == ConnectionState.waiting

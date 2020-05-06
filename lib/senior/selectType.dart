@@ -22,7 +22,9 @@ class SelectTypeScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => TabBarForceFieldScreen(),
+                    builder: (context) => TabBarForceFieldScreen(
+                      isAdmin: false,
+                    ),
                   ),
                 );
               },
@@ -47,7 +49,9 @@ class SelectTypeScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => TabBarScreenSells(),
+                    builder: (context) => TabBarScreenSells(
+                      isAdmin: false,
+                    ),
                   ),
                 );
               },
