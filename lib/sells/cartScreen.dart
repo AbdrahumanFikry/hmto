@@ -46,12 +46,12 @@ class CartScreen extends StatelessWidget {
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => Consumer<SellsData>(
-            builder: (context, data, _) => PrinterScreen(
-              storeName: storeName,
-              bill: data.printedBill,
-              debit: isDebit ? paid : 'noDebit',
-              sellsName: sellsName,
-            ),
+//            builder: (context, data, _) => PrinterScreen(
+//              storeName: storeName,
+//              bill: data.printedBill,
+//              debit: isDebit ? paid : 'noDebit',
+//              sellsName: sellsName,
+//            ),
           ),
         ),
       );

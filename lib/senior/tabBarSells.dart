@@ -9,6 +9,8 @@ import '../auth/loginScreen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class TabBarScreenSells extends StatelessWidget {
+  final bool isAdmin;
+  TabBarScreenSells({this.isAdmin=false});
   void _logout(BuildContext context) {
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
@@ -36,6 +38,7 @@ class TabBarScreenSells extends StatelessWidget {
           backgroundColor: Colors.white,
           leading: new Container(),
           actions: <Widget>[
+            isAdmin?Container():
             InkWell(
               onTap: () => _logout(context),
               child: Row(

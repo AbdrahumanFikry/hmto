@@ -50,7 +50,7 @@ dependencies:
 
   path_provider: ^1.4.0
   blue_thermal_printer:
-    path: ../blue_thermal_printer-master/blue_thermal_printer-master/
+    path: ../printPackage/blue_thermal_printer-master/
 
 
 
