@@ -106,9 +106,17 @@ class _TargetState extends State<Target> {
                                     animationDuration: 1000,
                                     lineHeight: 25.0,
                                     percent: (double.tryParse(
-                                          data.target.completed.split('%')[0],
-                                        ) /
-                                        100),
+                                                  data.target.completed
+                                                      .split('%')[0],
+                                                ) /
+                                                100) >=
+                                            1.0
+                                        ? 1.0
+                                        : (double.tryParse(
+                                              data.target.completed
+                                                  .split('%')[0],
+                                            ) /
+                                            100),
                                     center: Text(
                                         data.target.completed.split('.')[0] +
                                             '%'),

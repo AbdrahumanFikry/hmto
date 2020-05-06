@@ -55,20 +55,18 @@ class _SellsMapState extends State<SellsMap> {
         _markers[store.storeName] = marker;
       }
     });
-    return SafeArea(
-      child: Scaffold(
-        body: Stack(
-          children: <Widget>[
-            GoogleMap(
-              onMapCreated: onMapCreated,
-              initialCameraPosition: CameraPosition(
-                target: LatLng(31.037933, 31.381523),
-                zoom: 5.0,
-              ),
-              markers: _markers.values.toSet(),
+    return Scaffold(
+      body: Stack(
+        children: <Widget>[
+          GoogleMap(
+            onMapCreated: onMapCreated,
+            initialCameraPosition: CameraPosition(
+              target: LatLng(31.037933, 31.381523),
+              zoom: 5.0,
             ),
-          ],
-        ),
+            markers: _markers.values.toSet(),
+          ),
+        ],
       ),
     );
   }
