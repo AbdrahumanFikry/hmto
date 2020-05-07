@@ -22,13 +22,14 @@ class _TargetState extends State<Target> {
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: widget.isSells
-            ? Provider.of<SellsData>(context, listen: false).target == null
+            ? (Provider.of<SellsData>(context, listen: false).target == null
                 ? Provider.of<SellsData>(context, listen: false).fetchTarget()
-                : null
-            : Provider.of<FieldForceData>(context, listen: false).target == null
+                : null)
+            : (Provider.of<FieldForceData>(context, listen: false).target ==
+                    null
                 ? Provider.of<FieldForceData>(context, listen: false)
                     .fetchTarget()
-                : null,
+                : null),
         builder: (context, dataSnapShot) {
           if (dataSnapShot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -50,7 +51,7 @@ class _TargetState extends State<Target> {
             }
             return widget.isSells
                 ? Consumer<SellsData>(builder: (context, data, child) {
-                    return data.target == null
+                    return data.target.ownMonthlyBalance == null
                         ? Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -89,39 +90,123 @@ class _TargetState extends State<Target> {
                         : ListView(
                             padding: EdgeInsets.all(10.0),
                             children: <Widget>[
+                              Container(
+                                height: 60.0,
+                                width: MediaQuery.of(context).size.width,
+                                child: Row(
+                                  children: <Widget>[
+                                    Text(
+                                      '${tr('target.monthCash')} :',
+                                      style: TextStyle(fontSize: 20.0),
+                                    ),
+                                    Spacer(),
+                                    Container(
+                                      padding: EdgeInsets.all(5.0),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: Colors.grey,
+                                          width: 1.0,
+                                        ),
+                                      ),
+                                      child: Row(
+                                        children: <Widget>[
+                                          Text(
+                                            data.target.ownMonthlyBalance
+                                                        .toString() ==
+                                                    null
+                                                ? '0'
+                                                : data.target.ownMonthlyBalance
+                                                    .toString(),
+                                            style: TextStyle(
+                                              fontSize: 20.0,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 10.0,
+                                          ),
+                                          Icon(
+                                            Icons.monetization_on,
+                                            size: 18.0,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                height: 60.0,
+                                width: MediaQuery.of(context).size.width,
+                                child: Row(
+                                  children: <Widget>[
+                                    Text(
+                                      tr('target.target'),
+                                      style: TextStyle(fontSize: 20.0),
+                                    ),
+                                    Spacer(),
+                                    Container(
+                                      padding: EdgeInsets.all(5.0),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: Colors.grey,
+                                          width: 1.0,
+                                        ),
+                                      ),
+                                      child: Row(
+                                        children: <Widget>[
+                                          Text(
+                                            data.target.target.toString() ==
+                                                    null
+                                                ? '0'
+                                                : data.target.target.toString(),
+                                            style: TextStyle(
+                                              fontSize: 20.0,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 10.0,
+                                          ),
+                                          Icon(
+                                            Icons.monetization_on,
+                                            size: 18.0,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                               Row(
                                 children: <Widget>[
                                   Text(
-                                    tr('field_force_profile.my_target'),
+                                    tr('target.complete'),
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.blue,
                                       fontSize: 18.0,
                                     ),
                                   ),
-                                  Spacer(),
-                                  new LinearPercentIndicator(
-                                    width: 220.0,
-                                    animation: true,
-                                    animationDuration: 1000,
-                                    lineHeight: 25.0,
-                                    percent: (double.tryParse(
-                                                  data.target.completed
-                                                      .split('%')[0],
-                                                ) /
-                                                100) >=
-                                            1.0
-                                        ? 1.0
-                                        : (double.tryParse(
-                                              data.target.completed
-                                                  .split('%')[0],
-                                            ) /
-                                            100),
-                                    center: Text(
-                                        data.target.completed.split('.')[0] +
-                                            '%'),
-                                    linearStrokeCap: LinearStrokeCap.butt,
-                                    progressColor: Colors.blue,
+                                  Expanded(
+                                    child: new LinearPercentIndicator(
+                                      animation: true,
+                                      animationDuration: 1000,
+                                      lineHeight: 25.0,
+                                      percent: (data.target.ownMonthlyBalance /
+                                                  data.target.target) >=
+                                              1.0
+                                          ? 1.0
+                                          : (data.target.ownMonthlyBalance /
+                                              data.target.target),
+                                      center: Text(
+                                          (data.target.ownMonthlyBalance /
+                                                      data.target.target *
+                                                      100)
+                                                  .round()
+                                                  .toString() +
+                                              '%'),
+                                      linearStrokeCap: LinearStrokeCap.butt,
+                                      progressColor: Colors.blue,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -153,13 +238,13 @@ class _TargetState extends State<Target> {
                           );
                   })
                 : Consumer<FieldForceData>(builder: (context, data, child) {
-                    return data.target.data == null
+                    return data.target.data.targetPer == null
                         ? Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               Text(
-                                tr('extra.noTarget'),
+                                tr('extra.noTarget') + ':',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black,
@@ -205,27 +290,27 @@ class _TargetState extends State<Target> {
                                       fontSize: 18.0,
                                     ),
                                   ),
-                                  Spacer(),
-                                  new LinearPercentIndicator(
-                                    width: 220.0,
-                                    animation: true,
-                                    animationDuration: 1000,
-                                    lineHeight: 25.0,
-                                    percent: double.tryParse(
-                                              data.target.data.targetPer,
-                                            ) >=
-                                            100.0
-                                        ? 1.0
-                                        : double.tryParse(
-                                              data.target.data.targetPer,
-                                            ) /
-                                            100,
-                                    center: Text(double.tryParse(
-                                          data.target.data.targetPer,
-                                        ).round().toString() +
-                                        '%'),
-                                    linearStrokeCap: LinearStrokeCap.butt,
-                                    progressColor: Colors.blue,
+                                  Expanded(
+                                    child: LinearPercentIndicator(
+                                      animation: true,
+                                      animationDuration: 1000,
+                                      lineHeight: 25.0,
+                                      percent: double.tryParse(
+                                                data.target.data.targetPer,
+                                              ) >=
+                                              100.0
+                                          ? 1.0
+                                          : double.tryParse(
+                                                data.target.data.targetPer,
+                                              ) /
+                                              100,
+                                      center: Text(double.tryParse(
+                                            data.target.data.targetPer,
+                                          ).round().toString() +
+                                          '%'),
+                                      linearStrokeCap: LinearStrokeCap.butt,
+                                      progressColor: Colors.blue,
+                                    ),
                                   ),
                                 ],
                               ),

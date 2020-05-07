@@ -75,7 +75,10 @@ class AccountInfo extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.all(5.0),
                       child: Text(
-                        tr('field_force_profile.type'),
+                        Provider.of<Auth>(context, listen: false).type ==
+                                'salles_man'
+                            ? tr('sells_profile.type')
+                            : tr('field_force_profile.type'),
                         style: TextStyle(
                           fontWeight: FontWeight.w700,
                         ),

@@ -25,16 +25,15 @@ class Data {
 }
 
 class TargetSells {
-  String target;
-  String completed;
+  double target;
+  double ownMonthlyBalance;
+  double ownDailyBalance;
 
-  TargetSells({
-    this.target,
-    this.completed,
-  });
+  TargetSells({this.target, this.ownMonthlyBalance, this.ownDailyBalance});
 
   TargetSells.fromJson(Map<String, dynamic> json) {
-    target = json['Target'];
-    completed = json['targetCompleted'];
+    target = double.tryParse(json['Target'].toString());
+    ownMonthlyBalance = double.tryParse(json['ownMonthlyBalance'].toString());
+    ownDailyBalance = double.tryParse(json['ownDailyBalance'].toString());
   }
 }

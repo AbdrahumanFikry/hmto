@@ -5,6 +5,7 @@ import 'package:senior/providers/sellsProvider.dart';
 import 'package:senior/sells/itemTargetScreen.dart';
 import 'package:senior/forceField/storesScreen.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:senior/sells/myCart.dart';
 import 'package:senior/widgets/accountInfo.dart';
 import '../providers/authenticationProvider.dart';
 
@@ -41,11 +42,11 @@ class _SellsProfileState extends State<SellsProfile>
                 Tab(
                   text: tr('sells_profile.tab_two'),
                 ),
-//                  Tab(
-//                    text: tr('sells_profile.tab_three'),
-//                  ),
+                Tab(
+                  text: tr('start_day.cart_products'),
+                ),
               ],
-              controller: TabController(length: 2, vsync: this),
+              controller: TabController(length: 3, vsync: this),
             ),
           ),
           Expanded(
@@ -66,7 +67,7 @@ class _SellsProfileState extends State<SellsProfile>
                     Target(
                       isSells: true,
                     ),
-//                      ItemTargetScreen(),
+                    MyCart(),
                   ],
                 ),
               ),

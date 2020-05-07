@@ -83,7 +83,6 @@ class _FieldForceStoreState extends State<FieldForceStore> {
         setState(() {
           _isLoading = false;
         });
-        Navigator.of(context).pop();
       } catch (error) {
         GlobalAlertDialog.showErrorDialog(error.toString(), context);
         setState(() {

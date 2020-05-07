@@ -658,6 +658,7 @@ class SellsData with ChangeNotifier {
 
   //---------------------------- Fetch Target ----------------------------------
   Future<void> fetchTarget() async {
+    print('object');
     await fetchUserData();
     final url = 'https://api.hmto-eleader.com/api/sellsman/target';
     try {
@@ -677,5 +678,15 @@ class SellsData with ChangeNotifier {
       print('Request Error :' + error.toString());
       throw error;
     }
+  }
+
+  //------------------------------ Total bill ----------------------------------
+  double returnTotalCart() {
+    double sum = 0;
+    loadedItems.forEach((item) {
+      sum = sum + (item.priceForEach * item.quantity);
+    });
+//    print('Total price : ' + sum.toString());
+    return sum;
   }
 }

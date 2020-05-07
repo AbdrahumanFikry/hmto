@@ -122,8 +122,14 @@
     "errors": {
         "notFound": "product not found in the car!",
         "exist": "Already added to bill!",
-        "noMore": "You have reached the high limit of {} in your car!",
+        "noMore": "You have reached the high limit of {}!",
         "noBalance": "Could not balance products!",
         "lessData": "Data is not ready!"
+    },
+    "target": {
+        "target": "Monthly target",
+        "complete": "target completed",
+        "monthCash": "Monthly cash",
+        "dailyCash": "Daily cash"
     }
 }

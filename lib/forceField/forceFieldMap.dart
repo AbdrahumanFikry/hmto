@@ -157,79 +157,77 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
         _markers[store.id.toString()] = marker;
       }
     });
-    return SafeArea(
-      child: Scaffold(
-        body: currentLocation == null
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : Stack(
-                children: <Widget>[
-                  GoogleMap(
-                    onMapCreated: onMapCreated,
-                    initialCameraPosition: CameraPosition(
-                      target: LatLng(31.037933, 31.381523),
-                      zoom: 5.0,
-                    ),
-                    markers: _markers.values.toSet(),
+    return Scaffold(
+      body: currentLocation == null
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : Stack(
+              children: <Widget>[
+                GoogleMap(
+                  onMapCreated: onMapCreated,
+                  initialCameraPosition: CameraPosition(
+                    target: LatLng(31.037933, 31.381523),
+                    zoom: 5.0,
                   ),
-                  Positioned(
-                    bottom: 100.0,
-                    right: 20.0,
-                    child: currentLocation.latitude == null ||
-                            currentLocation.latitude == null
-                        ? CircularProgressIndicator()
-                        : FloatingActionButton(
-                            onPressed: () async {
-                              setState(() {
-                                currentLocation = Position();
-                              });
-                              await _getLocation();
-                              await _getAddress(currentLocation);
-                            },
-                            tooltip: 'Get Location',
-                            child: Icon(
-                              Icons.location_searching,
-                              color: Colors.white,
+                  markers: _markers.values.toSet(),
+                ),
+                Positioned(
+                  bottom: 100.0,
+                  right: 20.0,
+                  child: currentLocation.latitude == null ||
+                          currentLocation.latitude == null
+                      ? CircularProgressIndicator()
+                      : FloatingActionButton(
+                          onPressed: () async {
+                            setState(() {
+                              currentLocation = Position();
+                            });
+                            await _getLocation();
+                            await _getAddress(currentLocation);
+                          },
+                          tooltip: 'Get Location',
+                          child: Icon(
+                            Icons.location_searching,
+                            color: Colors.white,
+                          ),
+                        ),
+                ),
+                Positioned(
+                  top: 10.0,
+                  left: 10,
+                  child: moved
+                      ? SizedBox()
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            SizedBox(
+                              width: 5.0,
                             ),
-                          ),
-                  ),
-                  Positioned(
-                    top: 10.0,
-                    left: 10,
-                    child: moved
-                        ? SizedBox()
-                        : Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              SizedBox(
-                                width: 5.0,
+                            Icon(
+                              FontAwesomeIcons.solidLightbulb,
+                              color: Colors.yellow,
+                              size: 20.0,
+                            ),
+                            SizedBox(
+                              width: 5.0,
+                            ),
+                            Text(
+                              tr('extra.mapHint'),
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
                               ),
-                              Icon(
-                                FontAwesomeIcons.solidLightbulb,
-                                color: Colors.yellow,
-                                size: 20.0,
-                              ),
-                              SizedBox(
-                                width: 5.0,
-                              ),
-                              Text(
-                                tr('extra.mapHint'),
-                                style: TextStyle(
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                maxLines: 2,
-                                softWrap: true,
-                                textAlign: TextAlign.right,
-                              ),
-                            ],
-                          ),
-                  ),
-                ],
-              ),
-      ),
+                              maxLines: 2,
+                              softWrap: true,
+                              textAlign: TextAlign.right,
+                            ),
+                          ],
+                        ),
+                ),
+              ],
+            ),
     );
   }
 
