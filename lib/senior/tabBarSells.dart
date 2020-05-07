@@ -11,6 +11,12 @@ import '../providers/seniorProvider.dart';
 import '../widgets/errorWidget.dart';
 
 class TabBarScreenSells extends StatefulWidget {
+  final bool isAdmin;
+
+  TabBarScreenSells({
+    this.isAdmin = false,
+  });
+
   @override
   _TabBarScreenSellsState createState() => _TabBarScreenSellsState();
 }
@@ -45,28 +51,30 @@ class _TabBarScreenSellsState extends State<TabBarScreenSells> {
         backgroundColor: Colors.white,
         leading: new Container(),
         actions: <Widget>[
-          InkWell(
-            onTap: _logout,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Icon(
-                  FontAwesomeIcons.signOutAlt,
-                  color: Colors.green,
-                ),
-                Padding(
-                  padding: EdgeInsets.all(5.0),
-                  child: Text(
-                    tr('login_screen.logout'),
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black,
-                    ),
+          widget.isAdmin
+              ? new Container()
+              : InkWell(
+                  onTap: _logout,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Icon(
+                        FontAwesomeIcons.signOutAlt,
+                        color: Colors.green,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(5.0),
+                        child: Text(
+                          tr('login_screen.logout'),
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ),
         ],
       ),
       body: RefreshIndicator(

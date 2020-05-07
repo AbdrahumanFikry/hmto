@@ -33,7 +33,7 @@ class _SellsMapState extends State<SellsMap> {
   @override
   Widget build(BuildContext context) {
     Provider.of<SellsData>(context, listen: false).stores.data.forEach((store) {
-      if (store.lat != null && store.long != null && store.id != null) {
+      if (store.lat != null && store.long != null) {
         final marker = Marker(
           markerId: MarkerId(store.storeName),
           position: LatLng(
@@ -56,17 +56,13 @@ class _SellsMapState extends State<SellsMap> {
       }
     });
     return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          GoogleMap(
-            onMapCreated: onMapCreated,
-            initialCameraPosition: CameraPosition(
-              target: LatLng(31.037933, 31.381523),
-              zoom: 5.0,
-            ),
-            markers: _markers.values.toSet(),
-          ),
-        ],
+      body: GoogleMap(
+        onMapCreated: onMapCreated,
+        initialCameraPosition: CameraPosition(
+          target: LatLng(30.134690, 31.371124),
+          zoom: 6.0,
+        ),
+        markers: _markers.values.toSet(),
       ),
     );
   }

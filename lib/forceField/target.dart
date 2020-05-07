@@ -154,15 +154,43 @@ class _TargetState extends State<Target> {
                   })
                 : Consumer<FieldForceData>(builder: (context, data, child) {
                     return data.target.data == null
-                        ? Center(
-                            child: Text(
-                              tr('extra.noTarget'),
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                                fontSize: 18.0,
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                tr('extra.noTarget'),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                  fontSize: 18.0,
+                                ),
                               ),
-                            ),
+                              SizedBox(
+                                height: 15.0,
+                              ),
+                              RaisedButton(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 20.0,
+                                  vertical: 10.0,
+                                ),
+                                child: Text(
+                                  tr('extra.refresh'),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18.0,
+                                  ),
+                                ),
+                                color: Colors.green,
+                                onPressed: () {
+                                  setState(() {
+                                    Provider.of<FieldForceData>(context,
+                                            listen: false)
+                                        .target = null;
+                                  });
+                                },
+                              ),
+                            ],
                           )
                         : ListView(
                             padding: EdgeInsets.all(10.0),

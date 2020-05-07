@@ -55,7 +55,7 @@ class _ProductBarCodeReaderState extends State<ProductBarCodeReader> {
         });
       }
     } catch (error) {
-      GlobalAlertDialog.showErrorDialog(error.toString(), context);
+      GlobalAlertDialog.showErrorDialog(tr('errors.notFound'), context);
       setState(() {
         hasError = true;
       });

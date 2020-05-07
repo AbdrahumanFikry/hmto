@@ -1,10 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:senior/auth/loginScreen.dart';
 import 'package:senior/senior/tabBarForceField.dart';
 import 'package:senior/senior/tabBarSells.dart';
-import 'package:senior/senior/targetGraph.dart';
-import 'package:senior/senior/targetGraphForceField.dart';
+import 'package:provider/provider.dart';
+import '../providers/authenticationProvider.dart';
 
 class SelectScreen extends StatefulWidget {
   @override
@@ -12,21 +13,28 @@ class SelectScreen extends StatefulWidget {
 }
 
 class _SelectScreenState extends State<SelectScreen> {
-  @override
-  //--------------------variables----------------------
   int index = 0;
   List<Widget> _pages = [];
-  //--------------------methods------------------------
+
   void initState() {
     _pages = [
       TabBarForceFieldScreen(
         isAdmin: true,
       ),
       TabBarScreenSells(
-//        isAdmin: true,
-          )
+        isAdmin: true,
+      )
     ];
     super.initState();
+  }
+
+  void _logout() {
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (context) => LoginScreen(),
+        ),
+        (Route<dynamic> route) => false);
+    Provider.of<Auth>(context, listen: false).logout();
   }
 
   void _changeScreen(value) {
@@ -35,15 +43,14 @@ class _SelectScreenState extends State<SelectScreen> {
     });
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         actions: <Widget>[
           InkWell(
-            onTap: () {
-              //todo---
-            },
+            onTap: _logout,
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
@@ -78,7 +85,7 @@ class _SelectScreenState extends State<SelectScreen> {
                 color: Colors.green,
               ),
               title: Text(
-                "FieldForce Senior Target",
+                tr('field_force_profile.type'),
                 style: TextStyle(
                   fontSize: 16,
                   color: index != 0 ? Colors.black : Colors.green,
@@ -92,7 +99,7 @@ class _SelectScreenState extends State<SelectScreen> {
                 color: Colors.green,
               ),
               title: Text(
-                "Salles Senior Target",
+                tr('sells_profile.type'),
                 style: TextStyle(
                   fontSize: 16,
                   color: index != 0 ? Colors.green : Colors.black,

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:senior/Admin/selectScreen.dart';
 import 'package:senior/auth/loginScreen.dart';
 import 'package:senior/forceField/forceFieldNavigator.dart';
 import 'package:senior/providers/authenticationProvider.dart';
@@ -58,6 +59,9 @@ class MyApp extends StatelessWidget {
         break;
       case 'filed_force_man':
         temp = ForceFieldNavigator();
+        break;
+      case 'general_manager':
+        temp = SelectScreen();
         break;
       case 'sales_senior':
         temp = TabBarScreenSells();

@@ -25,7 +25,7 @@ class SellsData with ChangeNotifier {
   StartDayData startDayData;
   QrResult qrResult;
   Stores stores;
-  double range = 0.0;
+  double range = 1.0;
   OldInvoices oldInvoices;
   List<BillProduct> bill = [];
   List<CarProduct> loadedItems = [];

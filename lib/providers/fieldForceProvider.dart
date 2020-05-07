@@ -133,7 +133,7 @@ class FieldForceData with ChangeNotifier {
         ));
       formData.fields..add(MapEntry('landmark', landmark));
       formData.fields..add(MapEntry('position', position));
-      formData.fields..add(MapEntry('created_by', userId.toString()));
+//      formData.fields..add(MapEntry('created_by', userId.toString()));
       formData.fields..add(MapEntry('questionsAnswer', answers));
       formData.fields
         ..add(MapEntry(
@@ -197,7 +197,7 @@ class FieldForceData with ChangeNotifier {
     try {
       var body = json.encode({
         "qrcode": "$qrData",
-        "user_id": "$userId",
+//        "user_id": "$userId",
       });
 
       Map<String, String> headers = {
@@ -246,7 +246,7 @@ class FieldForceData with ChangeNotifier {
   Future<void> fetchStores() async {
     await fetchUserData();
     stores = null;
-    final url = 'https://api.hmto-eleader.com/api/targetStore/$userId';
+    final url = 'https://api.hmto-eleader.com/api/targetStore';
     try {
       final response = await http.get(url, headers: {
         'Accept': 'json',
@@ -306,7 +306,7 @@ class FieldForceData with ChangeNotifier {
       var body = {
         "contact_id": id.toString(),
         "business_id": "$businessId",
-        "created_by": "$userId",
+//        "created_by": "$userId",
         "questionsAnswer": answers,
         "competitors": json.encode({"data": competitorsPercents}),
       };
@@ -338,10 +338,10 @@ class FieldForceData with ChangeNotifier {
   //---------------------------- Fetch Target ----------------------------------
   Future<void> fetchTarget() async {
     await fetchUserData();
-    final url = 'https://api.hmto-eleader.com/api/analysis/$userId';
+    final url = 'https://api.hmto-eleader.com/api/analysis';
     try {
       final response = await http.get(url, headers: {
-        'Content-Type': 'application/json',
+//        'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       });
       print("Response :" + response.body.toString());

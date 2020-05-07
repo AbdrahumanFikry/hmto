@@ -174,7 +174,7 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
                     markers: _markers.values.toSet(),
                   ),
                   Positioned(
-                    bottom: 80.0,
+                    bottom: 100.0,
                     right: 20.0,
                     child: currentLocation.latitude == null ||
                             currentLocation.latitude == null

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:senior/Admin/selectScreen.dart';
 import 'package:senior/forceField/forceFieldNavigator.dart';
 import 'package:senior/providers/authenticationProvider.dart';
 import 'package:senior/sells/sellsNavigator.dart';
@@ -57,6 +58,13 @@ class _LoginScreenState extends State<LoginScreen> {
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                 builder: (context) => ForceFieldNavigator(),
+              ),
+            );
+            break;
+          case 'general_manager':
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => SelectScreen(),
               ),
             );
             break;
