@@ -19,7 +19,7 @@ class StoresScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return data == null
+    return data.length == 0 || data == null
         ? Center(
             child: Text(
               tr('extra.noTarget'),

@@ -61,7 +61,7 @@ class _ForceFieldProfileState extends State<ForceFieldProfile>
                         builder: (context, data, child) => StoresScreen(
                           isSells: false,
                           isDriver: false,
-                          data: data.stores,
+                          data: data.fieldForceStores.targetVisit,
                         ),
                       ),
                       Target(),
