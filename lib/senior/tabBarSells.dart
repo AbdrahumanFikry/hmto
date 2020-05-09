@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:senior/senior/sells.dart';
+import 'package:senior/senior/sellsSeniorTaget.dart';
 import '../senior/targetGraph.dart';
 import 'cash.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -37,190 +38,105 @@ class _TabBarScreenSellsState extends State<TabBarScreenSells> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          tr('sells_profile.type'),
-          style: TextStyle(
-            fontSize: 18.0,
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            tr('sells_profile.type'),
+            style: TextStyle(
+              fontSize: 18.0,
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          elevation: 0.4,
+          backgroundColor: Colors.white,
+          leading: new Container(),
+          actions: <Widget>[
+            InkWell(
+              onTap: _logout,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Icon(
+                    FontAwesomeIcons.signOutAlt,
+                    color: Colors.green,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(5.0),
+                    child: Text(
+                      tr('login_screen.logout'),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+          bottom: TabBar(
+            tabs: [
+              Text(
+                tr('sells_profile.type'),
+                style: TextStyle(
+                  fontSize: 18.0,
+                  color: Colors.black,
+                ),
+              ),
+              Text(
+                tr('senior_profile.target'),
+                style: TextStyle(
+                  fontSize: 18.0,
+                  color: Colors.black,
+                ),
+              ),
+            ],
           ),
         ),
-        elevation: 0.4,
-        backgroundColor: Colors.white,
-        leading: new Container(),
-        actions: <Widget>[
-          widget.isAdmin
-              ? new Container()
-              : InkWell(
-                  onTap: _logout,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Icon(
-                        FontAwesomeIcons.signOutAlt,
-                        color: Colors.green,
+        body: RefreshIndicator(
+          onRefresh: onRefresh,
+          child: FutureBuilder(
+            future:
+                Provider.of<SeniorData>(context, listen: false).sellsAgents ==
+                        null
+                    ? Provider.of<SeniorData>(context, listen: false)
+                        .fetchSellsAgents()
+                    : null,
+            builder: (context, dataSnapShot) {
+              if (dataSnapShot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else {
+                if (dataSnapShot.hasError) {
+                  print(':::::::::' + dataSnapShot.error.toString());
+                  return ErrorHandler(
+                    toDO: () {
+                      setState(() {
+                        Provider.of<SeniorData>(context, listen: false)
+                            .sellsAgents = null;
+                      });
+                    },
+                  );
+                }
+                return Consumer<SeniorData>(
+                  builder: (context, data, _) => TabBarView(
+                    children: [
+                      SellsScreen(
+                        data: data.sellsAgents.data,
                       ),
-                      Padding(
-                        padding: EdgeInsets.all(5.0),
-                        child: Text(
-                          tr('login_screen.logout'),
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
+                      TargetSellsSeniorScreen(),
                     ],
                   ),
-                ),
-        ],
-      ),
-      body: RefreshIndicator(
-        onRefresh: onRefresh,
-        child: FutureBuilder(
-          future: Provider.of<SeniorData>(context, listen: false).sellsAgents ==
-                  null
-              ? Provider.of<SeniorData>(context, listen: false)
-                  .fetchSellsAgents()
-              : null,
-          builder: (context, dataSnapShot) {
-            if (dataSnapShot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            } else {
-              if (dataSnapShot.hasError) {
-                print(':::::::::' + dataSnapShot.error.toString());
-                return ErrorHandler(
-                  toDO: () {
-                    setState(() {
-                      Provider.of<SeniorData>(context, listen: false)
-                          .sellsAgents = null;
-                    });
-                  },
                 );
               }
-              return Consumer<SeniorData>(
-                builder: (context, data, _) => SellsScreen(
-                  data: data.sellsAgents.data,
-                ),
-              );
-            }
-          },
+            },
+          ),
         ),
       ),
     );
-//      DefaultTabController(
-//      length: 2,
-//      child: Scaffold(
-//        appBar: AppBar(
-//          title: Text(
-//            tr('sells_profile.type'),
-//            style: TextStyle(
-//              fontSize: 18.0,
-//              color: Colors.black,
-//              fontWeight: FontWeight.bold,
-//            ),
-//          ),
-//          elevation: 0.4,
-//          backgroundColor: Colors.white,
-//          leading: new Container(),
-//          actions: <Widget>[
-//            InkWell(
-//              onTap: _logout,
-//              child: Row(
-//                mainAxisSize: MainAxisSize.min,
-//                children: <Widget>[
-//                  Icon(
-//                    FontAwesomeIcons.signOutAlt,
-//                    color: Colors.green,
-//                  ),
-//                  Padding(
-//                    padding: EdgeInsets.all(5.0),
-//                    child: Text(
-//                      tr('login_screen.logout'),
-//                      style: TextStyle(
-//                        fontWeight: FontWeight.w700,
-//                        color: Colors.black,
-//                      ),
-//                    ),
-//                  ),
-//                ],
-//              ),
-//            ),
-//          ],
-//          bottom: TabBar(
-//            tabs: [
-//              Text(
-//                tr('sells_profile.type'),
-//                style: TextStyle(
-//                  fontSize: 18.0,
-//                  color: Colors.black,
-//                ),
-//              ),
-//              Text(
-//                tr('senior_profile.cash'),
-//                style: TextStyle(
-//                  fontSize: 18.0,
-//                  color: Colors.black,
-//                ),
-//              ),
-////              Text(
-////                tr('senior_profile.target'),
-////                style: TextStyle(
-////                  fontSize: 18.0,
-////                  color: Colors.black,
-////                ),
-////              ),
-//            ],
-//          ),
-//        ),
-//        body: RefreshIndicator(
-//          onRefresh: onRefresh,
-//          child: FutureBuilder(
-//            future:
-//                Provider.of<SeniorData>(context, listen: false).sellsAgents ==
-//                        null
-//                    ? Provider.of<SeniorData>(context, listen: false)
-//                        .fetchSellsAgents()
-//                    : null,
-//            builder: (context, dataSnapShot) {
-//              if (dataSnapShot.connectionState == ConnectionState.waiting) {
-//                return Center(
-//                  child: CircularProgressIndicator(),
-//                );
-//              } else {
-//                if (dataSnapShot.hasError) {
-//                  print(':::::::::' + dataSnapShot.error.toString());
-//                  return ErrorHandler(
-//                    toDO: () {
-//                      setState(() {
-//                        Provider.of<SeniorData>(context, listen: false)
-//                            .sellsAgents = null;
-//                      });
-//                    },
-//                  );
-//                }
-//                return Consumer<SeniorData>(
-//                  builder: (context, data, _) => TabBarView(
-//                    children: [
-//                      SellsScreen(
-//                        data: data.sellsAgents.data,
-//                      ),
-//                      CashScreen(
-//                        data: data.sellsAgents.data,
-//                      ),
-////                      TargetGraphSenior(),
-//                    ],
-//                  ),
-//                );
-//              }
-//            },
-//          ),
-//        ),
-//      ),
-//    );
   }
 }

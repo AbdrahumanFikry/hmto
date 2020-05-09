@@ -26,7 +26,8 @@ class FieldForceData with ChangeNotifier {
   List<Competitors> competitors = [];
   List<Question> products;
   List<CompetitorPercents> competitorsPercents = [];
-  Stores stores;
+  FieldForceStores fieldForceStores;
+  List<StoresData> stores = [];
   TargetForceField target;
 
   //--------------------------- Fetch questions --------------------------------
@@ -255,7 +256,8 @@ class FieldForceData with ChangeNotifier {
       print("Response :" + response.body.toString());
       final Map responseData = json.decode(response.body);
       if (response.statusCode >= 200 && response.statusCode < 300) {
-        stores = Stores.fromJson(responseData);
+        fieldForceStores = FieldForceStores.fromJson(responseData);
+        stores = fieldForceStores.targetVisit + fieldForceStores.ownStores;
         return true;
       } else {
         throw HttpException(message: responseData['error']);

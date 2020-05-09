@@ -178,7 +178,8 @@ class _AdsAddStoreState extends State<AdsAddStore> {
         ),
         actions: <Widget>[
           Provider.of<FieldForceData>(context, listen: false).dataForNewShop !=
-                  null
+                      null ||
+                  _isLoading == false
               ? IconButton(
                   icon: Icon(Icons.done),
                   onPressed: finish,
@@ -198,7 +199,7 @@ class _AdsAddStoreState extends State<AdsAddStore> {
                   ),
                   Text(
                     Provider.of<FieldForceData>(context).progress == '100'
-                        ? 'Finishing ... '
+                        ? 'Please wait ... '
                         : Provider.of<FieldForceData>(context).progress + ' %',
                     style: TextStyle(
                       fontSize: 18.0,

@@ -37,3 +37,29 @@ class Data {
     return data;
   }
 }
+
+class SellsSeniorTarget {
+  bool success;
+  SeniorData data;
+  String message;
+
+  SellsSeniorTarget({this.success, this.data, this.message});
+
+  SellsSeniorTarget.fromJson(Map<String, dynamic> json) {
+    success = json['success'];
+    data = json['data'] != null ? new SeniorData.fromJson(json['data']) : null;
+    message = json['message'];
+  }
+}
+
+class SeniorData {
+  int targetRequired;
+  int targetCompleted;
+
+  SeniorData({this.targetRequired, this.targetCompleted});
+
+  SeniorData.fromJson(Map<String, dynamic> json) {
+    targetRequired = json['targetRequired'];
+    targetCompleted = json['targetCompeleted'];
+  }
+}

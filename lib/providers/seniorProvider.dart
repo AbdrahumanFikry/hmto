@@ -16,6 +16,7 @@ class SeniorData with ChangeNotifier {
   FieldForceSeniorTargetModel fieldForceSeniorTarget;
   AgentsModel agents;
   SellsAgents sellsAgents;
+  SellsSeniorTarget sellsSeniorTarget;
 
   //------------------------- Fetch senior target ------------------------------
   Future<void> fetchTargetSenior() async {
@@ -95,6 +96,29 @@ class SeniorData with ChangeNotifier {
       final responseData = json.decode(response.body);
       if (response.statusCode >= 200 && response.statusCode < 300) {
         sellsAgents = SellsAgents.fromJson(responseData);
+        notifyListeners();
+        return true;
+      } else {
+        throw HttpException(message: responseData['error']);
+      }
+    } catch (error) {
+      print('Request Error :' + error.toString());
+      throw error;
+    }
+  }
+
+  //------------------------- Fetch senior target ------------------------------
+  Future<void> fetchTargetSells() async {
+    const url = 'https://api.hmto-eleader.com/api/senior_sells_target';
+    await fetchUserData();
+    try {
+      final response = await http.get(url, headers: {
+        'Authorization': 'Bearer $token',
+      });
+      print("Response :" + response.body.toString());
+      final responseData = json.decode(response.body);
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        sellsSeniorTarget = SellsSeniorTarget.fromJson(responseData);
         notifyListeners();
         return true;
       } else {

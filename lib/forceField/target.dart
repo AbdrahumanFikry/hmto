@@ -238,7 +238,7 @@ class _TargetState extends State<Target> {
                           );
                   })
                 : Consumer<FieldForceData>(builder: (context, data, child) {
-                    return data.target.data.targetPer == null
+                    return data.target.data == null
                         ? Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,

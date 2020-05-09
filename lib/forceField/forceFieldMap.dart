@@ -21,7 +21,7 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
   GoogleMapController mapController;
   final Map<String, Marker> _markers = {};
   String address;
-  bool moved = false;
+  bool moved = false, searching = false;
   var currentLocation = Position();
   BitmapDescriptor customIcon;
 
@@ -41,6 +41,9 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
   }
 
   Future<String> _getAddress(Position pos) async {
+    setState(() {
+      searching = true;
+    });
     List<Placemark> placeMarks = await Geolocator()
         .placemarkFromCoordinates(pos.latitude, pos.longitude);
     if (placeMarks != null && placeMarks.isNotEmpty) {
@@ -49,10 +52,16 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
       address = pos.thoroughfare + ', ' + pos.locality;
       return address;
     }
+    setState(() {
+      searching = false;
+    });
     return "";
   }
 
   Future<void> _getLocation() async {
+    setState(() {
+      searching = true;
+    });
     currentLocation = await Geolocator()
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
     print("BeforeRemove:" +
@@ -62,6 +71,9 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
         currentLocation.longitude.toString());
     _getAddress(currentLocation);
     setState(() {
+      searching = false;
+    });
+    setState(() {
       _markers.clear();
       final marker = Marker(
         draggable: true,
@@ -69,11 +81,17 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
           setState(() {
             moved = true;
           });
+          setState(() {
+            searching = true;
+          });
           currentLocation = Position(
             latitude: value.latitude,
             longitude: value.longitude,
           );
           _getAddress(currentLocation);
+          setState(() {
+            searching = false;
+          });
         }),
         icon: customIcon,
         onTap: () {
@@ -84,16 +102,17 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
               currentLocation.longitude.toString() +
               '-address :' +
               address);
-
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => AdsAddStore(
-                lat: currentLocation.latitude,
-                long: currentLocation.longitude,
-                address: address,
+          if (!searching) {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => AdsAddStore(
+                  lat: currentLocation.latitude,
+                  long: currentLocation.longitude,
+                  address: address,
+                ),
               ),
-            ),
-          );
+            );
+          }
         },
         markerId: MarkerId("curr_loc"),
         position: LatLng(currentLocation.latitude, currentLocation.longitude),
@@ -131,32 +150,33 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
   @override
   Widget build(BuildContext context) {
     createMarker(context);
-    Provider.of<FieldForceData>(context, listen: false)
-        .stores
-        .data
-        .forEach((store) {
-      if (store.lat != null && store.long != null && store.id != null) {
-        final marker = Marker(
-          markerId: MarkerId(store.id.toString()),
-          position: LatLng(
-              double.tryParse(store.lat) == null
-                  ? 120.000
-                  : double.tryParse(store.lat),
-              double.tryParse(store.long) == null
-                  ? 120.000
-                  : double.tryParse(store.long)),
-          infoWindow: InfoWindow(title: store.storeName),
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => QrReaderFieldForce(),
-              ),
-            );
-          },
-        );
-        _markers[store.id.toString()] = marker;
-      }
-    });
+    if (Provider.of<FieldForceData>(context, listen: false).stores != null) {
+      Provider.of<FieldForceData>(context, listen: false)
+          .stores
+          .forEach((store) {
+        if (store.lat != null && store.long != null && store.id != null) {
+          final marker = Marker(
+            markerId: MarkerId(store.id.toString()),
+            position: LatLng(
+                double.tryParse(store.lat) == null
+                    ? 120.000
+                    : double.tryParse(store.lat),
+                double.tryParse(store.long) == null
+                    ? 120.000
+                    : double.tryParse(store.long)),
+            infoWindow: InfoWindow(title: store.storeName),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => QrReaderFieldForce(),
+                ),
+              );
+            },
+          );
+          _markers[store.id.toString()] = marker;
+        }
+      });
+    }
     return Scaffold(
       body: currentLocation == null
           ? Center(

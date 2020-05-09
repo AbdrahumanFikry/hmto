@@ -9,7 +9,7 @@ import '../widgets/qrReaderSells.dart';
 class StoresScreen extends StatelessWidget {
   final bool isSells;
   final bool isDriver;
-  final List<Data> data;
+  final List<StoresData> data;
 
   StoresScreen({
     this.isSells = false,
@@ -19,7 +19,7 @@ class StoresScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return data.isEmpty
+    return data == null
         ? Center(
             child: Text(
               tr('extra.noTarget'),

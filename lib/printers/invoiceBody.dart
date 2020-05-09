@@ -61,7 +61,9 @@ class InvoiceBody {
         bluetooth.printNewLine();
         bluetooth.printNewLine();
         bluetooth.printCustom("Total : $sum", normalSize, alignLeft);
-        bluetooth.printCustom("Cash  : $sum", normalSize, alignLeft);
+        debit == 'noDebit'
+            ? bluetooth.printCustom("Cash : $sum", normalSize, alignLeft)
+            : bluetooth.printCustom("Cash : $debit", normalSize, alignLeft);
         debit == 'noDebit'
             ? bluetooth.printCustom("Debit :  -------", normalSize, alignLeft)
             : bluetooth.printCustom(
