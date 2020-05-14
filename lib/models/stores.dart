@@ -50,3 +50,25 @@ class StoresData {
     isVisited = json['is_visited'];
   }
 }
+
+class FieldForceStores {
+  List<StoresData> storeVisit;
+  List<StoresData> ownStores;
+
+  FieldForceStores({this.storeVisit, this.ownStores});
+
+  FieldForceStores.fromJson(Map<String, dynamic> json) {
+    if (json['storeVisit'] != null) {
+      storeVisit = new List<Null>();
+      json['storeVisit'].forEach((v) {
+        storeVisit.add(new StoresData.fromJson(v));
+      });
+    }
+    if (json['ownStores'] != null) {
+      ownStores = new List<StoresData>();
+      json['ownStores'].forEach((v) {
+        ownStores.add(new StoresData.fromJson(v));
+      });
+    }
+  }
+}

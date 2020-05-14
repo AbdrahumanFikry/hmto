@@ -153,7 +153,6 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
     if (Provider.of<FieldForceData>(context, listen: false).stores != null) {
       Provider.of<FieldForceData>(context, listen: false)
           .stores
-          .data
           .forEach((store) {
         if (store.lat != null && store.long != null && store.id != null) {
           final marker = Marker(
