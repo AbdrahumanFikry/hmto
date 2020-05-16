@@ -71,7 +71,7 @@
     "new_products": "New products",
     "return_products": "Return products",
     "submit": "Start day",
-    "continueDay":"Continue day",
+    "continueDay": "Continue day",
     "dashboard": "DashBoard"
   },
   "sells_profile": {
@@ -117,8 +117,8 @@
     "refresh": "refresh",
     "answer": "Type answer here",
     "noStartDay": "You can't start day your balance is Full or your cart is Empty",
-    "oldInvoice":"old invoice",
-    "wait":"Please wait",
+    "oldInvoice": "old invoice",
+    "wait": "Please wait",
     "finishing": "Finishing"
   },
   "errors": {
@@ -133,5 +133,14 @@
     "complete": "target completed",
     "monthCash": "Monthly cash",
     "dailyCash": "Daily cash"
+  },
+  "debitInvoice": {
+    "id": "Transaction id",
+    "total": "Invoice total",
+    "beforeTax": "Total before tax",
+    "tax": "Tax amount",
+    "paid": "Total paid",
+    "mustPaid": "Amount must paid",
+    "pay": "Pay"
   }
 }

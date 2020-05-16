@@ -9,6 +9,7 @@ import 'package:senior/models/reternedProduct.dart';
 import 'package:senior/models/startDaySalles.dart';
 import 'package:senior/models/stores.dart';
 import 'package:senior/models/target.dart';
+import 'package:senior/models/debitInvoices.dart';
 import 'package:senior/senior/sellsTarget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -20,6 +21,7 @@ class SellsData with ChangeNotifier {
   int businessId;
   String date;
   String locationId;
+  String transactionId;
   bool invoiceError = false;
   int invoiceId = 0;
   StartDayData startDayData;
@@ -27,6 +29,7 @@ class SellsData with ChangeNotifier {
   Stores stores;
   double range = 1.0;
   OldInvoices oldInvoices;
+  DebitInvoicesModel debitInvoices;
   List<BillProduct> bill = [];
   List<CarProduct> loadedItems = [];
   List<Products> billProducts = [];
@@ -352,6 +355,7 @@ class SellsData with ChangeNotifier {
       final Map responseData = json.decode(response.body);
       if (response.statusCode >= 200 && response.statusCode < 300) {
         //remove items from car and balance the products
+        transactionId = responseData['transaction_id'];
         await finishBill();
         notifyListeners();
         return true;
@@ -393,6 +397,7 @@ class SellsData with ChangeNotifier {
       final Map responseData = json.decode(response.body);
       if (response.statusCode >= 200 && response.statusCode < 300) {
         //remove items from car and balance the products
+        transactionId = responseData['transaction_id'];
         await finishBill();
         notifyListeners();
         return true;
@@ -688,5 +693,68 @@ class SellsData with ChangeNotifier {
     });
 //    print('Total price : ' + sum.toString());
     return sum;
+  }
+
+  //------------------------- Fetch debit invoices -----------------------------
+  Future<void> fetchDebitInvoices({int storeId}) async {
+    await fetchUserData();
+    const url = 'https://api.hmto-eleader.com/api/sellsman/get/debit';
+    try {
+      var body = {
+        "contact_id": storeId.toString(),
+      };
+      Map<String, String> headers = {
+        'Authorization': 'Bearer $token',
+      };
+      final response = await http.post(
+        url,
+        headers: headers,
+        body: body,
+      );
+      print("Response :" + response.body.toString());
+      final responseData = json.decode(response.body);
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        debitInvoices = DebitInvoicesModel.fromJson(responseData);
+        notifyListeners();
+        return true;
+      } else {
+        throw HttpException(message: responseData['error']);
+      }
+    } catch (error) {
+      print('Request Error :' + error.toString());
+      throw error;
+    }
+  }
+
+  //------------------------- Pay old debit invoice ----------------------------
+  Future<void> payOldDebitInvoice(
+      {int transactionId, String amountPaid}) async {
+    await fetchUserData();
+    const url = 'https://api.hmto-eleader.com/api/sellsman/paid/debit';
+    try {
+      var body = {
+        "transaction_id": transactionId.toString(),
+        "amount_paid": amountPaid,
+      };
+      Map<String, String> headers = {
+        'Authorization': 'Bearer $token',
+      };
+      final response = await http.post(
+        url,
+        headers: headers,
+        body: body,
+      );
+      print("Response :" + response.body.toString());
+      final responseData = json.decode(response.body);
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        notifyListeners();
+        return true;
+      } else {
+        throw HttpException(message: responseData['error']);
+      }
+    } catch (error) {
+      print('Request Error :' + error.toString());
+      throw error;
+    }
   }
 }
