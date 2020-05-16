@@ -49,8 +49,8 @@ class Analysis {
   Analysis({this.visited, this.newStorePer, this.targetPer});
 
   Analysis.fromJson(Map<String, dynamic> json) {
-    visited = double.tryParse(json['Visited']).round().toString();
-    newStorePer = json['newStorePer'];
-    targetPer = json['TargetPer'];
+    visited = json['Visited'].toString();
+    newStorePer = json['newStorePer'].toString();
+    targetPer = json['TargetPer'].toString();
   }
 }

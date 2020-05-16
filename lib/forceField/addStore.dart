@@ -199,7 +199,7 @@ class _AdsAddStoreState extends State<AdsAddStore> {
                   ),
                   Text(
                     Provider.of<FieldForceData>(context).progress == '100'
-                        ? 'Please wait ... '
+                        ? '${tr('extra.wait')} ... '
                         : Provider.of<FieldForceData>(context).progress + ' %',
                     style: TextStyle(
                       fontSize: 18.0,

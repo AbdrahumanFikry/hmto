@@ -39,191 +39,192 @@ class _AgentsState extends State<Agents> {
                   toDO: () {
                     setState(() {
                       Provider.of<SeniorData>(context, listen: false).agents =
-                      null;
+                          null;
                     });
                   },
                 );
               } else {
                 return Consumer<SeniorData>(
                   builder: (context, data, child) => data.agents.data.length ==
-                      null
+                          null
                       ? Center(
-                    child: Text(
-                      tr('extra.noTarget'),
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        fontSize: 18.0,
-                      ),
-                    ),
-                  )
+                          child: Text(
+                            tr('extra.noTarget'),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontSize: 18.0,
+                            ),
+                          ),
+                        )
                       : ListView(
-                    children: <Widget>[
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: data.agents.data.length,
-                        itemBuilder: (ctx, index) {
-                          return Column(
-                            children: <Widget>[
-                              ListTile(
-                                title: GestureDetector(
-                                  onTap: data.agents.data[index]
-                                      .analysis ==
-                                      null
-                                      ? () {}
-                                      : () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            TargetGraphSenior(
-                                              isFieldForce: true,
-                                              visits: double.tryParse(
-                                                data.agents.data[index]
-                                                    .analysis.visited,
-                                              ),
-                                              target: double.tryParse(
-                                                data.agents.data[index]
-                                                    .analysis.targetPer,
-                                              ),
-                                              newStores:
-                                              double.tryParse(
-                                                data
-                                                    .agents
-                                                    .data[index]
-                                                    .analysis
-                                                    .newStorePer,
-                                              ),
-                                              loading: _isLoading,
-                                              onTab: () async {
-                                                _isLoading = true;
-                                                await Provider.of<
-                                                    SeniorData>(
-                                                    context,
-                                                    listen: false)
-                                                    .fetchAgents();
-                                                _isLoading = false;
-                                              },
-                                            ),
-                                      ),
-                                    );
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      SizedBox(
-                                        width: MediaQuery.of(context)
-                                            .size
-                                            .width *
-                                            0.23,
-                                        child: Text(
-                                          data.agents.data[index].name,
-                                          softWrap: true,
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 2,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 10.0,
-                                      ),
-                                      Expanded(
-                                        child: LinearPercentIndicator(
-//                              width: MediaQuery.of(context).size.width * 0.3,
-                                          animation: true,
-                                          animationDuration: 1000,
-                                          lineHeight: 25.0,
-                                          percent: data.agents.data[index]
-                                              .analysis ==
-                                              null
-                                              ? 0.0
-                                              : double.parse(
-                                            data
-                                                .agents
-                                                .data[index]
-                                                .analysis
-                                                .targetPer,
-                                          ) >=
-                                              100.0
-                                              ? 1.0
-                                              : double.tryParse(
-                                            data
-                                                .agents
-                                                .data[index]
-                                                .analysis
-                                                .targetPer,
-                                          ) /
-                                              100,
-                                          center: Text(
-                                            data.agents.data[index]
-                                                .analysis ==
+                          children: <Widget>[
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: data.agents.data.length,
+                              itemBuilder: (ctx, index) {
+                                return Column(
+                                  children: <Widget>[
+                                    ListTile(
+                                      title: GestureDetector(
+                                        onTap: data.agents.data[index]
+                                                    .analysis ==
                                                 null
-                                                ? 'No Target'
-                                                : data
-                                                .agents
-                                                .data[index]
-                                                .analysis
-                                                .targetPer
-                                                .split('.')[0] +
-                                                '%',
-                                          ),
-                                          linearStrokeCap:
-                                          LinearStrokeCap.butt,
-                                          progressColor: Colors.red,
+                                            ? () {}
+                                            : () {
+                                                Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        TargetGraphSenior(
+                                                      isFieldForce: true,
+                                                      visits: double.tryParse(
+                                                        data.agents.data[index]
+                                                            .analysis.visited,
+                                                      ),
+                                                      target: double.tryParse(
+                                                        data.agents.data[index]
+                                                            .analysis.targetPer,
+                                                      ),
+                                                      newStores:
+                                                          double.tryParse(
+                                                        data
+                                                            .agents
+                                                            .data[index]
+                                                            .analysis
+                                                            .newStorePer,
+                                                      ),
+                                                      loading: _isLoading,
+                                                      onTab: () async {
+                                                        _isLoading = true;
+                                                        await Provider.of<
+                                                                    SeniorData>(
+                                                                context,
+                                                                listen: false)
+                                                            .fetchAgents();
+                                                        _isLoading = false;
+                                                      },
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.23,
+                                              child: Text(
+                                                data.agents.data[index].name,
+                                                softWrap: true,
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 2,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 10.0,
+                                            ),
+                                            Expanded(
+                                              child: LinearPercentIndicator(
+//                              width: MediaQuery.of(context).size.width * 0.3,
+                                                animation: true,
+                                                animationDuration: 1000,
+                                                lineHeight: 25.0,
+                                                percent: data.agents.data[index]
+                                                            .analysis ==
+                                                        null
+                                                    ? 0.0
+                                                    : double.parse(
+                                                              data
+                                                                  .agents
+                                                                  .data[index]
+                                                                  .analysis
+                                                                  .targetPer,
+                                                            ) >=
+                                                            100.0
+                                                        ? 1.0
+                                                        : double.tryParse(
+                                                              data
+                                                                  .agents
+                                                                  .data[index]
+                                                                  .analysis
+                                                                  .targetPer,
+                                                            ) /
+                                                            100,
+                                                center: Text(
+                                                  data.agents.data[index]
+                                                              .analysis ==
+                                                          null
+                                                      ? 'No Target'
+                                                      : data
+                                                              .agents
+                                                              .data[index]
+                                                              .analysis
+                                                              .targetPer
+                                                              .split('.')[0] +
+                                                          '%',
+                                                ),
+                                                linearStrokeCap:
+                                                    LinearStrokeCap.butt,
+                                                progressColor: Colors.red,
+                                              ),
+                                            ),
+                                            Text(
+                                              '',
+//                                              data.agents.data[index]
+//                                                          .analysis ==
+//                                                      null
+//                                                  ? ''
+//                                                  : data.agents.data[index]
+//                                                      .analysis.visited,
+                                              style: TextStyle(
+                                                fontSize: 12.0,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 10.0,
+                                            ),
+                                            data.agents.data[index].analysis ==
+                                                    null
+                                                ? Text('')
+                                                : Text(
+                                                    tr('senior_profile.one_visit'),
+                                                    style: TextStyle(
+                                                      fontSize: 12.0,
+                                                      color: Colors.blue,
+                                                    ),
+                                                  ),
+                                          ],
                                         ),
                                       ),
-                                      Text(
-                                        data.agents.data[index]
-                                            .analysis ==
-                                            null
-                                            ? ''
-                                            : data.agents.data[index]
-                                            .analysis.visited,
-                                        style: TextStyle(
-                                          fontSize: 12.0,
-                                          color: Colors.black,
+                                      leading: ClipRRect(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10),
+                                        ),
+                                        child: Image.asset(
+                                          'assets/user.png',
+                                          fit: BoxFit.cover,
                                         ),
                                       ),
-                                      SizedBox(
-                                        width: 10.0,
-                                      ),
-                                      data.agents.data[index].analysis ==
-                                          null
-                                          ? Text('')
-                                          : Text(
-                                        tr('senior_profile.one_visit'),
-                                        style: TextStyle(
-                                          fontSize: 12.0,
-                                          color: Colors.blue,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                leading: ClipRRect(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                  child: Image.asset(
-                                    'assets/user.png',
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                              Divider(
-                                height: 2,
-                                indent: 0,
-                                endIndent: 50,
-                              )
-                            ],
-                          );
-                        },
-                      ),
-                    ],
-                  ),
+                                    ),
+                                    Divider(
+                                      height: 2,
+                                      indent: 0,
+                                      endIndent: 50,
+                                    )
+                                  ],
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                 );
               }
             }

@@ -117,7 +117,9 @@
         "refresh": "refresh",
         "answer": "Type answer here",
         "noStartDay": "You can't start day your balance is Full or your cart is Empty",
-        "oldInvoice":"old invoice"
+        "oldInvoice":"old invoice",
+        "wait":"Please wait",
+        "finishing": "Finishing"
     },
     "errors": {
         "notFound": "product not found in the car!",
