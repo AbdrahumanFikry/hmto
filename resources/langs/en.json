@@ -119,7 +119,10 @@
     "noStartDay": "You can't start day your balance is Full or your cart is Empty",
     "oldInvoice": "old invoice",
     "wait": "Please wait",
-    "finishing": "Finishing"
+    "finishing": "Finishing",
+    "tax": "Tax group",
+    "price": "Price group",
+    "apply": "Apply"
   },
   "errors": {
     "notFound": "product not found in the car!",

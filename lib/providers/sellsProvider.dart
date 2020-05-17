@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:senior/models/billProduct.dart';
 import 'package:senior/models/httpExceptionModel.dart';
 import 'package:senior/models/oldInvoice.dart';
+import 'package:senior/models/pricePlan.dart';
 import 'package:senior/models/qrResult.dart';
 import 'package:senior/models/reternedProduct.dart';
 import 'package:senior/models/startDaySalles.dart';
@@ -22,12 +23,17 @@ class SellsData with ChangeNotifier {
   String date;
   String locationId;
   String transactionId;
+  int chosenPricePlan = 0;
+  int chosenTaxPlan = 0;
+  bool donePricePlan = false;
   bool invoiceError = false;
   int invoiceId = 0;
   StartDayData startDayData;
   QrResult qrResult;
   Stores stores;
+  double sale = 0.0;
   double range = 1.0;
+  double priceAfterTax = 0.0;
   OldInvoices oldInvoices;
   DebitInvoicesModel debitInvoices;
   List<BillProduct> bill = [];
@@ -36,6 +42,7 @@ class SellsData with ChangeNotifier {
   List<ReturnedProduct> returnedBill = [];
   List<CarProduct> printedBill = [];
   TargetSells target;
+  PriceTaxesPlan priceTaxesPlan;
 
   //-------------------------- Fetch Data --------------------------------------
   Future<bool> fetchUserData() async {
@@ -212,12 +219,19 @@ class SellsData with ChangeNotifier {
         json.decode(prefs.getString('cartItems')) as Map<String, dynamic>;
     loadedItems = [];
     responseData['data'].forEach((itemData) {
+      List<GroupPriceStartDay> groupPrice = new List<GroupPriceStartDay>();
+      if (itemData['group_price'] != null) {
+        itemData['group_price'].forEach((v) {
+          groupPrice.add(new GroupPriceStartDay.fromJson(v));
+        });
+      }
       loadedItems.add(CarProduct(
         productId: itemData['product_id'],
         productName: itemData['product_name'],
         serialNumber: itemData['Sku'],
         quantity: itemData['quantity'],
         priceForEach: itemData['default_sell_price'],
+        groupPrice: groupPrice,
       ));
     });
 //    print('Car products :' + json.encode({'carProducts': loadedItems}));
@@ -292,8 +306,16 @@ class SellsData with ChangeNotifier {
     bill.forEach((item) {
       sum = sum + (item.unitPrice * item.quantity);
     });
-//    print('Total price : ' + sum.toString());
+    sum = sum - sale;
+    priceAfterTax =
+        (sum * priceTaxesPlan.taxes[chosenTaxPlan].amount / 100) + sum;
     return sum;
+  }
+
+  //-------------------------- Total bill after tax ----------------------------
+  void applySale({double value}) {
+    sale = value;
+    notifyListeners();
   }
 
   //---------------------------- Balance car products---------------------------
@@ -320,6 +342,7 @@ class SellsData with ChangeNotifier {
       );
       prefs.setString('cartItems', userData);
       bill = [];
+      priceAfterTax = 0.0;
       print('Car products :' + json.encode({'carProducts': loadedItems}));
       notifyListeners();
     } catch (error) {
@@ -328,18 +351,21 @@ class SellsData with ChangeNotifier {
   }
 
   //------------------------------- Pay cash -----------------------------------
-  Future<void> payCash({int storeId, double total}) async {
+  Future<void> payCash({int storeId, double total, String sale}) async {
     await fetchUserData();
     const url = 'https://api.hmto-eleader.com/api/sellsman/transaction/cache';
     try {
       var body = {
-        "created_by": userId.toString(),
+//        "created_by": userId.toString(),
         "business_id": businessId.toString(),
         "location_id": locationId,
         "contact_id": storeId.toString(),
         "total_before_tax": total.toString(),
-        "final_total": total.toString(),
+        "final_total": priceAfterTax.toString(),
         "products": json.encode(bill),
+        "tax_id": priceTaxesPlan.taxes[chosenTaxPlan].id.toString(),
+        "tax_amount": priceTaxesPlan.taxes[chosenTaxPlan].amount.toString(),
+        "discount_amount": sale,
       };
 
       Map<String, String> headers = {
@@ -355,7 +381,7 @@ class SellsData with ChangeNotifier {
       final Map responseData = json.decode(response.body);
       if (response.statusCode >= 200 && response.statusCode < 300) {
         //remove items from car and balance the products
-        transactionId = responseData['transaction_id'];
+        transactionId = responseData['transaction_id'].toString();
         await finishBill();
         notifyListeners();
         return true;
@@ -369,19 +395,27 @@ class SellsData with ChangeNotifier {
   }
 
   //------------------------------- Pay debit ----------------------------------
-  Future<void> payDebit({int storeId, double total, String paid}) async {
+  Future<void> payDebit({
+    int storeId,
+    double total,
+    String paid,
+    String sale,
+  }) async {
     await fetchUserData();
     const url = 'https://api.hmto-eleader.com/api/sellsman/debit';
     try {
       var body = {
-        "created_by": userId.toString(),
+//        "created_by": userId.toString(),
         "business_id": businessId.toString(),
         "location_id": locationId,
         "contact_id": storeId.toString(),
         "total_before_tax": total.toString(),
-        "final_total": total.toString(),
+        "final_total": priceAfterTax.toString(),
         "products": json.encode(bill),
         "amout_paid": paid,
+        "tax_amount": priceTaxesPlan.taxes[chosenTaxPlan].amount.toString(),
+        "tax_id": priceTaxesPlan.taxes[chosenTaxPlan].id.toString(),
+        "discount_amount": sale,
       };
 
       Map<String, String> headers = {
@@ -397,7 +431,7 @@ class SellsData with ChangeNotifier {
       final Map responseData = json.decode(response.body);
       if (response.statusCode >= 200 && response.statusCode < 300) {
         //remove items from car and balance the products
-        transactionId = responseData['transaction_id'];
+        transactionId = responseData['transaction_id'].toString();
         await finishBill();
         notifyListeners();
         return true;
@@ -518,7 +552,6 @@ class SellsData with ChangeNotifier {
     } else {
       throw HttpException(message: tr('errors.notFound'));
     }
-    returnTotal();
     notifyListeners();
   }
 
@@ -527,7 +560,6 @@ class SellsData with ChangeNotifier {
     int index = returnedBill.indexWhere((item) => item.productId == id);
     if (index != -1 && returnedBill[index].quantity != 1) {
       returnedBill[index].quantity--;
-      returnTotal();
       notifyListeners();
     }
   }
@@ -541,7 +573,6 @@ class SellsData with ChangeNotifier {
         billProducts[oldInvoiceIndex].quantity >
             returnedBill[billIndex].quantity) {
       returnedBill[billIndex].quantity++;
-      returnTotal();
       notifyListeners();
     } else {
       throw HttpException(
@@ -567,7 +598,6 @@ class SellsData with ChangeNotifier {
             returnedBill[billIndex].quantity) {
       returnedBill[billIndex].quantity = range.round();
       resetRange();
-      returnTotal();
       notifyListeners();
     } else {
       throw HttpException(
@@ -582,7 +612,6 @@ class SellsData with ChangeNotifier {
     int index = returnedBill.indexWhere((item) => item.productId == id);
     if (index != -1) {
       returnedBill.removeAt(index);
-      returnTotal();
       notifyListeners();
     }
   }
@@ -651,7 +680,7 @@ class SellsData with ChangeNotifier {
             productId: loadedItems[index].productId,
             serialNumber: loadedItems[index].serialNumber,
             productName: loadedItems[index].productName,
-            priceForEach: loadedItems[index].priceForEach,
+            priceForEach: billItem.unitPrice,
             quantity: billItem.quantity,
           ),
         );
@@ -663,7 +692,6 @@ class SellsData with ChangeNotifier {
 
   //---------------------------- Fetch Target ----------------------------------
   Future<void> fetchTarget() async {
-    print('object');
     await fetchUserData();
     final url = 'https://api.hmto-eleader.com/api/sellsman/target';
     try {
@@ -756,5 +784,76 @@ class SellsData with ChangeNotifier {
       print('Request Error :' + error.toString());
       throw error;
     }
+  }
+
+  //--------------------------- Fetch price plan -------------------------------
+  Future<void> fetchPricePlan() async {
+    await fetchUserData();
+    const url = 'https://api.hmto-eleader.com/api/price_group';
+    try {
+      Map<String, String> headers = {
+        'Authorization': 'Bearer $token',
+      };
+      final response = await http.post(
+        url,
+        headers: headers,
+      );
+      print("Response :" + response.body.toString());
+      final responseData = json.decode(response.body);
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        priceTaxesPlan = PriceTaxesPlan.fromJson(responseData);
+        notifyListeners();
+        return true;
+      } else {
+        throw HttpException(message: responseData['error']);
+      }
+    } catch (error) {
+      print('Request Error :' + error.toString());
+      throw error;
+    }
+  }
+
+  //--------------------------- Choose price plan ------------------------------
+  void choosePricePlan({int value}) {
+    chosenPricePlan = value;
+    notifyListeners();
+  }
+
+  //---------------------------- Choose tax plan -------------------------------
+  void chooseTaxPlan({int value}) {
+    chosenTaxPlan = value;
+    notifyListeners();
+  }
+
+  //------------------------------- Done plans ---------------------------------
+  void donePlans() async {
+    loadedItems = [];
+    await fetchCarProduct();
+    int priceId = priceTaxesPlan.groupPrice[chosenPricePlan].id;
+    bill.forEach((item) {
+      int targetIndex = loadedItems
+          .indexWhere((carItem) => item.productId == carItem.productId);
+      if (targetIndex != -1) {
+        item.unitPrice = loadedItems[targetIndex]
+            .groupPrice
+            .firstWhere((groupPrice) => groupPrice.id == priceId)
+            .priceIncTax;
+      } else {
+        throw HttpException(
+            message: 'error adding new price ,could not find the right price');
+      }
+    });
+    sale = 0.0;
+    donePricePlan = true;
+    notifyListeners();
+  }
+
+  //------------------------------- Done plans ---------------------------------
+  void clearAll() {
+    donePricePlan = false;
+    chosenPricePlan = 0;
+    chosenTaxPlan = 0;
+    priceTaxesPlan = null;
+    notifyListeners();
   }
 }

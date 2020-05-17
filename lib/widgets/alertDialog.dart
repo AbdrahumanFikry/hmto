@@ -31,7 +31,8 @@ class GlobalAlertDialog {
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.only(
-                      top: 10.0,
+                      top: 15.0,
+                      bottom: 15.0,
                     ),
                     child: Text(
                       tr('store.submit'),
@@ -94,7 +95,8 @@ class GlobalAlertDialog {
                     children: <Widget>[
                       Padding(
                         padding: const EdgeInsets.only(
-                          top: 10.0,
+                          top: 15.0,
+                          bottom: 15.0,
                         ),
                         child: Text(
                           tr('store.submit'),

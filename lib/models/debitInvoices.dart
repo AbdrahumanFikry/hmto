@@ -20,7 +20,7 @@ class DebitInvoice {
   String totalBeforeTax;
   String taxAmount;
   String amountPaid;
-  int amountMustBePaid;
+  double amountMustBePaid;
 
   DebitInvoice(
       {this.transactionId,
@@ -38,6 +38,6 @@ class DebitInvoice {
     totalBeforeTax = json['total_before_tax'];
     taxAmount = json['tax_amount'];
     amountPaid = json['amout_paid'];
-    amountMustBePaid = json['amout_must_be_paid'];
+    amountMustBePaid = double.tryParse(json['amout_must_be_paid'].toString());
   }
 }

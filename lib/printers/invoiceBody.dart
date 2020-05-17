@@ -9,6 +9,11 @@ class InvoiceBody {
     String sellsName,
     String debit,
     List<CarProduct> bill,
+    String sale,
+    String tax,
+    String total,
+    String totalAfterTax,
+    String transactionId,
   }) async {
     //SIZE
     // 0- normal size text
@@ -27,15 +32,13 @@ class InvoiceBody {
     int alignLeft = 0;
     int alignCenter = 1;
     int alignRight = 2;
-    double sum = 0.0;
-    bill.forEach((item) {
-      double itemTotal = item.quantity * item.priceForEach;
-      sum = sum + itemTotal;
-    });
     bluetooth.isConnected.then((isConnected) {
       if (isConnected) {
         bluetooth.printNewLine();
         bluetooth.printCustom("HMTO", boldLarge, alignCenter);
+        bluetooth.printNewLine();
+        bluetooth.printNewLine();
+        bluetooth.printCustom("$transactionId", boldLarge, alignCenter);
         bluetooth.printNewLine();
         bluetooth.printNewLine();
         bluetooth.printCustom("$storeName", normalSize, alignLeft);
@@ -45,29 +48,36 @@ class InvoiceBody {
         bluetooth.printNewLine();
         bluetooth.printCustom("*** المنتجات ***", alignCenter, boldLarge);
         bill.forEach((item) {
-          double total = item.quantity * item.priceForEach;
+          double itemTotal = item.quantity * item.priceForEach;
           bluetooth.printNewLine();
           bluetooth.printNewLine();
-
           bluetooth.printCustom(
-              ">${item.productName}  $total ", normalSize, alignCenter);
+              ">${item.productName}  $itemTotal ", normalSize, alignCenter);
           bluetooth.printCustom("${item.quantity} * ${item.priceForEach} ",
               normalSize, alignRight);
 //          bluetooth.printCustom("$total", alignLeft, normalSize);
-          total = 0.0;
+          itemTotal = 0.0;
         });
         bluetooth.printNewLine();
         bluetooth.printNewLine();
         bluetooth.printNewLine();
         bluetooth.printNewLine();
-        bluetooth.printCustom("Total : $sum", normalSize, alignLeft);
+        bluetooth.printCustom("Sale : $sale", normalSize, alignLeft);
+        bluetooth.printCustom("Total : $total", normalSize, alignLeft);
+        bluetooth.printCustom("Tax : $tax", normalSize, alignLeft);
+        bluetooth.printCustom(
+            "AfterTax : $totalAfterTax", normalSize, alignLeft);
         debit == 'noDebit'
-            ? bluetooth.printCustom("Cash : $sum", normalSize, alignLeft)
+            ? bluetooth.printCustom("Cash : $total", normalSize, alignLeft)
             : bluetooth.printCustom("Cash : $debit", normalSize, alignLeft);
+        print(
+            "Debit :::: ${double.tryParse(totalAfterTax)} ${double.tryParse(debit)}");
         debit == 'noDebit'
             ? bluetooth.printCustom("Debit :  -------", normalSize, alignLeft)
             : bluetooth.printCustom(
-                "Debit : ${sum - int.tryParse(debit)}", normalSize, alignLeft);
+                "Debit : ${double.tryParse(totalAfterTax)} ${double.tryParse(debit)}",
+                normalSize,
+                alignLeft);
         bluetooth.printNewLine();
         bluetooth.printCustom("DateTime : ", normalSize, alignLeft);
         bluetooth.printCustom(

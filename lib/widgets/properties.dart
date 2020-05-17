@@ -31,6 +31,7 @@ class _PropertiesState extends State<Properties> {
   String number = '';
 
   void goToCartScreen() {
+    Provider.of<SellsData>(context, listen: false).clearAll();
     if (!widget.isReturned) {
       Navigator.of(context).push(
         MaterialPageRoute(

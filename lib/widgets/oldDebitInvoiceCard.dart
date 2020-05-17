@@ -12,7 +12,7 @@ class OldDebitInvoiceCard extends StatefulWidget {
   final String totalBeforeTax;
   final String taxAmount;
   final String amountPaid;
-  final int amountMustBePaid;
+  final double amountMustBePaid;
 
   OldDebitInvoiceCard({
     this.storeId,
@@ -33,18 +33,23 @@ class _OldDebitInvoiceCardState extends State<OldDebitInvoiceCard> {
   String paid;
 
   Future<void> payOldDebit() async {
-    try {
-      isLoading = true;
-      await Provider.of<SellsData>(context, listen: false).payOldDebitInvoice(
-          transactionId: widget.transactionId, amountPaid: paid);
-      await Provider.of<SellsData>(context, listen: false)
-          .fetchDebitInvoices(storeId: widget.storeId);
-      isLoading = false;
-    } catch (error) {
-      GlobalAlertDialog.showErrorDialog(error.toString(), context);
-      setState(() {
+    if (double.tryParse(paid) <= widget.amountMustBePaid) {
+      try {
+        isLoading = true;
+        await Provider.of<SellsData>(context, listen: false).payOldDebitInvoice(
+            transactionId: widget.transactionId, amountPaid: paid);
+        await Provider.of<SellsData>(context, listen: false)
+            .fetchDebitInvoices(storeId: widget.storeId);
         isLoading = false;
-      });
+      } catch (error) {
+        GlobalAlertDialog.showErrorDialog(error.toString(), context);
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } else {
+      GlobalAlertDialog.showErrorDialog(
+          'errors.noMore'.tr(args: [tr('debitInvoice.mustPaid')]), context);
     }
   }
 

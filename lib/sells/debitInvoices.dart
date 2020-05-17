@@ -24,6 +24,12 @@ class OldInvoicesScreen extends StatefulWidget {
 
 class _OldInvoicesScreenState extends State<OldInvoicesScreen> {
   @override
+  void initState() {
+    Provider.of<SellsData>(context, listen: false).debitInvoices = null;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder(

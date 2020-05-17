@@ -37,6 +37,7 @@ class _QrReaderSellsState extends State<QrReaderSells> {
         await Provider.of<SellsData>(context, listen: false).scanStore(
           qrData: barcode,
         );
+        Provider.of<SellsData>(context, listen: false).clearAll();
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => Consumer<SellsData>(

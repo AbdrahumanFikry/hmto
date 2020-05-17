@@ -12,13 +12,23 @@ class PrinterScreen extends StatefulWidget {
   final String storeName;
   final String sellsName;
   final String debit;
+  final String sale;
+  final String tax;
+  final String total;
+  final String totalAfterTax;
+  final String transactionId;
   final List<CarProduct> bill;
 
   PrinterScreen({
     this.storeName,
+    this.transactionId,
     this.sellsName,
     this.debit = 'noDebit',
     this.bill,
+    this.sale = '0.0',
+    this.total = '0.0',
+    this.tax = '0.0',
+    this.totalAfterTax = '0.0',
   });
 
   @override
@@ -172,6 +182,11 @@ class _PrinterScreenState extends State<PrinterScreen> {
                       debit: widget.debit,
                       storeName: widget.storeName,
                       bill: widget.bill,
+                      tax: widget.tax,
+                      totalAfterTax: widget.totalAfterTax,
+                      sale: widget.sale,
+                      total: widget.total,
+                      transactionId: widget.transactionId,
                     );
                   },
                   child: Text(tr('sells_store.print'),
