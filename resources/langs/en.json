@@ -122,7 +122,8 @@
     "finishing": "Finishing",
     "tax": "Tax group",
     "price": "Price group",
-    "apply": "Apply"
+    "apply": "Apply",
+    "success": "Operation succeeded"
   },
   "errors": {
     "notFound": "product not found in the car!",
@@ -144,6 +145,7 @@
     "tax": "Tax amount",
     "paid": "Total paid",
     "mustPaid": "Amount must paid",
-    "pay": "Pay"
+    "pay": "Pay",
+    "title": "Debit invoices"
   }
 }

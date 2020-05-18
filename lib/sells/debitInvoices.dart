@@ -32,6 +32,15 @@ class _OldInvoicesScreenState extends State<OldInvoicesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          tr('debitInvoice.title'),
+          style: TextStyle(color: Colors.green),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 3.0,
+      ),
       body: FutureBuilder(
         future:
             Provider.of<SellsData>(context, listen: false).debitInvoices == null

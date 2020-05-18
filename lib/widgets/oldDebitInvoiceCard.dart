@@ -64,13 +64,18 @@ class _OldDebitInvoiceCardState extends State<OldDebitInvoiceCard> {
             Text(tr('debitInvoice.id') +
                 ' : ' +
                 widget.transactionId.toString()),
-            Text(tr('debitInvoice.beforeTax') + ' : ' + widget.totalBeforeTax),
-            Text(tr('debitInvoice.tax') + ' : ' + widget.taxAmount),
-            Text(tr('debitInvoice.total') + ' : ' + widget.finalTotal),
-            Text(tr('debitInvoice.paid') + ' : ' + widget.amountPaid),
+            Text(tr('debitInvoice.total') +
+                ' : ' +
+                widget.finalTotal +
+                ' ${tr('senior_profile.egp')}'),
+            Text(tr('debitInvoice.paid') +
+                ' : ' +
+                widget.amountPaid +
+                ' ${tr('senior_profile.egp')}'),
             Text(tr('debitInvoice.mustPaid') +
                 ' : ' +
-                widget.amountMustBePaid.toString()),
+                widget.amountMustBePaid.toString() +
+                ' ${tr('senior_profile.egp')}'),
             isLoading
                 ? Padding(
                     padding: const EdgeInsets.all(8.0),

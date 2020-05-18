@@ -124,6 +124,7 @@ class _AdsAddStoreState extends State<AdsAddStore> {
             landmark: widget.address == null ? 'no data' : widget.address,
             position: widget.address == null ? 'no data' : widget.address,
           );
+          GlobalAlertDialog.showErrorDialog(tr('extra.success'), context);
           setState(() {
             _isLoading = false;
           });

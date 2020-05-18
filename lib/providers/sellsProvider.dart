@@ -189,6 +189,7 @@ class SellsData with ChangeNotifier {
     int index = loadedItems.indexWhere((i) => i.serialNumber == serialNumber);
     int billIndex =
         bill.indexWhere((i) => i.productId == loadedItems[index].productId);
+//    print('::::::::::' + billIndex.toString());
     if (billIndex != -1) {
       throw HttpException(message: tr('errors.exist'));
     }
@@ -307,8 +308,11 @@ class SellsData with ChangeNotifier {
       sum = sum + (item.unitPrice * item.quantity);
     });
     sum = sum - sale;
-    priceAfterTax =
-        (sum * priceTaxesPlan.taxes[chosenTaxPlan].amount / 100) + sum;
+//    print('::::::::::' + priceTaxesPlan.toString());
+    if (priceTaxesPlan != null) {
+      priceAfterTax =
+          (sum * priceTaxesPlan.taxes[chosenTaxPlan].amount / 100) + sum;
+    }
     return sum;
   }
 
@@ -343,7 +347,7 @@ class SellsData with ChangeNotifier {
       prefs.setString('cartItems', userData);
       bill = [];
       priceAfterTax = 0.0;
-      print('Car products :' + json.encode({'carProducts': loadedItems}));
+//      print('Car products :' + json.encode({'carProducts': loadedItems}));
       notifyListeners();
     } catch (error) {
       throw HttpException(message: tr('errors.noBalance'));
@@ -360,11 +364,12 @@ class SellsData with ChangeNotifier {
         "business_id": businessId.toString(),
         "location_id": locationId,
         "contact_id": storeId.toString(),
-        "total_before_tax": total.toString(),
-        "final_total": priceAfterTax.toString(),
+        "total_before_tax": (total - double.tryParse(sale)).toString(),
+        "final_total": priceAfterTax.toStringAsFixed(2).toString(),
         "products": json.encode(bill),
         "tax_id": priceTaxesPlan.taxes[chosenTaxPlan].id.toString(),
-        "tax_amount": priceTaxesPlan.taxes[chosenTaxPlan].amount.toString(),
+        "tax_amount": (priceTaxesPlan.taxes[chosenTaxPlan].amount * total / 100)
+            .toString(),
         "discount_amount": sale,
       };
 
@@ -409,11 +414,12 @@ class SellsData with ChangeNotifier {
         "business_id": businessId.toString(),
         "location_id": locationId,
         "contact_id": storeId.toString(),
-        "total_before_tax": total.toString(),
-        "final_total": priceAfterTax.toString(),
+        "total_before_tax": (total - double.tryParse(sale)).toString(),
+        "final_total": priceAfterTax.toStringAsFixed(2).toString(),
         "products": json.encode(bill),
         "amout_paid": paid,
-        "tax_amount": priceTaxesPlan.taxes[chosenTaxPlan].amount.toString(),
+        "tax_amount": (priceTaxesPlan.taxes[chosenTaxPlan].amount * total / 100)
+            .toString(),
         "tax_id": priceTaxesPlan.taxes[chosenTaxPlan].id.toString(),
         "discount_amount": sale,
       };
@@ -659,7 +665,7 @@ class SellsData with ChangeNotifier {
       );
       prefs.setString('cartItems', userData);
       returnedBill = [];
-      print('Car products :' + json.encode({'carProducts': loadedItems}));
+//      print('Car products :' + json.encode({'carProducts': loadedItems}));
       notifyListeners();
     } catch (error) {
       throw HttpException(message: tr('errors.noBalance'));

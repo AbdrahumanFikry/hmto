@@ -54,7 +54,7 @@ class CartScreen extends StatelessWidget {
       } else {
         GlobalAlertDialog.showErrorDialog('Invalid input!', context);
       }
-      print('Paid : ' + paid);
+//      print('Paid : ' + paid);
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => Consumer<SellsData>(
@@ -65,8 +65,8 @@ class CartScreen extends StatelessWidget {
               sellsName: sellsName,
               sale: sale.toString(),
               tax: tax.toString(),
-              total: total.toString(),
-              totalAfterTax: totalAfterTax.toString(),
+              total: (total - sale).toString(),
+              totalAfterTax: totalAfterTax.toStringAsFixed(2).toString(),
               transactionId: data.transactionId,
             ),
           ),
@@ -302,7 +302,9 @@ class CartScreen extends StatelessWidget {
                                       ),
                                     ),
                                     Text(
-                                      data.priceAfterTax.toString() +
+                                      data.priceAfterTax
+                                              .toStringAsFixed(2)
+                                              .toString() +
                                           ' ' +
                                           tr('senior_profile.egp'),
                                       style: TextStyle(
@@ -340,7 +342,7 @@ class CartScreen extends StatelessWidget {
                                             child: TextField(
                                               onChanged: (value) {
                                                 paid = value;
-                                                print(paid);
+//                                                print(paid);
                                               },
                                               decoration: InputDecoration(
                                                 contentPadding: EdgeInsets.only(

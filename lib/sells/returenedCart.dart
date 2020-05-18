@@ -25,6 +25,7 @@ class ReturnedCartCart extends StatelessWidget {
       isLoading = true;
       await Provider.of<SellsData>(context, listen: false)
           .returnProducts(storeId: storeId, total: total);
+      GlobalAlertDialog.showErrorDialog(tr('extra.success'), context);
       Provider.of<SellsData>(context, listen: false).returnedBill = [];
       isLoading = false;
     } catch (error) {
