@@ -16,6 +16,7 @@ class CloseReason extends StatelessWidget {
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
+              color: Colors.black,
             ),
             onPressed: () {
               Navigator.of(context).pop();
@@ -24,57 +25,69 @@ class CloseReason extends StatelessWidget {
           backgroundColor: Colors.white,
           elevation: 0.5,
         ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'من فضلك قم بتوضيح سبب اغلاق الزياره',
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 22.0,
-              ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 10.0,
+              horizontal: 20.0,
             ),
-            TextFormField(
-              maxLines: 5,
-              onChanged: (value) => reason = value,
-              initialValue: null,
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.symmetric(
-                  vertical: 10.0,
-                  horizontal: 10.0,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'من فضلك قم بتوضيح سبب اغلاق الزياره',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20.0,
+                  ),
+                  textAlign: TextAlign.start,
                 ),
-                hintText: 'ضع السبب هنا',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-              ),
-            ),
-            RaisedButton(
-              color: Colors.green,
-              padding: EdgeInsets.symmetric(
-                horizontal: 20.0,
-                vertical: 10.0,
-              ),
-              child: Text(
-                'اغلاق',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20.0,
-                ),
-              ),
-              onPressed: () {
-                Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                      builder: (_) => SellsNavigator(
-                        isDriver: false,
-                      ),
+                TextFormField(
+                  maxLines: 7,
+                  onChanged: (value) => reason = value,
+                  initialValue: null,
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.symmetric(
+                      vertical: 10.0,
+                      horizontal: 10.0,
                     ),
-                    (route) => false);
-              },
+                    hintText: 'ضع السبب هنا',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                RaisedButton(
+                  color: Colors.green,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20.0,
+                    vertical: 10.0,
+                  ),
+                  child: Text(
+                    'اغلاق',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20.0,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                          builder: (_) => SellsNavigator(
+                            isDriver: false,
+                          ),
+                        ),
+                        (route) => false);
+                  },
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

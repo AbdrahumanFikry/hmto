@@ -5,6 +5,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:senior/sells/closeReason.dart';
 import 'package:senior/sells/debitInvoices.dart';
 import 'package:senior/sells/sellsNavigator.dart';
 import 'package:senior/widgets/alertDialog.dart';
@@ -327,9 +328,7 @@ class _SellsStoreState extends State<SellsStore> {
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (_) => SellsNavigator(
-                        isDriver: false,
-                      ),
+                      builder: (_) => CloseReason(),
                     ),
                   );
                 },

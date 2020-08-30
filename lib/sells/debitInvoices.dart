@@ -38,8 +38,17 @@ class _OldInvoicesScreenState extends State<OldInvoicesScreen> {
           tr('debitInvoice.title'),
           style: TextStyle(color: Colors.green),
         ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.black,
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
         backgroundColor: Colors.white,
-        elevation: 3.0,
+        elevation: 0.5,
       ),
       body: FutureBuilder(
         future:
