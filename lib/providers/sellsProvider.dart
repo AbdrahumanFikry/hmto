@@ -1,7 +1,10 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:senior/models/billProduct.dart';
+import 'package:senior/models/debitInvoices.dart';
 import 'package:senior/models/httpExceptionModel.dart';
 import 'package:senior/models/oldInvoice.dart';
 import 'package:senior/models/pricePlan.dart';
@@ -10,10 +13,7 @@ import 'package:senior/models/reternedProduct.dart';
 import 'package:senior/models/startDaySalles.dart';
 import 'package:senior/models/stores.dart';
 import 'package:senior/models/target.dart';
-import 'package:senior/models/debitInvoices.dart';
-import 'package:senior/senior/sellsTarget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:easy_localization/easy_localization.dart';
 
 class SellsData with ChangeNotifier {
   String token;
@@ -117,13 +117,15 @@ class SellsData with ChangeNotifier {
   }
 
   //------------------------------ Scan store ----------------------------------
-  Future<void> scanStore({String qrData}) async {
+  Future<void> scanStore({String qrData, double lat, double lng}) async {
     oldInvoices = null;
     await fetchUserData();
     const url = 'https://api.hmto-eleader.com/api/sellsman/scanStore';
     try {
       var body = {
         "qrcode": qrData,
+        "lat": lat.toString(),
+        "lan": lng.toString(),
         "user_id": userId.toString(),
       };
 
@@ -844,6 +846,8 @@ class SellsData with ChangeNotifier {
             .groupPrice
             .firstWhere((groupPrice) => groupPrice.id == priceId)
             .priceIncTax;
+        item.unitPriceBeforeDiscount = item.unitPrice;
+        item.unitPriceIncTax = item.unitPrice;
       } else {
         throw HttpException(
             message: 'error adding new price ,could not find the right price');

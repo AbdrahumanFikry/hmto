@@ -124,7 +124,7 @@ class _PrinterScreenState extends State<PrinterScreen> {
                     width: 10,
                   ),
                   Text(
-                    'Device:',
+                    'الطابعه :',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                     ),
@@ -154,7 +154,7 @@ class _PrinterScreenState extends State<PrinterScreen> {
                       initPlatformState();
                     },
                     child: Text(
-                      'Refresh',
+                      'تحديث',
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
@@ -165,7 +165,7 @@ class _PrinterScreenState extends State<PrinterScreen> {
                     color: _connected ? Colors.red : Colors.green,
                     onPressed: _connected ? _disconnect : _connect,
                     child: Text(
-                      _connected ? 'Disconnect' : 'Connect',
+                      _connected ? 'فصل' : 'توصيل',
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
@@ -204,7 +204,7 @@ class _PrinterScreenState extends State<PrinterScreen> {
     List<DropdownMenuItem<BluetoothDevice>> items = [];
     if (_devices.isEmpty) {
       items.add(DropdownMenuItem(
-        child: Text('NONE'),
+        child: Text('لا يوجد'),
       ));
     } else {
       _devices.forEach((device) {
@@ -219,7 +219,7 @@ class _PrinterScreenState extends State<PrinterScreen> {
 
   void _connect() {
     if (_device == null) {
-      show('No device selected.');
+      show('ليس هناك اجهزه متصله');
     } else {
       bluetooth.isConnected.then((isConnected) {
         if (!isConnected) {

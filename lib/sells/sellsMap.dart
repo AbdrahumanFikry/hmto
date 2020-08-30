@@ -10,6 +10,12 @@ import '../widgets/qrReaderSells.dart';
 import '../providers/sellsProvider.dart';
 
 class SellsMap extends StatefulWidget {
+  final bool openPlace;
+
+  SellsMap({
+    this.openPlace = false,
+  });
+
   @override
   _SellsMapState createState() => _SellsMapState();
 }
@@ -21,6 +27,7 @@ class _SellsMapState extends State<SellsMap> {
   bool moved = false;
   var currentLocation = Position();
   BitmapDescriptor customIcon;
+  LatLng userLatLng;
 
   createMarker(context) {
     if (customIcon == null) {
@@ -35,6 +42,10 @@ class _SellsMapState extends State<SellsMap> {
         });
       });
     }
+  }
+
+  void _onDone(BuildContext context) {
+    Navigator.pop(context, [userLatLng, address]);
   }
 
   Future<String> _getAddress(Position pos) async {
@@ -52,6 +63,7 @@ class _SellsMapState extends State<SellsMap> {
   Future<void> _getLocation() async {
     currentLocation = await Geolocator()
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
+    userLatLng = LatLng(currentLocation.latitude, currentLocation.longitude);
     print("BeforeRemove:" +
         'lat :' +
         currentLocation.latitude.toString() +
@@ -61,17 +73,7 @@ class _SellsMapState extends State<SellsMap> {
     setState(() {
       _markers.clear();
       final marker = Marker(
-        draggable: true,
-        onDragEnd: ((value) {
-          setState(() {
-            moved = true;
-          });
-          currentLocation = Position(
-            latitude: value.latitude,
-            longitude: value.longitude,
-          );
-          _getAddress(currentLocation);
-        }),
+        draggable: false,
         icon: customIcon,
         markerId: MarkerId("curr_loc"),
         position: LatLng(currentLocation.latitude, currentLocation.longitude),
@@ -121,55 +123,93 @@ class _SellsMapState extends State<SellsMap> {
                   ? 120.000
                   : double.tryParse(store.long)),
           infoWindow: InfoWindow(title: store.storeName),
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => QrReaderSells(),
-              ),
-            );
+          onTap: () async {
+            if (currentLocation.latitude != null &&
+                currentLocation.longitude != null) {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => QrReaderSells(
+                    latLng: LatLng(
+                        currentLocation.latitude, currentLocation.longitude),
+                  ),
+                ),
+              );
+            }
           },
         );
         _markers[store.storeName] = marker;
       }
     });
-    return Scaffold(
-      body: currentLocation == null
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : Stack(
-              children: <Widget>[
-                GoogleMap(
-                  onMapCreated: onMapCreated,
-                  initialCameraPosition: CameraPosition(
-                    target: LatLng(31.037933, 31.381523),
-                    zoom: 5.0,
+    return SafeArea(
+      child: Scaffold(
+        body: currentLocation == null
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : Stack(
+                children: <Widget>[
+                  GoogleMap(
+                    onMapCreated: onMapCreated,
+                    initialCameraPosition: CameraPosition(
+                      target: LatLng(31.037933, 31.381523),
+                      zoom: 5.0,
+                    ),
+                    markers: _markers.values.toSet(),
                   ),
-                  markers: _markers.values.toSet(),
-                ),
-                Positioned(
-                  bottom: 100.0,
-                  right: 20.0,
-                  child: currentLocation.latitude == null ||
-                          currentLocation.latitude == null
-                      ? CircularProgressIndicator()
-                      : FloatingActionButton(
-                          onPressed: () async {
-                            setState(() {
-                              currentLocation = Position();
-                            });
-                            await _getLocation();
-                            await _getAddress(currentLocation);
-                          },
-                          tooltip: 'Get Location',
-                          child: Icon(
-                            Icons.location_searching,
-                            color: Colors.white,
+                  Positioned(
+                    bottom: 100.0,
+                    right: 20.0,
+                    child: currentLocation.latitude == null ||
+                            currentLocation.latitude == null
+                        ? CircularProgressIndicator()
+                        : FloatingActionButton(
+                            onPressed: () async {
+                              setState(() {
+                                currentLocation = Position();
+                              });
+                              await _getLocation();
+                              await _getAddress(currentLocation);
+                            },
+                            tooltip: 'Get Location',
+                            child: Icon(
+                              Icons.location_searching,
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
-                ),
-              ],
-            ),
+                  ),
+                  widget.openPlace
+                      ? Positioned(
+                          bottom: 30.0,
+                          right: 20.0,
+                          child: currentLocation.latitude == null ||
+                                  currentLocation.latitude == null
+                              ? SizedBox()
+                              : RaisedButton(
+                                  onPressed: () {
+                                    userLatLng = LatLng(
+                                        currentLocation.latitude,
+                                        currentLocation.longitude);
+                                    Navigator.of(context).pop([userLatLng]);
+                                    print('*************' +
+                                        userLatLng.latitude.toString() +
+                                        '    ' +
+                                        userLatLng.longitude.toString());
+                                  },
+                                  color: Colors.green,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  // tooltip: 'Go to shop',
+                                  child: Icon(
+                                    Icons.done,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                        )
+                      : SizedBox(),
+                ],
+              ),
+      ),
     );
   }
 

@@ -6,6 +6,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:senior/sells/debitInvoices.dart';
+import 'package:senior/sells/sellsNavigator.dart';
 import 'package:senior/widgets/alertDialog.dart';
 import 'package:senior/widgets/errorWidget.dart';
 import 'package:senior/widgets/invoices.dart';
@@ -94,24 +95,24 @@ class _SellsStoreState extends State<SellsStore> {
           style: TextStyle(color: Colors.green),
         ),
         backgroundColor: Colors.white,
-        elevation: 3.0,
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(
-              FontAwesomeIcons.cashRegister,
-              color: Colors.green,
-            ),
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => OldInvoicesScreen(
-                    storeId: widget.id,
-                  ),
-                ),
-              );
-            },
-          ),
-        ],
+        elevation: 0.5,
+        // actions: <Widget>[
+        //   IconButton(
+        //     icon: Icon(
+        //       FontAwesomeIcons.cashRegister,
+        //       color: Colors.green,
+        //     ),
+        //     onPressed: () {
+        //       Navigator.of(context).push(
+        //         MaterialPageRoute(
+        //           builder: (context) => OldInvoicesScreen(
+        //             storeId: widget.id,
+        //           ),
+        //         ),
+        //       );
+        //     },
+        //   ),
+        // ],
       ),
       body: ListView(
         children: <Widget>[
@@ -202,6 +203,44 @@ class _SellsStoreState extends State<SellsStore> {
               ),
             ),
           ),
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => OldInvoicesScreen(
+                    storeId: widget.id,
+                  ),
+                ),
+              );
+            },
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 33 * screenSize.aspectRatio,
+                vertical: 16 * screenSize.aspectRatio,
+              ),
+              child: Row(
+                children: <Widget>[
+                  Text(
+                    'الفواتير الاجله',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      color: Colors.blue,
+                      fontSize: 33 * screenSize.aspectRatio,
+                    ),
+                  ),
+                  Spacer(),
+                  Icon(
+                    Icons.keyboard_arrow_down,
+                    color: Colors.grey[700],
+                    size: 22,
+                  ),
+                  SizedBox(
+                    width: 8,
+                  )
+                ],
+              ),
+            ),
+          ),
           Padding(
             padding: EdgeInsets.symmetric(
               horizontal: 33 * screenSize.aspectRatio,
@@ -268,6 +307,34 @@ class _SellsStoreState extends State<SellsStore> {
                 ],
               ),
             ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              RaisedButton(
+                color: Colors.green,
+                padding: EdgeInsets.symmetric(
+                  horizontal: 20.0,
+                  vertical: 10.0,
+                ),
+                child: Text(
+                  'اغلاق',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20.0,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => SellsNavigator(
+                        isDriver: false,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
         ],
       ),

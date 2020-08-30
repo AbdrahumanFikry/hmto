@@ -21,74 +21,76 @@ class _SellsProfileState extends State<SellsProfile>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 4, left: 4, right: 4),
-            child: TabBar(
-              onTap: (index) {
-                this.tabIndex = index;
-                pageController.animateToPage(index,
-                    duration: Duration(milliseconds: 200),
-                    curve: Curves.easeIn);
-              },
-              indicatorColor: Colors.green,
-              labelColor: Colors.black,
-              tabs: <Widget>[
-                Tab(
-                  text: tr('sells_profile.tab_one'),
-                ),
-                Tab(
-                  text: tr('sells_profile.tab_two'),
-                ),
-                Tab(
-                  text: tr('start_day.cart_products'),
-                ),
-              ],
-              controller: TabController(length: 3, vsync: this),
-            ),
-          ),
-          Expanded(
-            child: NestedScrollView(
-              body: ScrollConfiguration(
-                behavior: ScrollBehavior(),
-                child: PageView(
-                  controller: pageController,
-                  physics: NeverScrollableScrollPhysics(),
-                  children: <Widget>[
-                    Consumer<SellsData>(
-                      builder: (context, data, child) => StoresScreen(
-                        isSells: true,
-                        isDriver: false,
-                        data: data.stores.data,
-                      ),
-                    ),
-                    Target(
-                      isSells: true,
-                    ),
-                    MyCart(),
-                  ],
-                ),
+    return SafeArea(
+      child: Scaffold(
+        body: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(top: 4, left: 4, right: 4),
+              child: TabBar(
+                onTap: (index) {
+                  this.tabIndex = index;
+                  pageController.animateToPage(index,
+                      duration: Duration(milliseconds: 200),
+                      curve: Curves.easeIn);
+                },
+                indicatorColor: Colors.green,
+                labelColor: Colors.black,
+                tabs: <Widget>[
+                  Tab(
+                    text: tr('sells_profile.tab_one'),
+                  ),
+                  Tab(
+                    text: tr('sells_profile.tab_two'),
+                  ),
+                  Tab(
+                    text: tr('start_day.cart_products'),
+                  ),
+                ],
+                controller: TabController(length: 3, vsync: this),
               ),
-              //-------------------- User Info ------------------------------
-              headerSliverBuilder: (_, x) => [
-                SliverAppBar(
-                  backgroundColor: Colors.transparent,
-                  expandedHeight: 325.250,
-                  flexibleSpace: FlexibleSpaceBar(
-                    collapseMode: CollapseMode.parallax,
-                    background: Consumer<Auth>(
-                      builder: (context, auth, _) => AccountInfo(
-                        name: auth.userName == null ? 'user' : auth.userName,
+            ),
+            Expanded(
+              child: NestedScrollView(
+                body: ScrollConfiguration(
+                  behavior: ScrollBehavior(),
+                  child: PageView(
+                    controller: pageController,
+                    physics: NeverScrollableScrollPhysics(),
+                    children: <Widget>[
+                      Consumer<SellsData>(
+                        builder: (context, data, child) => StoresScreen(
+                          isSells: true,
+                          isDriver: false,
+                          data: data.stores.data,
+                        ),
+                      ),
+                      Target(
+                        isSells: true,
+                      ),
+                      MyCart(),
+                    ],
+                  ),
+                ),
+                //-------------------- User Info ------------------------------
+                headerSliverBuilder: (_, x) => [
+                  SliverAppBar(
+                    backgroundColor: Colors.transparent,
+                    expandedHeight: 325.250,
+                    flexibleSpace: FlexibleSpaceBar(
+                      collapseMode: CollapseMode.parallax,
+                      background: Consumer<Auth>(
+                        builder: (context, auth, _) => AccountInfo(
+                          name: auth.userName == null ? 'user' : auth.userName,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

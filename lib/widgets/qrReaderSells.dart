@@ -8,8 +8,16 @@ import 'package:senior/sells/testStore.dart';
 import 'package:senior/widgets/alertDialog.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../providers/sellsProvider.dart';
+import '../sells/sellsMap.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class QrReaderSells extends StatefulWidget {
+  final LatLng latLng;
+
+  QrReaderSells({
+    this.latLng,
+  });
+
   @override
   _QrReaderSellsState createState() => _QrReaderSellsState();
 }
@@ -18,6 +26,7 @@ class _QrReaderSellsState extends State<QrReaderSells> {
   bool hasError = false;
   Uint8List bytes = Uint8List(0);
   TextEditingController _outputController;
+  double _lat, _long;
 
   Future _scan() async {
     setState(() {
@@ -36,6 +45,8 @@ class _QrReaderSellsState extends State<QrReaderSells> {
         print('BarCodeSells Output : ' + barcode);
         await Provider.of<SellsData>(context, listen: false).scanStore(
           qrData: barcode,
+          lat: _lat,
+          lng: _long,
         );
         Provider.of<SellsData>(context, listen: false).clearAll();
         Navigator.of(context).pushReplacement(
@@ -71,6 +82,8 @@ class _QrReaderSellsState extends State<QrReaderSells> {
   initState() {
     super.initState();
     _scan();
+    _lat = widget.latLng.latitude;
+    _long = widget.latLng.longitude;
     this._outputController = new TextEditingController();
   }
 
