@@ -39,7 +39,7 @@ class AdsAddStore extends StatefulWidget {
 
 class _AdsAddStoreState extends State<AdsAddStore> {
   int competitorLength = 0;
-  File image;
+
   bool _isLoading = false;
   List<File> images = new List<File>();
   GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
@@ -52,9 +52,10 @@ class _AdsAddStoreState extends State<AdsAddStore> {
       position,
       answers;
   double rate;
-  List questionsAnswer = new List();
+  // List questionsAnswer = new List();
   List<Competitors> competitors = new List<Competitors>();
   Map<String, double> competitorsData = {};
+  File image;
 
   Future getImage() async {
     try {
@@ -112,9 +113,17 @@ class _AdsAddStoreState extends State<AdsAddStore> {
             image2: images[1] == null ? 'Nothing' : images[1],
             image3: images[2] == null ? 'Nothing' : images[2],
             image4: images[3] == null ? 'Nothing' : images[3],
-            answers: json.encode({"data": questionsAnswer}) == null
+            answers: json.encode({
+                      "data":
+                          Provider.of<FieldForceData>(context, listen: false)
+                              .questionsAnswer
+                    }) ==
+                    null
                 ? '{"data":[]}'
-                : json.encode({"data": questionsAnswer}),
+                : json.encode({
+                    "data": Provider.of<FieldForceData>(context, listen: false)
+                        .questionsAnswer
+                  }),
             lat: widget.lat.toString() == null
                 ? '31.000'
                 : widget.lat.toString(),
@@ -513,40 +522,38 @@ class _AdsAddStoreState extends State<AdsAddStore> {
                                   physics: NeverScrollableScrollPhysics(),
                                   itemCount: data.trueAndFalse.length,
                                   itemBuilder: (ctx, index) {
-                                    String answer = 'No answer yet';
-
-                                    void onSavedTrue() {
-                                      setState(() {
-                                        answer = 'True';
-                                      });
-                                      questionsAnswer.add(
-                                        Answer(
-                                          questionId:
-                                              data.trueAndFalse[index].id,
-                                          answer: 'True',
-                                        ),
-                                      );
-                                    }
-
-                                    void onSavedFalse() {
-                                      setState(() {
-                                        answer = 'False';
-                                      });
-                                      questionsAnswer.add(
-                                        Answer(
-                                          questionId:
-                                              data.trueAndFalse[index].id,
-                                          answer: 'False',
-                                        ),
-                                      );
-                                    }
-
                                     return TrueAndFalse(
                                       index: index + 1,
+                                      qId: data.trueAndFalse[index].id,
                                       question: data.trueAndFalse[index].name,
-                                      onSavedTrue: onSavedTrue,
-                                      onSavedFalse: onSavedFalse,
-                                      answer: answer,
+                                      options: ['صح', 'خطأ'],
+                                    );
+                                  },
+                                ),
+                              ),
+                              Text(
+                                tr('new_store.optionQ'),
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Consumer<FieldForceData>(
+                                builder: (context, data, child) =>
+                                    ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemCount: data.optionQuestion.length,
+                                  itemBuilder: (ctx, index) {
+                                    return TrueAndFalse(
+                                      index: index + 1,
+                                      question: data.optionQuestion[index].name,
+                                      qId: data.optionQuestion[index].id,
+                                      options:
+                                          data.optionQuestion[index].options,
                                     );
                                   },
                                 ),
@@ -568,21 +575,11 @@ class _AdsAddStoreState extends State<AdsAddStore> {
                                   physics: NeverScrollableScrollPhysics(),
                                   itemCount: data.longAnswerQuestion.length,
                                   itemBuilder: (ctx, index) {
-                                    void onSaved(value) {
-                                      questionsAnswer.add(
-                                        Answer(
-                                          questionId:
-                                              data.longAnswerQuestion[index].id,
-                                          answer: value,
-                                        ),
-                                      );
-                                    }
-
                                     return QuestionHandler(
                                       index: index + 1,
                                       question:
                                           data.longAnswerQuestion[index].name,
-                                      onSaved: onSaved,
+                                      qId: data.longAnswerQuestion[index].id,
                                     );
                                   },
                                 ),

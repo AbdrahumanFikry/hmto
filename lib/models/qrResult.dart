@@ -36,6 +36,7 @@ class StoreInfo {
   String alternateName;
   String alternateNumber;
   String landmark;
+  String creditLimit;
   String lat;
   String long;
   int rate;
@@ -54,6 +55,7 @@ class StoreInfo {
       this.mobile,
       this.alternateName,
       this.alternateNumber,
+      this.creditLimit,
       this.landmark,
       this.lat,
       this.long,
@@ -76,6 +78,7 @@ class StoreInfo {
     landmark = json['landmark'];
     lat = json['lat'];
     long = json['long'];
+    creditLimit = json['credit_limit'].toString();
     rate = json['rate'];
     imageIn = json['image_in'];
     imageOut = json['image_out'];

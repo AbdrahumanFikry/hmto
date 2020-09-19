@@ -1,6 +1,17 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+import '../widgets/alertDialog.dart';
 
 class PaymentMethod extends StatefulWidget {
+  final double amount;
+
+  PaymentMethod({
+    this.amount = 0.0,
+  });
+
   @override
   _PaymentMethodState createState() => _PaymentMethodState();
 }
@@ -17,6 +28,43 @@ class _PaymentMethodState extends State<PaymentMethod> {
     //TODO -------------
   }
 
+  final List<String> methods = [
+    tr('sells_store.cash'),
+    tr('sells_store.anotherMethod'),
+  ];
+
+  File image;
+
+  Future getImageCamera() async {
+    try {
+      File holder = await ImagePicker.pickImage(
+        source: ImageSource.camera,
+        imageQuality: 85,
+        maxWidth: 512,
+        maxHeight: 700,
+      );
+      image = holder;
+      setState(() {});
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future getImageGallery() async {
+    try {
+      File holder = await ImagePicker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 85,
+        maxWidth: 512,
+        maxHeight: 700,
+      );
+      image = holder;
+      setState(() {});
+    } catch (error) {
+      throw error;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -30,15 +78,17 @@ class _PaymentMethodState extends State<PaymentMethod> {
           backgroundColor: Colors.white,
           elevation: 0.5,
         ),
-        body: Column(
+        body: ListView(
+          padding: EdgeInsets.symmetric(horizontal: 20.0),
           children: <Widget>[
             Container(
               height: 60.0,
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
               width: MediaQuery.of(context).size.width,
               child: Row(
                 children: <Widget>[
                   Text(
-                    'لقيمه :',
+                    '${tr('extra.value')} : ',
                     style: TextStyle(fontSize: 20.0),
                   ),
                   Spacer(),
@@ -53,7 +103,7 @@ class _PaymentMethodState extends State<PaymentMethod> {
                     child: Row(
                       children: <Widget>[
                         Text(
-                          '500',
+                          widget.amount.toStringAsFixed(2).toString(),
                           style: TextStyle(
                             fontSize: 20.0,
                           ),
@@ -71,19 +121,114 @@ class _PaymentMethodState extends State<PaymentMethod> {
                 ],
               ),
             ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: 3,
-                itemBuilder: (context, index) {
-                  return PaymentItem(
-                    value: index,
-                    onChange: () => _handleRadioValueChange(index),
-                    radioVal: _radioValue,
-                    title: 'asasa',
-                  );
-                },
-              ),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: methods.length,
+              itemBuilder: (context, index) {
+                return PaymentItem(
+                  value: index,
+                  onChange: (int value) => _handleRadioValueChange(value),
+                  radioVal: _radioValue,
+                  title: methods[index],
+                );
+              },
             ),
+            _radioValue == 1
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        height: 90.0,
+                        width: 90.0,
+                        margin: EdgeInsets.symmetric(
+                          vertical: 5.0,
+                          horizontal: 5.0,
+                        ),
+                        color: Colors.grey[200],
+                        child: Center(
+                          child: IconButton(
+                            icon: Icon(Icons.camera_alt),
+                            onPressed: () async {
+                              await getImageCamera();
+                            },
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 30.0,
+                      ),
+                      Container(
+                        height: 90.0,
+                        width: 90.0,
+                        margin: EdgeInsets.symmetric(
+                          vertical: 5.0,
+                          horizontal: 5.0,
+                        ),
+                        color: Colors.grey[200],
+                        child: Center(
+                          child: IconButton(
+                            icon: Icon(Icons.photo),
+                            onPressed: () async {
+                              await getImageGallery();
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                : SizedBox(),
+            _radioValue != 0 && image != null
+                ? Container(
+                    height: 200.0,
+                    width: 90.0,
+                    margin: EdgeInsets.symmetric(
+                      vertical: 5.0,
+                      horizontal: 50.0,
+                    ),
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: FileImage(image),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        IconButton(
+                          icon: Icon(
+                            Icons.cancel,
+                            size: 18,
+                            color: Colors.red,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              image = null;
+                            });
+                          },
+                        )
+                      ],
+                    ),
+                  )
+                : SizedBox(),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20.0),
+              child: RaisedButton(
+                onPressed: () async {
+                  String type = _radioValue == 0 ? 'cash' : 'not cash';
+                  if (type == 'not cash' && image == null) {
+                    GlobalAlertDialog.showErrorDialog(
+                        'يجب ارفاق صوره ايصال', context);
+                  } else {
+                    Navigator.of(context).pop([type, image]);
+                  }
+                },
+                color: Colors.green,
+                child: Text('اتمام العمليه'),
+                padding: EdgeInsets.symmetric(vertical: 10.0),
+              ),
+            )
           ],
         ),
       ),

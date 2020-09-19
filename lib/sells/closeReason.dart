@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:senior/providers/fieldForceProvider.dart';
 import 'package:senior/sells/sellsNavigator.dart';
+import '../forceField/forceFieldNavigator.dart';
 
 class CloseReason extends StatelessWidget {
+  final int id;
+  final bool isSells;
+
+  CloseReason({
+    this.id,
+    this.isSells = false,
+  });
+
   @override
   Widget build(BuildContext context) {
     String reason = '';
@@ -46,7 +57,10 @@ class CloseReason extends StatelessWidget {
                 ),
                 TextFormField(
                   maxLines: 7,
-                  onChanged: (value) => reason = value,
+                  onChanged: (value) {
+                    reason = value;
+                    print(reason);
+                  },
                   initialValue: null,
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.symmetric(
@@ -62,28 +76,50 @@ class CloseReason extends StatelessWidget {
                 SizedBox(
                   height: 20.0,
                 ),
-                RaisedButton(
-                  color: Colors.green,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 20.0,
-                    vertical: 10.0,
-                  ),
-                  child: Text(
-                    'اغلاق',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20.0,
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(
-                          builder: (_) => SellsNavigator(
-                            isDriver: false,
+                Consumer<FieldForceData>(
+                  builder: (context, provider, _) => provider.isLoading
+                      ? Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : RaisedButton(
+                          color: Colors.green,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 20.0,
+                            vertical: 10.0,
                           ),
+                          child: Text(
+                            'اغلاق',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20.0,
+                            ),
+                          ),
+                          onPressed: () async {
+                            try {
+                              if (reason.length > 0) {
+                                await provider.closeVisit(
+                                  answer: reason,
+                                  id: id,
+                                );
+                                if (isSells) {
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(
+                                        builder: (_) => SellsNavigator(
+                                          isDriver: false,
+                                        ),
+                                      ),
+                                      (route) => false);
+                                } else {
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(
+                                        builder: (_) => ForceFieldNavigator(),
+                                      ),
+                                      (route) => false);
+                                }
+                              }
+                            } catch (e) {}
+                          },
                         ),
-                        (route) => false);
-                  },
                 ),
               ],
             ),

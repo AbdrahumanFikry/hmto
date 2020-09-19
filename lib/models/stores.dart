@@ -59,7 +59,7 @@ class FieldForceStores {
 
   FieldForceStores.fromJson(Map<String, dynamic> json) {
     if (json['storeVisit'] != null) {
-      storeVisit = new List<Null>();
+      storeVisit = new List<StoresData>();
       json['storeVisit'].forEach((v) {
         storeVisit.add(new StoresData.fromJson(v));
       });

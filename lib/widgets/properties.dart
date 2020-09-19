@@ -48,6 +48,7 @@ class _PropertiesState extends State<Properties> {
         MaterialPageRoute(
           builder: (context) => ReturnedCartCart(
             storeId: widget.storeId,
+            name: widget.storeName,
           ),
         ),
       );

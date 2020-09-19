@@ -46,7 +46,9 @@ class _StoresScreenState extends State<StoresScreen> {
                 children: <Widget>[
                   ListTile(
                       subtitle: Text(
-                        widget.data[index].landmark,
+                        widget.data[index].landmark == null
+                            ? ''
+                            : widget.data[index].landmark,
                         overflow: TextOverflow.ellipsis,
                       ),
                       title: Text(widget.data[index].storeName),

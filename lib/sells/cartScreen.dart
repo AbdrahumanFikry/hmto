@@ -40,6 +40,12 @@ class CartScreen extends StatelessWidget {
       double totalAfterTax,
       double sale}) async {
     String sellsName = Provider.of<Auth>(context, listen: false).userName;
+    String limit = Provider.of<SellsData>(context, listen: false)
+            .qrResult
+            .storeInfo
+            .creditLimit ??
+        '0.0';
+    print('limit :::::::::' + limit.toString());
     try {
       isLoading = true;
       if (isCash) {
@@ -48,30 +54,51 @@ class CartScreen extends StatelessWidget {
           total: total,
           sale: sale.toString(),
         );
-      } else if (isDebit) {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => Consumer<SellsData>(
+              builder: (context, data, _) => PrinterScreen(
+                storeName: storeName,
+                bill: data.printedBill,
+                paid: isDebit ? paid : 'noDebit',
+                sellsName: sellsName,
+                sale: sale.toString(),
+                tax: tax.toString(),
+                total: total.toStringAsFixed(2).toString(),
+                totalAfterTax: totalAfterTax.toStringAsFixed(2).toString(),
+                transactionId: data.transactionId,
+              ),
+            ),
+          ),
+        );
+      } else if ((isDebit && (totalAfterTax - sale) < double.tryParse(limit)) ||
+          (isDebit && double.tryParse(limit) == 0.0)) {
         await Provider.of<SellsData>(context, listen: false).payDebit(
             storeId: storeId, total: total, paid: paid, sale: sale.toString());
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => Consumer<SellsData>(
+              builder: (context, data, _) => PrinterScreen(
+                storeName: storeName,
+                bill: data.printedBill,
+                paid: isDebit ? paid : 'noDebit',
+                sellsName: sellsName,
+                sale: sale.toString(),
+                tax: tax.toString(),
+                total: total.toStringAsFixed(2).toString(),
+                totalAfterTax: totalAfterTax.toStringAsFixed(2).toString(),
+                transactionId: data.transactionId,
+              ),
+            ),
+          ),
+        );
+      } else if (isDebit && totalAfterTax >= double.tryParse(limit)) {
+        GlobalAlertDialog.showErrorDialog(
+            ' لا يمكنك اتمام فاتوره بقيمه  اكبر من \n$limit ${tr('senior_profile.egp')}',
+            context);
       } else {
         GlobalAlertDialog.showErrorDialog('Invalid input!', context);
       }
-//      print('Paid : ' + paid);
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => Consumer<SellsData>(
-            builder: (context, data, _) => PrinterScreen(
-              storeName: storeName,
-              bill: data.printedBill,
-              debit: isDebit ? paid : 'noDebit',
-              sellsName: sellsName,
-              sale: sale.toString(),
-              tax: tax.toString(),
-              total: (total - sale).toString(),
-              totalAfterTax: totalAfterTax.toStringAsFixed(2).toString(),
-              transactionId: data.transactionId,
-            ),
-          ),
-        ),
-      );
       isLoading = false;
     } catch (error) {
       GlobalAlertDialog.showErrorDialog(error.toString(), context);
@@ -81,7 +108,7 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String paid = '';
+    String paid = '0.0';
     String tax = '0.0';
     String title = '';
     if (isCash) {
@@ -112,7 +139,7 @@ class CartScreen extends StatelessWidget {
             if (dataSnapShot.hasError) {
               return ErrorHandler(
                 toDO: () {
-                  Provider.of<SellsData>(context, listen: false).clearAll();
+                  Navigator.of(context).pop();
                 },
               );
             } else {
@@ -251,7 +278,10 @@ class CartScreen extends StatelessWidget {
                                       ),
                                     ),
                                     Text(
-                                      data.returnTotal().toString() +
+                                      data
+                                              .returnTotal()
+                                              .toStringAsFixed(2)
+                                              .toString() +
                                           ' ' +
                                           tr('senior_profile.egp'),
                                       style: TextStyle(
@@ -378,17 +408,27 @@ class CartScreen extends StatelessWidget {
                                               BorderRadius.circular(20.0),
                                         ),
                                         child: FlatButton(
-                                          onPressed: () => finishAndPrintBill(
-                                              context: context,
-                                              tax: data
-                                                  .priceTaxesPlan
-                                                  .taxes[data.chosenTaxPlan]
-                                                  .amount,
-                                              paid: paid,
-                                              total: data.returnTotal(),
-                                              sale: double.tryParse(sale),
-                                              totalAfterTax:
-                                                  data.priceAfterTax),
+                                          onPressed: () {
+                                            if (isDebit &&
+                                                double.tryParse(paid) == 0.0) {
+                                              GlobalAlertDialog.showErrorDialog(
+                                                  'ادخل مبلغ', context);
+                                            } else {
+                                              finishAndPrintBill(
+                                                context: context,
+                                                tax: data
+                                                    .priceTaxesPlan
+                                                    .taxes[data.chosenTaxPlan]
+                                                    .amount,
+                                                paid: paid,
+                                                total: data.returnTotal(),
+                                                sale: double.tryParse(sale),
+                                                totalAfterTax:
+                                                    (data.priceAfterTax -
+                                                        double.tryParse(sale)),
+                                              );
+                                            }
+                                          },
                                           child: Text(
                                             tr('sells_store.print'),
                                             style: TextStyle(

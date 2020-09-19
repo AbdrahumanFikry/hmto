@@ -27,7 +27,8 @@
     "competitor_name": "Competitor name",
     "percent": "percent",
     "t_f_questions": "True False questions",
-    "long_answer_questions": "Long answer questions"
+    "long_answer_questions": "Long answer questions",
+    "optionQ": "Option questions"
   },
   "sells_store": {
     "cash": "Cash",
@@ -43,7 +44,8 @@
     "done": "Done",
     "total": "Total",
     "price": "Price",
-    "print": "Print"
+    "print": "Print",
+    "anotherMethod": "Another payment method"
   },
   "field_force_profile": {
     "tab_one": "My info",
@@ -123,7 +125,8 @@
     "tax": "Tax group",
     "price": "Price group",
     "apply": "Apply",
-    "success": "Operation succeeded"
+    "success": "Operation succeeded",
+    "value": "value"
   },
   "errors": {
     "notFound": "product not found in the car!",

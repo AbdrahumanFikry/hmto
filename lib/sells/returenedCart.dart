@@ -6,12 +6,16 @@ import 'package:senior/widgets/alertDialog.dart';
 import 'package:senior/widgets/productBarCodeReader.dart';
 import 'package:senior/widgets/returnsdCartItem.dart';
 import 'package:easy_localization/easy_localization.dart';
+import '../printers/ScreenPrinter.dart';
+import '../providers/authenticationProvider.dart';
 
 class ReturnedCartCart extends StatelessWidget {
   final int storeId;
+  final String name;
 
   ReturnedCartCart({
     this.storeId,
+    this.name = '',
   });
 
   bool isLoading = false;
@@ -25,7 +29,18 @@ class ReturnedCartCart extends StatelessWidget {
       isLoading = true;
       await Provider.of<SellsData>(context, listen: false)
           .returnProducts(storeId: storeId, total: total);
-      GlobalAlertDialog.showErrorDialog(tr('extra.success'), context);
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => PrinterScreen(
+            isReturned: true,
+            sellsName: Provider.of<Auth>(context, listen: false).userName,
+            returnedBill:
+                Provider.of<SellsData>(context, listen: false).returnedBill,
+            storeName: name,
+          ),
+        ),
+      );
+      // GlobalAlertDialog.showErrorDialog(tr('extra.success'), context);
       Provider.of<SellsData>(context, listen: false).returnedBill = [];
       isLoading = false;
     } catch (error) {

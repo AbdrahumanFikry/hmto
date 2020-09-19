@@ -24,6 +24,7 @@ class QrReaderSells extends StatefulWidget {
 
 class _QrReaderSellsState extends State<QrReaderSells> {
   bool hasError = false;
+  String error = tr('extra.error');
   Uint8List bytes = Uint8List(0);
   TextEditingController _outputController;
   double _lat, _long;
@@ -49,6 +50,8 @@ class _QrReaderSellsState extends State<QrReaderSells> {
           lng: _long,
         );
         Provider.of<SellsData>(context, listen: false).clearAll();
+        Provider.of<SellsData>(context, listen: false).lat = _lat;
+        Provider.of<SellsData>(context, listen: false).lan = _long;
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => Consumer<SellsData>(
@@ -71,8 +74,9 @@ class _QrReaderSellsState extends State<QrReaderSells> {
           hasError = false;
         });
       }
-    } catch (error) {
+    } catch (e) {
       setState(() {
+        error = e.toString();
         hasError = true;
       });
     }
@@ -98,7 +102,7 @@ class _QrReaderSellsState extends State<QrReaderSells> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    tr('extra.error'),
+                    error,
                     style: TextStyle(
                       color: Colors.red,
                       fontWeight: FontWeight.bold,

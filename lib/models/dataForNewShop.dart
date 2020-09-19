@@ -52,12 +52,19 @@ class Question {
   int id;
   String name;
   String type;
+  List<dynamic> options;
 
-  Question({this.id, this.name, this.type});
+  Question({
+    this.id,
+    this.name,
+    this.type,
+    this.options,
+  });
 
   Question.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     type = json['type'];
+    options = json['options'] ?? List<dynamic>();
   }
 }

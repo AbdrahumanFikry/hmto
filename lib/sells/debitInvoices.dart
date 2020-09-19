@@ -13,9 +13,11 @@ import 'dart:convert';
 
 class OldInvoicesScreen extends StatefulWidget {
   final int storeId;
+  final String storeName;
 
   OldInvoicesScreen({
     this.storeId,
+    this.storeName = '',
   });
 
   @override
@@ -87,6 +89,7 @@ class _OldInvoicesScreenState extends State<OldInvoicesScreen> {
                           itemBuilder: (ctx, index) {
                             return OldDebitInvoiceCard(
                               storeId: widget.storeId,
+                              storeName: widget.storeName,
                               amountMustBePaid: data
                                   .debitInvoices.data[index].amountMustBePaid,
                               amountPaid:

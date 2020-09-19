@@ -79,6 +79,7 @@ class _SellsStoreState extends State<SellsStore> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.id);
     final oldInvoices = Provider.of<SellsData>(context, listen: false);
 //    Provider.of<SellsData>(context, listen: false).debitInvoices = null;
     var screenSize = MediaQuery.of(context).size;
@@ -210,6 +211,7 @@ class _SellsStoreState extends State<SellsStore> {
                 MaterialPageRoute(
                   builder: (context) => OldInvoicesScreen(
                     storeId: widget.id,
+                    storeName: widget.storeName,
                   ),
                 ),
               );
@@ -328,7 +330,10 @@ class _SellsStoreState extends State<SellsStore> {
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (_) => CloseReason(),
+                      builder: (_) => CloseReason(
+                        id: widget.id,
+                        isSells: true,
+                      ),
                     ),
                   );
                 },

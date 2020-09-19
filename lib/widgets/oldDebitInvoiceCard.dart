@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
+import 'package:senior/printers/ScreenPrinter.dart';
+import 'package:senior/providers/authenticationProvider.dart';
 import 'package:senior/widgets/alertDialog.dart';
 import '../providers/sellsProvider.dart';
 import 'package:easy_localization/easy_localization.dart';
+import '../sells/paymentMethod.dart';
 
 class OldDebitInvoiceCard extends StatefulWidget {
   final int storeId;
+  final String storeName;
   final int transactionId;
   final String finalTotal;
   final String totalBeforeTax;
@@ -22,6 +26,7 @@ class OldDebitInvoiceCard extends StatefulWidget {
     this.amountMustBePaid,
     this.taxAmount,
     this.totalBeforeTax,
+    this.storeName,
   });
 
   @override
@@ -30,16 +35,41 @@ class OldDebitInvoiceCard extends StatefulWidget {
 
 class _OldDebitInvoiceCardState extends State<OldDebitInvoiceCard> {
   bool isLoading = false;
-  String paid;
+  String paid = 'Another Payment';
 
   Future<void> payOldDebit() async {
+    List paymentData = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => PaymentMethod(
+          amount: double.tryParse(paid),
+        ),
+      ),
+    );
+    String sellsName = Provider.of<Auth>(context, listen: false).userName;
     if (double.tryParse(paid) <= widget.amountMustBePaid) {
       try {
         isLoading = true;
         await Provider.of<SellsData>(context, listen: false).payOldDebitInvoice(
-            transactionId: widget.transactionId, amountPaid: paid);
-        await Provider.of<SellsData>(context, listen: false)
-            .fetchDebitInvoices(storeId: widget.storeId);
+          storeId: widget.storeId,
+          transactionId: widget.transactionId,
+          amountPaid: paid,
+          image: paymentData[1],
+          type: paid[0],
+        );
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => PrinterScreen(
+              transactionId: widget.transactionId.toString(),
+              storeName: widget.storeName,
+              sellsName: sellsName,
+              paid: paid,
+              oldTotal: widget.amountPaid,
+              total: widget.finalTotal,
+              isOldDebit: true,
+            ),
+          ),
+        );
+
         isLoading = false;
       } catch (error) {
         GlobalAlertDialog.showErrorDialog(error.toString(), context);

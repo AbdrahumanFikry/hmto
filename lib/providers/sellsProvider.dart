@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -14,14 +14,17 @@ import 'package:senior/models/startDaySalles.dart';
 import 'package:senior/models/stores.dart';
 import 'package:senior/models/target.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:dio/dio.dart';
 
 class SellsData with ChangeNotifier {
+  var dio = Dio();
   String token;
   int userId;
   String userName;
   int businessId;
   String date;
   String locationId;
+  double lat = 31.0000, lan = 31.0000;
   String transactionId;
   int chosenPricePlan = 0;
   int chosenTaxPlan = 0;
@@ -43,6 +46,11 @@ class SellsData with ChangeNotifier {
   List<CarProduct> printedBill = [];
   TargetSells target;
   PriceTaxesPlan priceTaxesPlan;
+  bool isLoading = false;
+  void loading(bool state) {
+    isLoading = state;
+    notifyListeners();
+  }
 
   //-------------------------- Fetch Data --------------------------------------
   Future<bool> fetchUserData() async {
@@ -82,6 +90,7 @@ class SellsData with ChangeNotifier {
     await fetchUserData();
     const url = 'https://api.hmto-eleader.com/api/sellsman/account';
     final prefs = await SharedPreferences.getInstance();
+    loading(true);
     try {
       var body = {
         "user_id": userId.toString(),
@@ -105,12 +114,16 @@ class SellsData with ChangeNotifier {
         );
         prefs.setString('cartItems', userData);
         prefs.setString('locationId', startDayData.locationId.toString());
+        await fetchCarProduct();
         notifyListeners();
+        loading(false);
         return true;
       } else {
+        loading(false);
         throw HttpException(message: responseData['error']);
       }
     } catch (error) {
+      loading(false);
       print('Request Error :' + error.toString());
       throw error;
     }
@@ -119,6 +132,7 @@ class SellsData with ChangeNotifier {
   //------------------------------ Scan store ----------------------------------
   Future<void> scanStore({String qrData, double lat, double lng}) async {
     oldInvoices = null;
+    bill = [];
     await fetchUserData();
     const url = 'https://api.hmto-eleader.com/api/sellsman/scanStore';
     try {
@@ -140,6 +154,9 @@ class SellsData with ChangeNotifier {
       print("Response :" + response.body.toString());
       final Map responseData = json.decode(response.body);
       if (response.statusCode >= 200 && response.statusCode < 300) {
+        if (response.body.contains('401')) {
+          throw HttpException(message: ' هذا المتجر ليس ضمن التارجت المحقق لك');
+        }
         qrResult = QrResult.fromJson(responseData);
         notifyListeners();
         return true;
@@ -309,11 +326,12 @@ class SellsData with ChangeNotifier {
     bill.forEach((item) {
       sum = sum + (item.unitPrice * item.quantity);
     });
-    sum = sum - sale;
+    sum = sum;
 //    print('::::::::::' + priceTaxesPlan.toString());
     if (priceTaxesPlan != null) {
-      priceAfterTax =
+      double temp =
           (sum * priceTaxesPlan.taxes[chosenTaxPlan].amount / 100) + sum;
+      priceAfterTax = temp - sale;
     }
     return sum;
   }
@@ -424,6 +442,8 @@ class SellsData with ChangeNotifier {
             .toString(),
         "tax_id": priceTaxesPlan.taxes[chosenTaxPlan].id.toString(),
         "discount_amount": sale,
+        "lat": lat.toString(),
+        "lan": lan.toString(),
       };
 
       Map<String, String> headers = {
@@ -516,7 +536,9 @@ class SellsData with ChangeNotifier {
       );
       print("Response :" + response.body.toString());
       final Map responseData = json.decode(response.body);
-      if (response.statusCode >= 200 && response.statusCode < 300) {
+      if (response.body.contains('400')) {
+        throw HttpException(message: 'لا يمكنك استرجاع منتجات لهذا المتجر');
+      } else if (response.statusCode >= 200 && response.statusCode < 300) {
         await finishReturnedInvoice();
         notifyListeners();
         return true;
@@ -527,6 +549,12 @@ class SellsData with ChangeNotifier {
       print('Request Error :' + error.toString());
       throw error;
     }
+  }
+
+  String getName({int id}) {
+    loadedItems = [];
+    int index = loadedItems.indexWhere((i) => i.productId == id);
+    return loadedItems[index].productName;
   }
 
   //------------------- Add product to returned invoice ------------------------
@@ -733,6 +761,8 @@ class SellsData with ChangeNotifier {
 
   //------------------------- Fetch debit invoices -----------------------------
   Future<void> fetchDebitInvoices({int storeId}) async {
+    print(storeId);
+    print(token);
     await fetchUserData();
     const url = 'https://api.hmto-eleader.com/api/sellsman/get/debit';
     try {
@@ -763,34 +793,82 @@ class SellsData with ChangeNotifier {
   }
 
   //------------------------- Pay old debit invoice ----------------------------
-  Future<void> payOldDebitInvoice(
-      {int transactionId, String amountPaid}) async {
+  // Future<void> payOldDebitInvoice(
+  //     {int transactionId, String amountPaid}) async {
+  //   await fetchUserData();
+  //   const url = 'https://api.hmto-eleader.com/api/sellsman/paid/debit';
+  //   try {
+  //     var body = {
+  //       "transaction_id": transactionId.toString(),
+  //       "amount_paid": amountPaid,
+  //     };
+  //     Map<String, String> headers = {
+  //       'Authorization': 'Bearer $token',
+  //     };
+  //     final response = await http.post(
+  //       url,
+  //       headers: headers,
+  //       body: body,
+  //     );
+  //     print("Response :" + response.body.toString());
+  //     final responseData = json.decode(response.body);
+  //     if (response.statusCode >= 200 && response.statusCode < 300) {
+  //       notifyListeners();
+  //       return true;
+  //     } else {
+  //       throw HttpException(message: responseData['error']);
+  //     }
+  //   } catch (error) {
+  //     print('Request Error :' + error.toString());
+  //     throw error;
+  //   }
+  // }
+
+  Future<void> payOldDebitInvoice({
+    int storeId,
+    int transactionId,
+    String amountPaid,
+    File image,
+    String type,
+  }) async {
     await fetchUserData();
     const url = 'https://api.hmto-eleader.com/api/sellsman/paid/debit';
     try {
-      var body = {
-        "transaction_id": transactionId.toString(),
-        "amount_paid": amountPaid,
-      };
-      Map<String, String> headers = {
-        'Authorization': 'Bearer $token',
-      };
-      final response = await http.post(
+      var formData = FormData();
+      formData.fields
+        ..add(MapEntry('transaction_id', transactionId.toString()));
+      formData.fields..add(MapEntry('amount_paid', amountPaid));
+      if (image != null)
+        formData.files.add(MapEntry(
+          'img',
+          await MultipartFile.fromFile(image.path,
+              filename: image.path.split("/").last),
+        ));
+      formData.fields..add(MapEntry('type', type));
+      var response = await dio.post(
         url,
-        headers: headers,
-        body: body,
+        data: formData,
+        onSendProgress: (sent, total) {
+          notifyListeners();
+        },
+        options: Options(
+          headers: {
+            // 'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+        ),
       );
-      print("Response :" + response.body.toString());
-      final responseData = json.decode(response.body);
-      if (response.statusCode >= 200 && response.statusCode < 300) {
-        notifyListeners();
-        return true;
-      } else {
-        throw HttpException(message: responseData['error']);
-      }
+      await fetchDebitInvoices(storeId: storeId);
+      print("Response :" + response.toString());
+      notifyListeners();
+      return true;
     } catch (error) {
       print('Request Error :' + error.toString());
-      throw error;
+      if (!error.toString().contains(
+          'DioError [DioErrorType.DEFAULT]: FormatException: Unexpected character (at character 1)')) {
+        throw error;
+      }
+      print('Request Error :' + error.toString());
     }
   }
 
@@ -834,7 +912,7 @@ class SellsData with ChangeNotifier {
   }
 
   //------------------------------- Done plans ---------------------------------
-  void donePlans() async {
+  Future<void> donePlans() async {
     loadedItems = [];
     await fetchCarProduct();
     int priceId = priceTaxesPlan.groupPrice[chosenPricePlan].id;
@@ -865,5 +943,14 @@ class SellsData with ChangeNotifier {
     chosenTaxPlan = 0;
     priceTaxesPlan = null;
     notifyListeners();
+  }
+
+  double totalReturnedBill() {
+    double sum = 0;
+    returnedBill.forEach((item) {
+      sum = sum + (item.quantity);
+    });
+//    print('Total price : ' + sum.toString());
+    return sum;
   }
 }

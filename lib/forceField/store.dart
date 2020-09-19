@@ -16,6 +16,7 @@ import '../models/answers.dart';
 import '../widgets/question.dart';
 import 'dart:convert';
 import '../providers/fieldForceProvider.dart';
+import '../sells/closeReason.dart';
 
 class FieldForceStore extends StatefulWidget {
   final int id;
@@ -31,6 +32,7 @@ class FieldForceStore extends StatefulWidget {
   final List<Competitors> competitors;
   final List<Question> trueAndFalse;
   final List<Question> longAnswerQuestion;
+  final List<Question> optionQuestion;
   final List<Question> products;
 
   FieldForceStore({
@@ -46,6 +48,7 @@ class FieldForceStore extends StatefulWidget {
     this.imageStoreFront = 'NULL',
     this.trueAndFalse,
     this.longAnswerQuestion,
+    this.optionQuestion,
     this.products,
     this.competitors,
   });
@@ -57,8 +60,8 @@ class FieldForceStore extends StatefulWidget {
 class _FieldForceStoreState extends State<FieldForceStore> {
   GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   Map<String, double> competitorsData = {};
-  List questionsAnswer = new List();
-  List productsAnswer = new List();
+  // List questionsAnswer = new List();
+  // List productsAnswer = new List();
   List<PercentChanger> competitorsPercents = [];
   bool _isLoading = false;
 
@@ -73,7 +76,10 @@ class _FieldForceStoreState extends State<FieldForceStore> {
       try {
         await Provider.of<FieldForceData>(context, listen: false).addNewVisit(
           id: widget.id,
-          answers: json.encode({"data": questionsAnswer}),
+          answers: json.encode({
+            "data": Provider.of<FieldForceData>(context, listen: false)
+                .questionsAnswer
+          }),
         );
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
@@ -359,38 +365,11 @@ class _FieldForceStoreState extends State<FieldForceStore> {
                                   physics: NeverScrollableScrollPhysics(),
                                   itemCount: widget.products.length,
                                   itemBuilder: (context, index) {
-                                    String answer = 'No answer yet';
-
-                                    void onSavedTrue() {
-                                      setState(() {
-                                        answer = 'True';
-                                      });
-                                      productsAnswer.add(
-                                        Answer(
-                                          questionId: widget.products[index].id,
-                                          answer: 'True',
-                                        ),
-                                      );
-                                    }
-
-                                    void onSavedFalse() {
-                                      setState(() {
-                                        answer = 'False';
-                                      });
-                                      productsAnswer.add(
-                                        Answer(
-                                          questionId: widget.products[index].id,
-                                          answer: 'False',
-                                        ),
-                                      );
-                                    }
-
                                     return TrueAndFalse(
                                       index: index + 1,
                                       question: widget.products[index].name,
-                                      onSavedTrue: onSavedTrue,
-                                      onSavedFalse: onSavedFalse,
-                                      answer: answer,
+                                      qId: widget.products[index].id,
+                                      options: ['صح', 'خطأ'],
                                     );
                                   }),
                             ],
@@ -421,40 +400,11 @@ class _FieldForceStoreState extends State<FieldForceStore> {
                                   physics: NeverScrollableScrollPhysics(),
                                   itemCount: widget.trueAndFalse.length,
                                   itemBuilder: (context, index) {
-                                    String answer = 'No answer yet';
-
-                                    void onSavedTrue() {
-                                      setState(() {
-                                        answer = 'True';
-                                      });
-                                      questionsAnswer.add(
-                                        Answer(
-                                          questionId:
-                                              widget.trueAndFalse[index].id,
-                                          answer: 'True',
-                                        ),
-                                      );
-                                    }
-
-                                    void onSavedFalse() {
-                                      setState(() {
-                                        answer = 'False';
-                                      });
-                                      questionsAnswer.add(
-                                        Answer(
-                                          questionId:
-                                              widget.trueAndFalse[index].id,
-                                          answer: 'False',
-                                        ),
-                                      );
-                                    }
-
                                     return TrueAndFalse(
                                       index: index + 1,
                                       question: widget.trueAndFalse[index].name,
-                                      onSavedTrue: onSavedTrue,
-                                      onSavedFalse: onSavedFalse,
-                                      answer: answer,
+                                      qId: widget.trueAndFalse[index].id,
+                                      options: ['صح', 'خطأ'],
                                     );
                                   }),
                             ],
@@ -486,21 +436,11 @@ class _FieldForceStoreState extends State<FieldForceStore> {
                                 physics: NeverScrollableScrollPhysics(),
                                 itemCount: widget.longAnswerQuestion.length,
                                 itemBuilder: (ctx, index) {
-                                  void onSaved(value) {
-                                    questionsAnswer.add(
-                                      Answer(
-                                        questionId:
-                                            widget.longAnswerQuestion[index].id,
-                                        answer: value,
-                                      ),
-                                    );
-                                  }
-
                                   return QuestionHandler(
                                     index: index + 1,
                                     question:
                                         widget.longAnswerQuestion[index].name,
-                                    onSaved: onSaved,
+                                    qId: widget.longAnswerQuestion[index].id,
                                   );
                                 },
                               ),
@@ -509,26 +449,60 @@ class _FieldForceStoreState extends State<FieldForceStore> {
                         ),
                       ),
                       Divider(),
-                      Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Container(
-                          height: 60.0,
-                          decoration: BoxDecoration(
-                            color: Colors.green,
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                          child: FlatButton(
-                            onPressed: finish,
-                            child: Text(
-                              tr('store.submit'),
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20.0,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Container(
+                              height: 60.0,
+                              decoration: BoxDecoration(
+                                color: Colors.green,
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              child: FlatButton(
+                                onPressed: finish,
+                                child: Text(
+                                  tr('store.submit'),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20.0,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      )
+                          Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Container(
+                              height: 60.0,
+                              decoration: BoxDecoration(
+                                color: Colors.green,
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              child: FlatButton(
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (_) => CloseReason(
+                                        id: widget.id,
+                                        isSells: false,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Text(
+                                  'اغلاق',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20.0,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),

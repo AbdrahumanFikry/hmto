@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:senior/models/answers.dart';
 import 'package:senior/models/competitorPercent.dart';
 import 'package:senior/models/qrResult.dart';
 import 'package:senior/models/stores.dart';
@@ -17,18 +18,39 @@ class FieldForceData with ChangeNotifier {
   String userName;
   int businessId;
   String progress = '0';
+  bool isLoading = false;
+
+  void loading({bool state}) {
+    isLoading = state;
+    notifyListeners();
+  }
+
   double maxValue = 100.0;
   var dio = Dio();
   DataForNewShop dataForNewShop;
   QrResult qrResult;
   List<Question> trueAndFalse;
   List<Question> longAnswerQuestion;
+  List<Question> optionQuestion;
   List<Competitors> competitors = [];
   List<Question> products;
   List<CompetitorPercents> competitorsPercents = [];
   FieldForceStores fieldForceStores;
   List<StoresData> stores;
   TargetForceField target;
+  List<Answer> questionsAnswer = new List<Answer>();
+
+  //------------------------------  Add Answer ---------------------------------
+  void addAnswer(Answer answer) {
+    int index =
+        questionsAnswer.indexWhere((i) => i.questionId == answer.questionId);
+    if (index != -1) {
+      questionsAnswer[index].answer = answer.answer;
+    } else {
+      questionsAnswer.add(answer);
+    }
+    notifyListeners();
+  }
 
   //--------------------------- Fetch questions --------------------------------
   Future<void> fetchQuestions() async {
@@ -58,7 +80,10 @@ class FieldForceData with ChangeNotifier {
             .where((i) => i.type == 'falseOrTrue')
             .toList();
         longAnswerQuestion = dataForNewShop.data.question
-            .where((i) => i.type != 'product' && i.type != 'falseOrTrue')
+            .where((i) => i.type == 'typing')
+            .toList();
+        optionQuestion = dataForNewShop.data.question
+            .where((i) => i.type == 'options')
             .toList();
         notifyListeners();
         return true;
@@ -161,6 +186,7 @@ class FieldForceData with ChangeNotifier {
       print("Response :" + response.toString());
       notifyListeners();
       competitorsPercents = [];
+      questionsAnswer = [];
       maxValue = 100;
       dataForNewShop = null;
       stores = null;
@@ -226,10 +252,14 @@ class FieldForceData with ChangeNotifier {
           );
         });
         competitorsPercents = loadedItems;
-        trueAndFalse =
-            qrResult.question.where((i) => i.type == 'falseOrTrue').toList();
-        longAnswerQuestion = qrResult.question
-            .where((i) => i.type != 'product' && i.type != 'falseOrTrue')
+        trueAndFalse = dataForNewShop.data.question
+            .where((i) => i.type == 'falseOrTrue')
+            .toList();
+        longAnswerQuestion = dataForNewShop.data.question
+            .where((i) => i.type == 'typing')
+            .toList();
+        optionQuestion = dataForNewShop.data.question
+            .where((i) => i.type == 'options')
             .toList();
         products = qrResult.question.where((i) => i.type == 'product').toList();
         notifyListeners();
@@ -326,6 +356,7 @@ class FieldForceData with ChangeNotifier {
       final Map responseData = json.decode(response.body);
       if (response.statusCode >= 200 && response.statusCode < 300) {
         stores = null;
+        questionsAnswer = [];
         notifyListeners();
         return true;
       } else {
@@ -355,6 +386,45 @@ class FieldForceData with ChangeNotifier {
         throw HttpException(message: responseData['error']);
       }
     } catch (error) {
+      print('Request Error :' + error.toString());
+      throw error;
+    }
+  }
+
+  //---------------------------- Fetch Target ----------------------------------
+  Future<void> closeVisit({String answer, int id}) async {
+    await fetchUserData();
+    loading(state: true);
+    final url = 'https://api.hmto-eleader.com/api/shop/close';
+    try {
+      var body = {
+        "contact_id": id.toString(),
+        "business_id": "$businessId",
+        "answer": answer,
+      };
+
+      Map<String, String> headers = {
+        'Authorization': 'Bearer $token',
+      };
+      final response = await http.post(
+        url,
+        headers: headers,
+        body: body,
+      );
+      print("Response :" + response.body.toString());
+      final Map responseData = json.decode(response.body);
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        loading(state: false);
+
+        return true;
+      } else {
+        loading(state: false);
+
+        throw HttpException(message: responseData['error']);
+      }
+    } catch (error) {
+      loading(state: false);
+
       print('Request Error :' + error.toString());
       throw error;
     }

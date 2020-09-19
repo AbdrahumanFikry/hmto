@@ -93,8 +93,8 @@ class PriceAndTaxesPlans extends StatelessWidget {
               borderRadius: BorderRadius.circular(20.0),
             ),
             child: FlatButton(
-              onPressed: () {
-                data.donePlans();
+              onPressed: () async {
+                await data.donePlans();
               },
               child: Text(
                 tr('extra.apply'),

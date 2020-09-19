@@ -48,7 +48,6 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
         .placemarkFromCoordinates(pos.latitude, pos.longitude);
     if (placeMarks != null && placeMarks.isNotEmpty) {
       final Placemark pos = placeMarks[0];
-//      print(':::::::::::::' + pos.thoroughfare + ', ' + pos.locality);
       address = pos.thoroughfare + ', ' + pos.locality;
       return address;
     }

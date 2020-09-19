@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:provider/provider.dart';
+import 'package:senior/models/answers.dart';
+import 'package:senior/providers/fieldForceProvider.dart';
 
 class QuestionHandler extends StatelessWidget {
   final int index;
+  final int qId;
   final String question;
-  final FormFieldSetter<String> onSaved;
 
   QuestionHandler({
     this.index,
+    this.qId,
     this.question,
-    this.onSaved,
   });
 
   @override
@@ -25,7 +28,14 @@ class QuestionHandler extends StatelessWidget {
           ),
         ),
         TextFormField(
-          onSaved: onSaved,
+          onSaved: (String value) {
+            Provider.of<FieldForceData>(context, listen: false).addAnswer(
+              Answer(
+                questionId: qId,
+                answer: value,
+              ),
+            );
+          },
           decoration: InputDecoration(
             hintText: tr('extra.answer'),
           ),

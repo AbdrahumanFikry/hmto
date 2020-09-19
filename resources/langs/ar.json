@@ -27,7 +27,8 @@
     "competitor_name": "اسم المنافس",
     "percent": "النسبه",
     "t_f_questions": "أسأله صح وخطأ",
-    "long_answer_questions": "أسأله مقاليه"
+    "long_answer_questions": "أسأله مقاليه",
+    "optionQ": "أسأله اختيارى"
   },
   "sells_store": {
     "cash": "كاش",
@@ -43,7 +44,9 @@
     "done": "تم",
     "total": "الاجمالى",
     "price": "السعر",
-    "print": "طباعه"
+    "print": "طباعه",
+    "anotherMethod": "طريقه دفع اخرى"
+
   },
   "field_force_profile": {
     "tab_one": "بياناتى",
@@ -123,7 +126,8 @@
     "tax": "مجموعه الضرايب",
     "price": "مجموعه الاسعار",
     "apply": "تطبيق",
-    "success": "تمت العمليه بنجاح"
+    "success": "تمت العمليه بنجاح",
+    "value": "القيمه"
   },
   "errors": {
     "notFound": "هذا المنتج ليس لديك فى العربه!",

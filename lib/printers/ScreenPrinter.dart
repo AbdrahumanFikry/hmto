@@ -7,28 +7,41 @@ import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/services.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../models/startDaySalles.dart';
+import 'package:senior/models/reternedProduct.dart';
 
 class PrinterScreen extends StatefulWidget {
+  final bool isOldDebit;
+  final bool isCart;
+  final bool isReturned;
   final String storeName;
   final String sellsName;
-  final String debit;
+  final String sellsId;
+  final String paid;
   final String sale;
   final String tax;
   final String total;
+  final String oldTotal;
   final String totalAfterTax;
   final String transactionId;
   final List<CarProduct> bill;
+  final List<ReturnedProduct> returnedBill;
 
   PrinterScreen({
-    this.storeName,
-    this.transactionId,
-    this.sellsName,
-    this.debit = 'noDebit',
+    this.storeName = '',
+    this.sellsId = '',
+    this.transactionId = 'id',
+    this.sellsName = '',
+    this.isOldDebit = false,
+    this.isReturned = false,
+    this.paid = 'noDebit',
     this.bill,
+    this.oldTotal = '0.0',
+    this.isCart = false,
     this.sale = '0.0',
     this.total = '0.0',
     this.tax = '0.0',
     this.totalAfterTax = '0.0',
+    this.returnedBill,
   });
 
   @override
@@ -177,17 +190,45 @@ class _PrinterScreenState extends State<PrinterScreen> {
                 child: RaisedButton(
                   color: Colors.brown,
                   onPressed: () {
-                    testPrint.sample(
-                      sellsName: widget.sellsName,
-                      debit: widget.debit,
-                      storeName: widget.storeName,
-                      bill: widget.bill,
-                      tax: widget.tax,
-                      totalAfterTax: widget.totalAfterTax,
-                      sale: widget.sale,
-                      total: widget.total,
-                      transactionId: widget.transactionId,
-                    );
+                    if (widget.isOldDebit) {
+                      testPrint.sample2(
+                        sellsName: widget.sellsName,
+                        storeName: widget.storeName,
+                        paid: widget.paid,
+                        rest: (double.tryParse(widget.total) -
+                                double.tryParse(widget.paid) -
+                                double.tryParse(widget.oldTotal))
+                            .toStringAsFixed(2)
+                            .toString(),
+                        oldTotal: widget.oldTotal,
+                        total: widget.total,
+                        transactionId: widget.transactionId,
+                      );
+                    } else if (widget.isCart) {
+                      testPrint.cartSample(
+                        cart: widget.bill,
+                        sellsName: widget.sellsName,
+                      );
+                    } else if (widget.isReturned) {
+                      testPrint.returnSample(
+                        sellsName: widget.sellsName,
+                        bill: widget.returnedBill,
+                        storeName: widget.storeName,
+                        context: context,
+                      );
+                    } else {
+                      testPrint.sample(
+                        sellsName: widget.sellsName,
+                        debit: widget.paid,
+                        storeName: widget.storeName,
+                        bill: widget.bill,
+                        tax: widget.tax,
+                        totalAfterTax: widget.totalAfterTax,
+                        sale: widget.sale,
+                        total: widget.total,
+                        transactionId: widget.transactionId,
+                      );
+                    }
                   },
                   child: Text(tr('sells_store.print'),
                       style: TextStyle(color: Colors.white)),
