@@ -1,11 +1,12 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior/providers/sellsProvider.dart';
 import 'package:senior/sells/returenedCart.dart';
 import 'package:senior/widgets/alertDialog.dart';
 import 'package:senior/widgets/productBarCodeReader.dart';
+
 import '../sells/cartScreen.dart';
-import 'package:easy_localization/easy_localization.dart';
 
 class Properties extends StatefulWidget {
   final int storeId;
@@ -62,7 +63,7 @@ class _PropertiesState extends State<Properties> {
       try {
         if (!widget.isReturned) {
           await Provider.of<SellsData>(context, listen: false)
-              .addItemToBill(serialNumber: number);
+              .addItemToBill(serialNumber: number, context: context);
           Navigator.of(context).pop();
 
           GlobalAlertDialog.showQuantityDialog(

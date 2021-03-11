@@ -42,6 +42,7 @@ class CarProduct {
   int quantity;
   double priceForEach;
   List<GroupPriceStartDay> groupPrice;
+  List<Units> units;
 
   CarProduct(
       {this.productId,
@@ -49,7 +50,8 @@ class CarProduct {
       this.serialNumber,
       this.quantity,
       this.priceForEach,
-      this.groupPrice});
+      this.groupPrice,
+      this.units});
 
   CarProduct.fromJson(Map<String, dynamic> json) {
     productId = json['product_id'];
@@ -61,6 +63,12 @@ class CarProduct {
       groupPrice = new List<GroupPriceStartDay>();
       json['group_price'].forEach((v) {
         groupPrice.add(new GroupPriceStartDay.fromJson(v));
+      });
+    }
+    if (json['units'] != null) {
+      units = new List<Units>();
+      json['units'].forEach((v) {
+        units.add(new Units.fromJson(v));
       });
     }
   }
@@ -75,6 +83,37 @@ class CarProduct {
     if (this.groupPrice != null) {
       data['group_price'] = this.groupPrice.map((v) => v.toJson()).toList();
     }
+    if (this.units != null) {
+      data['units'] = this.units.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class Units {
+  int id;
+  String actualName;
+  String shortName;
+  String sku;
+  int unitCount;
+
+  Units({this.id, this.actualName, this.shortName, this.sku, this.unitCount});
+
+  Units.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    actualName = json['actual_name'];
+    shortName = json['short_name'];
+    sku = json['sku'];
+    unitCount = json['unit_count'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['actual_name'] = this.actualName;
+    data['short_name'] = this.shortName;
+    data['sku'] = this.sku;
+    data['unit_count'] = this.unitCount;
     return data;
   }
 }

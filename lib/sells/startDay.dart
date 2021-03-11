@@ -1,13 +1,14 @@
+import 'dart:convert';
+
+import 'package:easy_localization/easy_localization.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior/providers/sellsProvider.dart';
 import 'package:senior/sells/sellsNavigator.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:senior/widgets/alertDialog.dart';
 import 'package:senior/widgets/errorWidget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 
 class StartDay extends StatefulWidget {
   @override
@@ -28,7 +29,10 @@ class _StartDayState extends State<StartDay> {
         ),
       );
     } else {
-      GlobalAlertDialog.showErrorDialog(tr('extra.noStartDay'), context);
+      GlobalAlertDialog.showErrorDialog(
+        tr('extra.noStartDay'),
+        context,
+      );
       setState(() {
         Provider.of<SellsData>(context, listen: false).startDayData = null;
       });
@@ -58,10 +62,12 @@ class _StartDayState extends State<StartDay> {
             if (dataSnapShot.hasError) {
               return ErrorHandler(
                 toDO: () {
-                  setState(() {
-                    Provider.of<SellsData>(context, listen: false)
-                        .startDayData = null;
-                  });
+                  setState(
+                    () {
+                      Provider.of<SellsData>(context, listen: false)
+                          .startDayData = null;
+                    },
+                  );
                 },
               );
             }

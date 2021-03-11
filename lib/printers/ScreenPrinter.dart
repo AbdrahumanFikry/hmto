@@ -1,13 +1,19 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
-import '../printers/invoiceBody.dart';
-import 'package:flutter/material.dart';
-import 'dart:async';
+
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
-import 'package:flutter/services.dart';
 import 'package:easy_localization/easy_localization.dart';
-import '../models/startDaySalles.dart';
+import 'package:esc_pos_bluetooth/esc_pos_bluetooth.dart' as other;
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bluetooth_basic/flutter_bluetooth_basic.dart' as basic;
+import 'package:provider/provider.dart';
 import 'package:senior/models/reternedProduct.dart';
+import 'package:senior/providers/sellsProvider.dart';
+
+import '../models/startDaySalles.dart';
+import '../printers/invoiceBody.dart';
 
 class PrinterScreen extends StatefulWidget {
   final bool isOldDebit;
@@ -50,6 +56,8 @@ class PrinterScreen extends StatefulWidget {
 
 class _PrinterScreenState extends State<PrinterScreen> {
   BlueThermalPrinter bluetooth = BlueThermalPrinter.instance;
+  other.PrinterBluetoothManager printerManager =
+      other.PrinterBluetoothManager();
 
   List<BluetoothDevice> _devices = [];
   BluetoothDevice _device;
@@ -118,6 +126,11 @@ class _PrinterScreenState extends State<PrinterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String storeCode =
+        Provider.of<SellsData>(context, listen: false)?.storeCode ??
+            'code unAvailable';
+    print("::::::::::::::" + widget.sale.toString());
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -189,9 +202,10 @@ class _PrinterScreenState extends State<PrinterScreen> {
                     const EdgeInsets.only(left: 10.0, right: 10.0, top: 50),
                 child: RaisedButton(
                   color: Colors.brown,
-                  onPressed: () {
+                  onPressed: () async {
                     if (widget.isOldDebit) {
                       testPrint.sample2(
+                        storeCode: storeCode,
                         sellsName: widget.sellsName,
                         storeName: widget.storeName,
                         paid: widget.paid,
@@ -210,7 +224,11 @@ class _PrinterScreenState extends State<PrinterScreen> {
                         sellsName: widget.sellsName,
                       );
                     } else if (widget.isReturned) {
+                      print("::::::::::::::" +
+                          widget.returnedBill.length.toString());
+
                       testPrint.returnSample(
+                        storeCode: storeCode,
                         sellsName: widget.sellsName,
                         bill: widget.returnedBill,
                         storeName: widget.storeName,
@@ -218,6 +236,7 @@ class _PrinterScreenState extends State<PrinterScreen> {
                       );
                     } else {
                       testPrint.sample(
+                        storeCode: storeCode,
                         sellsName: widget.sellsName,
                         debit: widget.paid,
                         storeName: widget.storeName,
@@ -267,6 +286,12 @@ class _PrinterScreenState extends State<PrinterScreen> {
           bluetooth.connect(_device).catchError((error) {
             setState(() => _connected = false);
           });
+          basic.BluetoothDevice otherDevice = basic.BluetoothDevice()
+            ..name = _device.name
+            ..type = _device.type
+            ..address = _device.address
+            ..connected = _device.connected;
+          printerManager.selectPrinter(other.PrinterBluetooth(otherDevice));
           setState(() => _connected = true);
         }
       });

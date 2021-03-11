@@ -1,22 +1,26 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:provider/provider.dart';
 import 'package:senior/forceField/forceFieldNavigator.dart';
 import 'package:senior/widgets/alertDialog.dart';
-import '../widgets/trueAndFalse.dart';
-import '../widgets/persent.dart';
-import 'package:easy_localization/easy_localization.dart';
+
 import '../models/dataForNewShop.dart';
-import '../models/answers.dart';
-import '../widgets/question.dart';
-import 'dart:convert';
 import '../providers/fieldForceProvider.dart';
 import '../sells/closeReason.dart';
+import '../widgets/persent.dart';
+import '../widgets/question.dart';
+import '../widgets/trueAndFalse.dart';
 
 class FieldForceStore extends StatefulWidget {
   final int id;
@@ -60,13 +64,64 @@ class FieldForceStore extends StatefulWidget {
 class _FieldForceStoreState extends State<FieldForceStore> {
   GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   Map<String, double> competitorsData = {};
+
   // List questionsAnswer = new List();
   // List productsAnswer = new List();
   List<PercentChanger> competitorsPercents = [];
   bool _isLoading = false;
 
+  List<File> images = new List<File>();
+  File image;
+  var currentLocation = Position();
+  bool searching = false;
+
+  Future<Position> _getLocation() async {
+    try {
+      setState(() {
+        searching = true;
+      });
+      LocationPermission permission = await checkPermission();
+      if (permission == LocationPermission.denied) {
+        await requestPermission();
+      }
+      final geo = GeolocatorPlatform.instance;
+      Position position = await geo.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+      print(
+        'UserLocation => \nlat : ' +
+            position.latitude.toString() +
+            '\nlong : ' +
+            position.longitude.toString(),
+      );
+      setState(() {
+        searching = false;
+      });
+      return position;
+    } catch (e) {
+      setState(() {
+        searching = false;
+      });
+      print('Geolocator Error : ' + e.toString());
+      return Position();
+    }
+  }
+
+  Future getImage() async {
+    try {
+      File holder = await ImagePicker.pickImage(
+        source: ImageSource.camera,
+        imageQuality: 85,
+        maxWidth: 700,
+        maxHeight: 512,
+      );
+      image = holder;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   Future<void> finish() async {
-//    FocusScope.of(context).requestFocus(new FocusNode());
     final formData = _formKey.currentState;
     if (formData.validate()) {
       formData.save();
@@ -74,21 +129,32 @@ class _FieldForceStoreState extends State<FieldForceStore> {
         _isLoading = true;
       });
       try {
-        await Provider.of<FieldForceData>(context, listen: false).addNewVisit(
-          id: widget.id,
-          answers: json.encode({
-            "data": Provider.of<FieldForceData>(context, listen: false)
-                .questionsAnswer
-          }),
-        );
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(
-              builder: (context) => ForceFieldNavigator(),
-            ),
-            (Route<dynamic> route) => false);
-        setState(() {
-          _isLoading = false;
-        });
+        if (images.length == 4) {
+          currentLocation = await _getLocation();
+          await Provider.of<FieldForceData>(context, listen: false).addNewVisit(
+            id: widget.id,
+            answers: json.encode({
+              "data": Provider.of<FieldForceData>(context, listen: false)
+                  .questionsAnswer
+            }),
+            image1: images[0] == null ? 'Nothing' : images[0],
+            image2: images[1] == null ? 'Nothing' : images[1],
+            image3: images[2] == null ? 'Nothing' : images[2],
+            image4: images[3] == null ? 'Nothing' : images[3],
+            lat: currentLocation.latitude,
+            lang: currentLocation.longitude,
+          );
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => ForceFieldNavigator(),
+              ),
+              (Route<dynamic> route) => false);
+          setState(() {
+            _isLoading = false;
+          });
+        } else {
+          GlobalAlertDialog.showErrorDialog(tr('errors.lessData'), context);
+        }
       } catch (error) {
         GlobalAlertDialog.showErrorDialog(error.toString(), context);
         setState(() {
@@ -101,7 +167,7 @@ class _FieldForceStoreState extends State<FieldForceStore> {
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
-    List<String> images = [
+    List<String> constImages = [
       widget.imageIn,
       widget.imageOut,
       widget.imageStoreAds,
@@ -136,7 +202,7 @@ class _FieldForceStoreState extends State<FieldForceStore> {
                       CarouselSlider(
                         scrollPhysics: BouncingScrollPhysics(),
                         height: 384 * screenSize.aspectRatio,
-                        items: images.map((url) {
+                        items: constImages.map((url) {
                           return Padding(
                             padding:
                                 EdgeInsets.all(13 * screenSize.aspectRatio),
@@ -184,6 +250,94 @@ class _FieldForceStoreState extends State<FieldForceStore> {
                             ],
                           ),
                         ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: <Widget>[
+                            images.length >= 4
+                                ? SizedBox(
+                                    width: 1.0,
+                                  )
+                                : Container(
+                                    height: 90.0,
+                                    width: 90.0,
+                                    margin: EdgeInsets.symmetric(
+                                      vertical: 5.0,
+                                      horizontal: 5.0,
+                                    ),
+                                    color: Colors.grey[200],
+                                    child: Center(
+                                      child: IconButton(
+                                        icon: Icon(Icons.camera_alt),
+                                        onPressed: () async {
+                                          await getImage();
+                                          setState(() {
+                                            if (image != null) {
+                                              images.add(image);
+                                            }
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                            images == null
+                                ? SizedBox()
+                                : Container(
+                                    height: 100,
+                                    width: images.length >= 4
+                                        ? MediaQuery.of(context).size.width - 35
+                                        : MediaQuery.of(context).size.width -
+                                            130,
+                                    child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: images.length,
+                                      itemBuilder: (ctx, index) {
+                                        return Container(
+                                          height: 90.0,
+                                          width: 90.0,
+                                          margin: EdgeInsets.symmetric(
+                                            vertical: 5.0,
+                                            horizontal: 5.0,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                              image: FileImage(
+                                                images[index],
+                                              ),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: <Widget>[
+                                              IconButton(
+                                                icon: Icon(
+                                                  Icons.cancel,
+                                                  size: 18,
+                                                  color: Colors.black,
+                                                ),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    images
+                                                        .remove(images[index]);
+                                                  });
+                                                },
+                                              )
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
                       ),
                       Center(
                         child: Row(
@@ -363,13 +517,50 @@ class _FieldForceStoreState extends State<FieldForceStore> {
                               ListView.builder(
                                   shrinkWrap: true,
                                   physics: NeverScrollableScrollPhysics(),
-                                  itemCount: widget.products.length,
+                                  itemCount: widget.products?.length ?? 0,
                                   itemBuilder: (context, index) {
                                     return TrueAndFalse(
                                       index: index + 1,
                                       question: widget.products[index].name,
                                       qId: widget.products[index].id,
                                       options: ['صح', 'خطأ'],
+                                    );
+                                  }),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Divider(),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20 * screenSize.aspectRatio,
+                          vertical: 16 * screenSize.aspectRatio,
+                        ),
+                        child: ExpandablePanel(
+                          theme: ExpandableThemeData(
+                            animationDuration: Duration(milliseconds: 200),
+                          ),
+                          header: Text(
+                            tr('new_store.optionQ'),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 33 * screenSize.aspectRatio,
+                            ),
+                          ),
+                          expanded: Column(
+                            children: <Widget>[
+                              ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemCount: widget.optionQuestion?.length ?? 0,
+                                  itemBuilder: (context, index) {
+                                    return TrueAndFalse(
+                                      index: index + 1,
+                                      question:
+                                          widget.optionQuestion[index].name,
+                                      qId: widget.optionQuestion[index].id,
+                                      options:
+                                          widget.optionQuestion[index].options,
                                     );
                                   }),
                             ],
@@ -398,7 +589,7 @@ class _FieldForceStoreState extends State<FieldForceStore> {
                               ListView.builder(
                                   shrinkWrap: true,
                                   physics: NeverScrollableScrollPhysics(),
-                                  itemCount: widget.trueAndFalse.length,
+                                  itemCount: widget.trueAndFalse?.length ?? 0,
                                   itemBuilder: (context, index) {
                                     return TrueAndFalse(
                                       index: index + 1,
@@ -434,7 +625,8 @@ class _FieldForceStoreState extends State<FieldForceStore> {
                               ListView.builder(
                                 shrinkWrap: true,
                                 physics: NeverScrollableScrollPhysics(),
-                                itemCount: widget.longAnswerQuestion.length,
+                                itemCount:
+                                    widget.longAnswerQuestion?.length ?? 0,
                                 itemBuilder: (ctx, index) {
                                   return QuestionHandler(
                                     index: index + 1,

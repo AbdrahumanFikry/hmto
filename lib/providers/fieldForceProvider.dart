@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:senior/models/answers.dart';
@@ -5,12 +9,10 @@ import 'package:senior/models/competitorPercent.dart';
 import 'package:senior/models/qrResult.dart';
 import 'package:senior/models/stores.dart';
 import 'package:senior/models/target.dart';
-import 'dart:convert';
-import '../models/httpExceptionModel.dart';
-import '../models/dataForNewShop.dart';
-import 'package:dio/dio.dart';
-import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../models/dataForNewShop.dart';
+import '../models/httpExceptionModel.dart';
 
 class FieldForceData with ChangeNotifier {
   String token;
@@ -55,45 +57,48 @@ class FieldForceData with ChangeNotifier {
   //--------------------------- Fetch questions --------------------------------
   Future<void> fetchQuestions() async {
     const url = 'https://api.hmto-eleader.com/api/newStore';
-    try {
-      await fetchUserData();
-      final response = await http.get(url, headers: {
-        'Authorization': 'Bearer $token',
+    // try {
+    await fetchUserData();
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer $token',
+    });
+    print("Response :" + response.body.toString());
+    final Map responseData = json.decode(response.body);
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      dataForNewShop = DataForNewShop.fromJson(responseData);
+      competitors = dataForNewShop.data.competitors;
+      final List<CompetitorPercents> loadedItems = [];
+      competitors.forEach((competitor) {
+        loadedItems.add(
+          CompetitorPercents(
+            competitorId: competitor.competitorId,
+            sallesRateStock: '0.0',
+            sallesRateMoney: '0',
+          ),
+        );
       });
-      print("Response :" + response.body.toString());
-      final Map responseData = json.decode(response.body);
-      if (response.statusCode >= 200 && response.statusCode < 300) {
-        dataForNewShop = DataForNewShop.fromJson(responseData);
-        competitors = dataForNewShop.data.competitors;
-        final List<CompetitorPercents> loadedItems = [];
-        competitors.forEach((competitor) {
-          loadedItems.add(
-            CompetitorPercents(
-              competitorId: competitor.competitorId,
-              sallesRateStock: '0.0',
-              sallesRateMoney: '0',
-            ),
-          );
-        });
-        competitorsPercents = loadedItems;
-        trueAndFalse = dataForNewShop.data.question
-            .where((i) => i.type == 'falseOrTrue')
-            .toList();
-        longAnswerQuestion = dataForNewShop.data.question
-            .where((i) => i.type == 'typing')
-            .toList();
-        optionQuestion = dataForNewShop.data.question
-            .where((i) => i.type == 'options')
-            .toList();
-        notifyListeners();
-        return true;
-      } else {
-        throw HttpException(message: responseData['error']);
-      }
-    } catch (error) {
-      print('Request Error :' + error.toString());
-      throw error;
+      competitorsPercents = loadedItems;
+      trueAndFalse = dataForNewShop.data.question
+          .where((i) => i.type == 'falseOrTrue')
+          .toList();
+      longAnswerQuestion = dataForNewShop.data.question
+          .where((i) => i.type == 'typing')
+          .toList();
+      optionQuestion = dataForNewShop.data.question
+          .where((i) => i.type == 'options')
+          .toList();
+      products = dataForNewShop.data.question
+          .where((i) => i.type == 'product')
+          .toList();
+      notifyListeners();
+      return true;
+    } else {
+      throw HttpException(message: responseData['error']);
     }
+    // } catch (error) {
+    //   print('Request Error :' + error.toString());
+    //   throw error;
+    // }
   }
 
   //----------------------------- Add new shop ---------------------------------
@@ -103,6 +108,9 @@ class FieldForceData with ChangeNotifier {
     String customerPhone,
     String sellsName,
     String sellsPhone,
+    String country,
+    String city,
+    String state,
     double rate,
     String lat,
     String long,
@@ -130,6 +138,9 @@ class FieldForceData with ChangeNotifier {
       formData.fields..add(MapEntry('mobile', customerPhone));
       formData.fields..add(MapEntry('alternate_name', sellsName));
       formData.fields..add(MapEntry('alternate_number', sellsPhone));
+      formData.fields..add(MapEntry('country', country));
+      formData.fields..add(MapEntry('city', city));
+      formData.fields..add(MapEntry('state', state));
       formData.fields..add(MapEntry('lat', lat));
       formData.fields..add(MapEntry('long', long));
       formData.fields..add(MapEntry('rate', rate.toString()));
@@ -224,7 +235,6 @@ class FieldForceData with ChangeNotifier {
     try {
       var body = json.encode({
         "qrcode": "$qrData",
-//        "user_id": "$userId",
       });
 
       Map<String, String> headers = {
@@ -239,6 +249,9 @@ class FieldForceData with ChangeNotifier {
       print("Response :" + response.body.toString());
       final Map responseData = json.decode(response.body);
       if (response.statusCode >= 200 && response.statusCode < 300) {
+        if (response.body.contains('401')) {
+          throw HttpException(message: ' هذا المتجر ليس ضمن التارجت المحقق لك');
+        }
         qrResult = QrResult.fromJson(responseData);
         competitors = qrResult.competitors;
         final List<CompetitorPercents> loadedItems = [];
@@ -252,15 +265,12 @@ class FieldForceData with ChangeNotifier {
           );
         });
         competitorsPercents = loadedItems;
-        trueAndFalse = dataForNewShop.data.question
-            .where((i) => i.type == 'falseOrTrue')
-            .toList();
-        longAnswerQuestion = dataForNewShop.data.question
-            .where((i) => i.type == 'typing')
-            .toList();
-        optionQuestion = dataForNewShop.data.question
-            .where((i) => i.type == 'options')
-            .toList();
+        trueAndFalse =
+            qrResult.question.where((i) => i.type == 'falseOrTrue').toList();
+        longAnswerQuestion =
+            qrResult.question.where((i) => i.type == 'typing').toList();
+        optionQuestion =
+            qrResult.question.where((i) => i.type == 'options').toList();
         products = qrResult.question.where((i) => i.type == 'product').toList();
         notifyListeners();
         return true;
@@ -328,43 +338,123 @@ class FieldForceData with ChangeNotifier {
   }
 
   //----------------------------- Add new visit --------------------------------
+//   Future<void> addNewVisit({
+//     int id,
+//     String answers,
+//   }) async {
+//     await fetchUserData();
+//     const url = 'https://api.hmto-eleader.com/api/addnewvisit';
+//     try {
+//       var body = {
+//         "contact_id": id.toString(),
+//         "business_id": "$businessId",
+// //        "created_by": "$userId",
+//         "questionsAnswer": answers,
+//         "competitors": json.encode({"data": competitorsPercents}),
+//       };
+//
+//       Map<String, String> headers = {
+//         'Authorization': 'Bearer $token',
+//       };
+//       await fetchUserData();
+//       final response = await http.post(
+//         url,
+//         headers: headers,
+//         body: body,
+//       );
+//       print("Response :" + response.body.toString());
+//       final Map responseData = json.decode(response.body);
+//       if (response.statusCode >= 200 && response.statusCode < 300) {
+//         stores = null;
+//         questionsAnswer = [];
+//         notifyListeners();
+//         return true;
+//       } else {
+//         throw HttpException(message: responseData['error']);
+//       }
+//     } catch (error) {
+//       print('Request Error :' + error.toString());
+//       throw error;
+//     }
+//   }
+
   Future<void> addNewVisit({
     int id,
     String answers,
+    File image1,
+    File image2,
+    File image3,
+    File image4,
+    double lat,
+    double lang,
   }) async {
     await fetchUserData();
     const url = 'https://api.hmto-eleader.com/api/addnewvisit';
     try {
-      var body = {
-        "contact_id": id.toString(),
-        "business_id": "$businessId",
-//        "created_by": "$userId",
-        "questionsAnswer": answers,
-        "competitors": json.encode({"data": competitorsPercents}),
-      };
-
-      Map<String, String> headers = {
-        'Authorization': 'Bearer $token',
-      };
-      await fetchUserData();
-      final response = await http.post(
+      var formData = FormData();
+      formData.fields..add(MapEntry('contact_id', id.toString()));
+      formData.fields..add(MapEntry('business_id', "$businessId"));
+      formData.fields..add(MapEntry('created_by', "$userId"));
+      formData.fields..add(MapEntry('questionsAnswer', answers));
+      formData.fields
+        ..add(MapEntry(
+            'competitors', json.encode({"data": competitorsPercents})));
+      if (image1 != null)
+        formData.files.add(MapEntry(
+          'image_in',
+          await MultipartFile.fromFile(image1.path,
+              filename: image1.path.split("/").last),
+        ));
+      if (image2 != null)
+        formData.files.add(MapEntry(
+          'image_out',
+          await MultipartFile.fromFile(image2.path,
+              filename: image2.path.split("/").last),
+        ));
+      if (image3 != null)
+        formData.files.add(MapEntry(
+          'image_storeAds',
+          await MultipartFile.fromFile(image3.path,
+              filename: image3.path.split("/").last),
+        ));
+      if (image4 != null)
+        formData.files.add(MapEntry(
+          'image_storeFront',
+          await MultipartFile.fromFile(image4.path,
+              filename: image4.path.split("/").last),
+        ));
+      formData.fields
+        ..add(MapEntry(
+          'lat',
+          lat.toString(),
+        ));
+      formData.fields..add(MapEntry('lan', lang.toString()));
+      formData.fields..add(MapEntry('lng', lang.toString()));
+      var response = await dio.post(
         url,
-        headers: headers,
-        body: body,
+        data: formData,
+        onSendProgress: (sent, total) {
+          notifyListeners();
+        },
+        options: Options(
+          headers: {
+            // 'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+        ),
       );
-      print("Response :" + response.body.toString());
-      final Map responseData = json.decode(response.body);
-      if (response.statusCode >= 200 && response.statusCode < 300) {
-        stores = null;
-        questionsAnswer = [];
-        notifyListeners();
-        return true;
-      } else {
-        throw HttpException(message: responseData['error']);
-      }
+      print("Response :" + response.toString());
+      stores = null;
+      questionsAnswer = [];
+      notifyListeners();
+      return true;
     } catch (error) {
       print('Request Error :' + error.toString());
-      throw error;
+      if (!error.toString().contains(
+          'DioError [DioErrorType.DEFAULT]: FormatException: Unexpected character (at character 1)')) {
+        throw error;
+      }
+      print('Request Error :' + error.toString());
     }
   }
 

@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:typed_data';
+
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qrscan/qrscan.dart' as scanner;
-import '../providers/sellsProvider.dart';
 import 'package:senior/widgets/alertDialog.dart';
-import 'package:easy_localization/easy_localization.dart';
+
+import '../providers/sellsProvider.dart';
 
 class ProductBarCodeReader extends StatefulWidget {
   final bool isReturned;
@@ -41,7 +43,7 @@ class _ProductBarCodeReaderState extends State<ProductBarCodeReader> {
         print('BarCode Output : ' + barcode);
         if (!widget.isReturned) {
           await Provider.of<SellsData>(context, listen: false)
-              .addItemToBill(serialNumber: barcode);
+              .addItemToBill(serialNumber: barcode, context: context);
           Navigator.of(context).pop();
           GlobalAlertDialog.showQuantityDialog(
               context: context, serialNumber: barcode);

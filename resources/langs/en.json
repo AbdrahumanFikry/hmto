@@ -18,7 +18,10 @@
       "c_name": "Customer name",
       "c_phone": "Customer phone",
       "s_name": "Sells name",
-      "s_phone": "Sells phone"
+      "s_phone": "Sells phone",
+      "country": "Country",
+      "city": "City",
+      "state": "State"
     },
     "images": "Images",
     "rating": "Rating",
@@ -64,7 +67,10 @@
     "products": "Products",
     "questions": "Questions",
     "add_comment": "Add comment",
-    "submit": "Submit"
+    "submit": "Submit",
+    "piece": "piece",
+    "box": "box",
+    "Carton": "Carton"
   },
   "start_day": {
     "start": "Start day",
@@ -126,7 +132,8 @@
     "price": "Price group",
     "apply": "Apply",
     "success": "Operation succeeded",
-    "value": "value"
+    "value": "value",
+    "units": "Units"
   },
   "errors": {
     "notFound": "product not found in the car!",
@@ -139,7 +146,12 @@
     "target": "Monthly target",
     "complete": "target completed",
     "monthCash": "Monthly cash",
-    "dailyCash": "Daily cash"
+    "dailyCash": "Daily cash",
+    "qtyTarget": "quantity target",
+    "qtyReached": "Reached quantity",
+    "currentBonus": "Current bonus",
+    "cashTarget": "Cash target",
+    "visitsTarget": "Visits target"
   },
   "debitInvoice": {
     "id": "Transaction id",

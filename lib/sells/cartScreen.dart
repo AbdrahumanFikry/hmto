@@ -1,14 +1,15 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:senior/printers/ScreenPrinter.dart';
 import 'package:senior/providers/sellsProvider.dart';
+import 'package:senior/sells/paymentMethod.dart';
 import 'package:senior/sells/priceAndTaxesPlans.dart';
 import 'package:senior/widgets/alertDialog.dart';
 import 'package:senior/widgets/errorWidget.dart';
-import 'package:senior/widgets/productBarCodeReader.dart';
 import 'package:senior/widgets/testStoreWidget.dart';
-import 'package:easy_localization/easy_localization.dart';
+
 import '../providers/authenticationProvider.dart';
 
 class CartScreen extends StatelessWidget {
@@ -49,10 +50,19 @@ class CartScreen extends StatelessWidget {
     try {
       isLoading = true;
       if (isCash) {
+        print("Sale :::::::::::: " + sale.toString());
+        List paymentData = await Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => PaymentMethod(
+              amount: double.tryParse(total.toStringAsFixed(2).toString()),
+            ),
+          ),
+        );
         await Provider.of<SellsData>(context, listen: false).payCash(
           storeId: storeId,
-          total: total,
+          total: double.tryParse(total.toStringAsFixed(2).toString()),
           sale: sale.toString(),
+          image: paymentData[1],
         );
         Navigator.of(context).push(
           MaterialPageRoute(
@@ -71,7 +81,7 @@ class CartScreen extends StatelessWidget {
             ),
           ),
         );
-      } else if ((isDebit && (totalAfterTax - sale) < double.tryParse(limit)) ||
+      } else if ((isDebit && (totalAfterTax < double.tryParse(limit))) ||
           (isDebit && double.tryParse(limit) == 0.0)) {
         await Provider.of<SellsData>(context, listen: false).payDebit(
             storeId: storeId, total: total, paid: paid, sale: sale.toString());
@@ -223,6 +233,7 @@ class CartScreen extends StatelessWidget {
                                     Expanded(
                                       child: TextField(
                                         onChanged: (value) {
+                                          sale = '0.0';
                                           sale = value;
                                         },
                                         textAlign: TextAlign.center,
@@ -424,8 +435,7 @@ class CartScreen extends StatelessWidget {
                                                 total: data.returnTotal(),
                                                 sale: double.tryParse(sale),
                                                 totalAfterTax:
-                                                    (data.priceAfterTax -
-                                                        double.tryParse(sale)),
+                                                    (data.priceAfterTax),
                                               );
                                             }
                                           },

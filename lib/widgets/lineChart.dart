@@ -16,14 +16,14 @@ class LineChartSampleState extends State<LineChartSample> {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(18)),
-          gradient: LinearGradient(
-            colors: const [
-              Color(0xff2c274c),
-              Color(0xff46426c),
-            ],
-            begin: Alignment.bottomCenter,
-            end: Alignment.topCenter,
-          ),
+          // gradient: LinearGradient(
+          //   colors: const [
+          //     Color(0xff2c274c),
+          //     Color(0xff46426c),
+          //   ],
+          //   begin: Alignment.bottomCenter,
+          //   end: Alignment.topCenter,
+          // ),
         ),
         child: Stack(
           children: <Widget>[

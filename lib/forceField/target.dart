@@ -1,10 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:provider/provider.dart';
 import 'package:senior/providers/fieldForceProvider.dart';
-import 'package:senior/widgets/errorWidget.dart';
 import 'package:senior/providers/sellsProvider.dart';
+import 'package:senior/widgets/errorWidget.dart';
 
 class Target extends StatefulWidget {
   final bool isSells;
@@ -18,8 +18,23 @@ class Target extends StatefulWidget {
 }
 
 class _TargetState extends State<Target> {
+  double totalMoney = 0.0;
+
+  @override
+  void didChangeDependencies() async {
+    totalMoney = await Provider.of<SellsData>(context, listen: false)
+        .returnTotalOwnMoney();
+    super.didChangeDependencies();
+  }
+
+  void total() async {
+    totalMoney = await Provider.of<SellsData>(context, listen: false)
+        .returnTotalOwnMoney();
+  }
+
   @override
   Widget build(BuildContext context) {
+    total();
     return FutureBuilder(
       future: widget.isSells
           ? (Provider.of<SellsData>(context, listen: false).target == null
@@ -50,6 +65,7 @@ class _TargetState extends State<Target> {
           }
           return widget.isSells
               ? Consumer<SellsData>(builder: (context, data, child) {
+                  print(data.target.target.toString());
                   return data.target.ownMonthlyBalance == null
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -88,6 +104,40 @@ class _TargetState extends State<Target> {
                       : ListView(
                           padding: EdgeInsets.all(10.0),
                           children: <Widget>[
+                            Container(
+                              height: 60.0,
+                              width: MediaQuery.of(context).size.width,
+                              child: Row(
+                                children: <Widget>[
+                                  Text(
+                                    '${tr('start_day.balance')} :',
+                                    style: TextStyle(fontSize: 20.0),
+                                  ),
+                                  Spacer(),
+                                  Container(
+                                    padding: EdgeInsets.all(5.0),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: Colors.grey,
+                                        width: 1.0,
+                                      ),
+                                    ),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Text(
+                                          data.target.ownDailyBalance
+                                                  ?.toString() ??
+                                              ' 0 ',
+                                          style: TextStyle(
+                                            fontSize: 20.0,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                             Container(
                               height: 60.0,
                               width: MediaQuery.of(context).size.width,
@@ -137,11 +187,12 @@ class _TargetState extends State<Target> {
                               width: MediaQuery.of(context).size.width,
                               child: Row(
                                 children: <Widget>[
-                                  Text(
-                                    tr('target.target'),
-                                    style: TextStyle(fontSize: 20.0),
+                                  Expanded(
+                                    child: Text(
+                                      tr('target.visitsTarget') + ' : ',
+                                      style: TextStyle(fontSize: 20.0),
+                                    ),
                                   ),
-                                  Spacer(),
                                   Container(
                                     padding: EdgeInsets.all(5.0),
                                     decoration: BoxDecoration(
@@ -153,9 +204,9 @@ class _TargetState extends State<Target> {
                                     child: Row(
                                       children: <Widget>[
                                         Text(
-                                          data.target.target.toString() == null
-                                              ? '0'
-                                              : data.target.target.toString(),
+                                          data?.target?.visitsTarget
+                                                  ?.toString() ??
+                                              '0',
                                           style: TextStyle(
                                             fontSize: 20.0,
                                           ),
@@ -173,6 +224,168 @@ class _TargetState extends State<Target> {
                                 ],
                               ),
                             ),
+                            Container(
+                              height: 60.0,
+                              width: MediaQuery.of(context).size.width,
+                              child: Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Text(
+                                      tr('target.cashTarget') + ' : ',
+                                      style: TextStyle(fontSize: 20.0),
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.all(5.0),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: Colors.grey,
+                                        width: 1.0,
+                                      ),
+                                    ),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Text(
+                                          (((data.target.ownMonthlyBalance /
+                                                              data.target
+                                                                  .cashTarget) *
+                                                          100)
+                                                      .toString() +
+                                                  ' % ') ??
+                                              '0 % ',
+                                          style: TextStyle(
+                                            fontSize: 20.0,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Divider(),
+                            data.target.targetProduct == null ||
+                                    data.target.targetProduct.length == 0
+                                ? SizedBox.shrink()
+                                : ListView.builder(
+                                    itemCount: data.target.targetProduct.length,
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemBuilder: (context, index) {
+                                      return Column(
+                                        children: [
+                                          Container(
+                                            height: 60.0,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            child: Row(
+                                              children: <Widget>[
+                                                Text(
+                                                  data
+                                                      .target
+                                                      .targetProduct[index]
+                                                      .productName
+                                                      .name,
+                                                  style:
+                                                      TextStyle(fontSize: 20.0),
+                                                ),
+                                                Spacer(),
+                                                Container(
+                                                  padding: EdgeInsets.all(5.0),
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                      color: Colors.grey,
+                                                      width: 1.0,
+                                                    ),
+                                                  ),
+                                                  child: Text(
+                                                    data
+                                                        .target
+                                                        .targetProduct[index]
+                                                        .targetReachedQuantityPercentage
+                                                        .toString(),
+                                                    style: TextStyle(
+                                                      fontSize: 20.0,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Row(
+                                            children: <Widget>[
+                                              Text(
+                                                tr('target.qtyTarget') + ' : ',
+                                                style:
+                                                    TextStyle(fontSize: 16.0),
+                                              ),
+                                              const SizedBox(
+                                                width: 30.0,
+                                              ),
+                                              Text(
+                                                data.target.targetProduct[index]
+                                                    .targetQuantity
+                                                    .toString(),
+                                                style: TextStyle(
+                                                  fontSize: 20.0,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: <Widget>[
+                                              Text(
+                                                tr('target.qtyReached') + ' : ',
+                                                style:
+                                                    TextStyle(fontSize: 16.0),
+                                              ),
+                                              const SizedBox(
+                                                width: 30.0,
+                                              ),
+                                              Text(
+                                                data.target.targetProduct[index]
+                                                    .reachedQuantity
+                                                    .toString(),
+                                                style: TextStyle(
+                                                  fontSize: 20.0,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: <Widget>[
+                                              Text(
+                                                tr('target.currentBonus') +
+                                                    ' : ',
+                                                style:
+                                                    TextStyle(fontSize: 16.0),
+                                              ),
+                                              const SizedBox(
+                                                width: 30.0,
+                                              ),
+                                              Text(
+                                                data.target.targetProduct[index]
+                                                    .currentBonus
+                                                    .toString(),
+                                                style: TextStyle(
+                                                  fontSize: 20.0,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 10.0,
+                                              ),
+                                              Icon(
+                                                Icons.monetization_on,
+                                                size: 18.0,
+                                              ),
+                                            ],
+                                          ),
+                                          Divider(),
+                                        ],
+                                      );
+                                    },
+                                  ),
                             Row(
                               children: <Widget>[
                                 Text(
@@ -183,28 +396,41 @@ class _TargetState extends State<Target> {
                                     fontSize: 18.0,
                                   ),
                                 ),
-                                Expanded(
-                                  child: new LinearPercentIndicator(
-                                    animation: true,
-                                    animationDuration: 1000,
-                                    lineHeight: 25.0,
-                                    percent: (data.target.ownMonthlyBalance /
-                                                data.target.target) >=
-                                            1.0
-                                        ? 1.0
-                                        : (data.target.ownMonthlyBalance /
-                                            data.target.target),
-                                    center: Text(
-                                        (data.target.ownMonthlyBalance /
-                                                    data.target.target *
-                                                    100)
-                                                .round()
-                                                .toString() +
-                                            '%'),
-                                    linearStrokeCap: LinearStrokeCap.butt,
-                                    progressColor: Colors.blue,
-                                  ),
-                                ),
+                                data?.target?.target != null
+                                    ? Expanded(
+                                        child: new LinearPercentIndicator(
+                                          animation: true,
+                                          animationDuration: 1000,
+                                          lineHeight: 25.0,
+                                          percent:
+                                              (data.target.ownMonthlyBalance /
+                                                                  data?.target
+                                                                      ?.target ??
+                                                              0.0)
+                                                          .toDouble() >=
+                                                      1.0
+                                                  ? 1.0
+                                                  : (data.target
+                                                          .ownMonthlyBalance /
+                                                      data.target.target),
+                                          center: Text((data.target
+                                                              .ownMonthlyBalance /
+                                                          data.target.target *
+                                                          100)
+                                                      .toString() ==
+                                                  'Infinity'
+                                              ? ''
+                                              : (data.target.ownMonthlyBalance /
+                                                          data.target.target *
+                                                          100)
+                                                      .round()
+                                                      .toString() +
+                                                  '%'),
+                                          linearStrokeCap: LinearStrokeCap.butt,
+                                          progressColor: Colors.blue,
+                                        ),
+                                      )
+                                    : SizedBox.shrink()
                               ],
                             ),
                             SizedBox(

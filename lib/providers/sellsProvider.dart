@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -14,7 +16,8 @@ import 'package:senior/models/startDaySalles.dart';
 import 'package:senior/models/stores.dart';
 import 'package:senior/models/target.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:dio/dio.dart';
+
+import '../widgets/alertDialog.dart';
 
 class SellsData with ChangeNotifier {
   var dio = Dio();
@@ -24,7 +27,8 @@ class SellsData with ChangeNotifier {
   int businessId;
   String date;
   String locationId;
-  double lat = 31.0000, lan = 31.0000;
+  String storeCode = '0';
+  double latCache = 31.0000, lanCache = 31.0000;
   String transactionId;
   int chosenPricePlan = 0;
   int chosenTaxPlan = 0;
@@ -36,6 +40,7 @@ class SellsData with ChangeNotifier {
   Stores stores;
   double sale = 0.0;
   double range = 1.0;
+  double allRange = 0.0;
   double priceAfterTax = 0.0;
   OldInvoices oldInvoices;
   DebitInvoicesModel debitInvoices;
@@ -46,7 +51,13 @@ class SellsData with ChangeNotifier {
   List<CarProduct> printedBill = [];
   TargetSells target;
   PriceTaxesPlan priceTaxesPlan;
+  List<CarProduct> billItemRef = [];
+
+  // Units targetUnit;
+  CarProduct targetProduct;
   bool isLoading = false;
+  int maxVal = 0;
+
   void loading(bool state) {
     isLoading = state;
     notifyListeners();
@@ -115,6 +126,8 @@ class SellsData with ChangeNotifier {
         prefs.setString('cartItems', userData);
         prefs.setString('locationId', startDayData.locationId.toString());
         await fetchCarProduct();
+        double totalCarMoney = returnTotalCart();
+        prefs.setDouble('totalCarMoney', totalCarMoney);
         notifyListeners();
         loading(false);
         return true;
@@ -131,11 +144,16 @@ class SellsData with ChangeNotifier {
 
   //------------------------------ Scan store ----------------------------------
   Future<void> scanStore({String qrData, double lat, double lng}) async {
+    storeCode = 'code unAvailable';
     oldInvoices = null;
     bill = [];
+    lanCache = lat;
+    lanCache = lng;
     await fetchUserData();
+    storeCode = qrData;
     const url = 'https://api.hmto-eleader.com/api/sellsman/scanStore';
     try {
+      print('::::::::::::lat :' + lat.toString() + '-long :' + lng.toString());
       var body = {
         "qrcode": qrData,
         "lat": lat.toString(),
@@ -202,27 +220,92 @@ class SellsData with ChangeNotifier {
   }
 
   //--------------------------- Add product to bill ----------------------------
-  Future<void> addItemToBill({String serialNumber}) async {
+  Future<void> addItemToBill(
+      {String serialNumber, BuildContext context}) async {
     loadedItems = [];
+    maxVal = 0;
+    // targetUnit = null;
+    targetProduct = null;
     await fetchCarProduct();
-    int index = loadedItems.indexWhere((i) => i.serialNumber == serialNumber);
+    for (var item in loadedItems) {
+      if (item.serialNumber == serialNumber) {
+        var selectedUnit = await showUnits(item, context);
+        print('AddItemToBill :::' + selectedUnit.toString());
+        // targetUnit = Units(
+        //   id: item.productId,
+        //   actualName: item.productName,
+        //   shortName: item.productName,
+        //   sku: serialNumber,
+        //   unitCount: 1,
+        // );
+        if (selectedUnit != null && selectedUnit == item.serialNumber) {
+          targetProduct = item;
+          maxVal = item.quantity.round();
+          print('Target product ::::: ' + targetProduct.productName);
+          if (targetProduct != null) break;
+        } else {
+          serialNumber = selectedUnit;
+          print('SerialNumber :' + serialNumber);
+          for (var unit in item.units) {
+            if (unit.sku == serialNumber) {
+              // targetUnit = unit;
+              targetProduct = CarProduct(
+                productId: unit.id,
+                serialNumber: unit.sku,
+                productName: unit.actualName,
+                quantity: (item.quantity / unit.unitCount).round(),
+                units: [],
+                groupPrice: item.groupPrice,
+                priceForEach: (unit.unitCount * item.priceForEach),
+              );
+              print('Price for piece : ' + item.priceForEach.toString());
+              print('Price for all : ' +
+                  (unit.unitCount * item.priceForEach).toString());
+              maxVal = (item.quantity / unit.unitCount).round();
+              if (targetProduct != null) break;
+            }
+          }
+        }
+      } else if (item?.units != null) {
+        for (var unit in item.units) {
+          if (unit.sku == serialNumber) {
+            // targetUnit = unit;
+            targetProduct = CarProduct(
+              productId: unit.id,
+              serialNumber: unit.sku,
+              productName: unit.actualName,
+              quantity: (item.quantity / unit.unitCount).round(),
+              units: [],
+              groupPrice: item.groupPrice,
+              priceForEach: (unit.unitCount * item.priceForEach),
+            );
+            print('Price for piece : ' + item.priceForEach.toString());
+            print('Price for all : ' +
+                (unit.unitCount * item.priceForEach).toString());
+            maxVal = (item.quantity / unit.unitCount).round();
+            if (targetProduct != null) break;
+          }
+        }
+      }
+    }
+    // int index = loadedItems.indexWhere((i) => i.serialNumber == serialNumber);
     int billIndex =
-        bill.indexWhere((i) => i.productId == loadedItems[index].productId);
-//    print('::::::::::' + billIndex.toString());
+        bill.indexWhere((i) => i.productId == targetProduct?.productId);
     if (billIndex != -1) {
       throw HttpException(message: tr('errors.exist'));
     }
     try {
       bill.add(
         BillProduct(
-          productId: loadedItems[index].productId,
-          unitPrice: loadedItems[index].priceForEach,
+          productId: targetProduct.productId,
+          unitPrice: targetProduct.priceForEach,
           quantity: 1,
-          unitPriceBeforeDiscount: loadedItems[index].priceForEach,
-          unitPriceIncTax: loadedItems[index].priceForEach,
+          unitPriceBeforeDiscount: targetProduct.priceForEach,
+          unitPriceIncTax: targetProduct.priceForEach,
         ),
       );
     } catch (error) {
+      print(error.toString());
       throw HttpException(message: tr('errors.notFound'));
     }
     returnTotal();
@@ -240,9 +323,15 @@ class SellsData with ChangeNotifier {
     loadedItems = [];
     responseData['data'].forEach((itemData) {
       List<GroupPriceStartDay> groupPrice = new List<GroupPriceStartDay>();
+      List<Units> units = new List<Units>();
       if (itemData['group_price'] != null) {
         itemData['group_price'].forEach((v) {
           groupPrice.add(new GroupPriceStartDay.fromJson(v));
+        });
+      }
+      if (itemData['units'] != null) {
+        itemData['units'].forEach((v) {
+          units.add(new Units.fromJson(v));
         });
       }
       loadedItems.add(CarProduct(
@@ -252,6 +341,7 @@ class SellsData with ChangeNotifier {
         quantity: itemData['quantity'],
         priceForEach: itemData['default_sell_price'],
         groupPrice: groupPrice,
+        units: units,
       ));
     });
 //    print('Car products :' + json.encode({'carProducts': loadedItems}));
@@ -273,17 +363,45 @@ class SellsData with ChangeNotifier {
   Future<void> addAmountToBill({int id}) async {
     loadedItems = [];
     await fetchCarProduct();
+    CarProduct targetAmountProduct;
+    for (var item in loadedItems) {
+      if (item.productId == id) {
+        targetAmountProduct = item;
+        maxVal = item.quantity.round();
+        print('Target product ::::: ' + targetProduct.productName);
+        if (targetProduct != null) break;
+      } else if (item?.units != null) {
+        for (var unit in item.units) {
+          if (unit.id == id) {
+            targetAmountProduct = CarProduct(
+              productId: unit.id,
+              serialNumber: unit.sku,
+              productName: unit.actualName,
+              quantity: (item.quantity / unit.unitCount).round(),
+              units: [],
+              groupPrice: item.groupPrice,
+              priceForEach: (unit.unitCount * item.priceForEach),
+            );
+            print('Price for piece : ' + item.priceForEach.toString());
+            print('Price for all : ' +
+                (unit.unitCount * item.priceForEach).toString());
+            maxVal = (item.quantity / unit.unitCount).round();
+            if (targetProduct != null) break;
+          }
+        }
+      }
+    }
     int billIndex = bill.indexWhere((item) => item.productId == id);
-    int carIndex = loadedItems.indexWhere((item) => item.productId == id);
+    // int carIndex = loadedItems.indexWhere((item) => item.productId == id);
     if (billIndex != -1 &&
-        carIndex != -1 &&
-        loadedItems[carIndex].quantity > bill[billIndex].quantity) {
+        targetAmountProduct != null &&
+        targetAmountProduct.quantity > bill[billIndex].quantity) {
       bill[billIndex].quantity++;
       returnTotal();
       notifyListeners();
     } else {
       throw HttpException(
-        message: 'errors.noMore'.tr(args: [loadedItems[carIndex].productName]),
+        message: 'errors.noMore'.tr(args: [targetAmountProduct.productName]),
       );
     }
   }
@@ -292,20 +410,23 @@ class SellsData with ChangeNotifier {
   Future<void> addRangeAmountToBill({String serialNumber}) async {
     loadedItems = [];
     await fetchCarProduct();
-    int carIndex =
-        loadedItems.indexWhere((item) => item.serialNumber == serialNumber);
-    int billIndex = bill.indexWhere(
-        (item) => item.productId == loadedItems[carIndex].productId);
+    // for(var item in loadedItems){}
+    // int carIndex =
+    //     loadedItems.indexWhere((item) => item.serialNumber == serialNumber);
+    int billIndex =
+        bill.indexWhere((item) => item.productId == targetProduct.productId);
     if (billIndex != -1 &&
-        carIndex != -1 &&
-        loadedItems[carIndex].quantity > bill[billIndex].quantity) {
+        targetProduct != null &&
+        targetProduct.quantity > bill[billIndex].quantity) {
+      print(':::::::::::::' + range.toString());
       bill[billIndex].quantity = range.round();
+      print(':::::::::::::' + bill[billIndex].quantity.toString());
       resetRange();
       returnTotal();
       notifyListeners();
     } else {
       throw HttpException(
-        message: 'errors.noMore'.tr(args: [loadedItems[carIndex].productName]),
+        message: 'errors.noMore'.tr(args: [targetProduct.productName]),
       );
     }
   }
@@ -333,11 +454,13 @@ class SellsData with ChangeNotifier {
           (sum * priceTaxesPlan.taxes[chosenTaxPlan].amount / 100) + sum;
       priceAfterTax = temp - sale;
     }
+    sum = double.tryParse(sum.toStringAsFixed(2).toString());
     return sum;
   }
 
   //-------------------------- Total bill after tax ----------------------------
   void applySale({double value}) {
+    sale = 0.0;
     sale = value;
     notifyListeners();
   }
@@ -375,47 +498,112 @@ class SellsData with ChangeNotifier {
   }
 
   //------------------------------- Pay cash -----------------------------------
-  Future<void> payCash({int storeId, double total, String sale}) async {
+//   Future<void> payCash({int storeId, double total, String sale}) async {
+//     await fetchUserData();
+//     const url = 'https://api.hmto-eleader.com/api/sellsman/transaction/cache';
+//     try {
+//       var body = {
+// //        "created_by": userId.toString(),
+//         "business_id": businessId.toString(),
+//         "location_id": locationId,
+//         "contact_id": storeId.toString(),
+//         "total_before_tax": (total - double.tryParse(sale)).toString(),
+//         "final_total": priceAfterTax.toStringAsFixed(2).toString(),
+//         "products": json.encode(bill),
+//         "tax_id": priceTaxesPlan.taxes[chosenTaxPlan].id.toString(),
+//         "tax_amount": (priceTaxesPlan.taxes[chosenTaxPlan].amount * total / 100)
+//             .toString(),
+//         "discount_amount": sale,
+//       };
+//
+//       Map<String, String> headers = {
+//         "Authorization": "Bearer $token",
+//       };
+// //      print('Request body : ' + body);
+//       final response = await http.post(
+//         url,
+//         headers: headers,
+//         body: body,
+//       );
+//       print("Response :" + response.body.toString());
+//       final Map responseData = json.decode(response.body);
+//       if (response.statusCode >= 200 && response.statusCode < 300) {
+//         //remove items from car and balance the products
+//         transactionId = responseData['transaction_id'].toString();
+//         await finishBill();
+//         notifyListeners();
+//         return true;
+//       } else {
+//         throw HttpException(message: responseData['message']);
+//       }
+//     } catch (error) {
+//       print('Request Error :' + error.toString());
+//       throw error;
+//     }
+//   }
+
+  Future<void> payCash(
+      {int storeId, double total, String sale, File image}) async {
     await fetchUserData();
     const url = 'https://api.hmto-eleader.com/api/sellsman/transaction/cache';
     try {
-      var body = {
-//        "created_by": userId.toString(),
-        "business_id": businessId.toString(),
-        "location_id": locationId,
-        "contact_id": storeId.toString(),
-        "total_before_tax": (total - double.tryParse(sale)).toString(),
-        "final_total": priceAfterTax.toStringAsFixed(2).toString(),
-        "products": json.encode(bill),
-        "tax_id": priceTaxesPlan.taxes[chosenTaxPlan].id.toString(),
-        "tax_amount": (priceTaxesPlan.taxes[chosenTaxPlan].amount * total / 100)
-            .toString(),
-        "discount_amount": sale,
-      };
-
-      Map<String, String> headers = {
-        "Authorization": "Bearer $token",
-      };
-//      print('Request body : ' + body);
-      final response = await http.post(
+      await prepareBillBeforeSending();
+      var formData = FormData();
+      formData.fields..add(MapEntry('created_by', userId.toString()));
+      formData.fields..add(MapEntry('business_id', businessId.toString()));
+      formData.fields..add(MapEntry('location_id', locationId));
+      formData.fields..add(MapEntry('contact_id', storeId.toString()));
+      formData.fields
+        ..add(MapEntry(
+            'total_before_tax', (total - double.tryParse(sale)).toString()));
+      formData.fields
+        ..add(MapEntry(
+            'final_total', priceAfterTax.toStringAsFixed(2).toString()));
+      formData.fields..add(MapEntry('products', json.encode(bill)));
+      formData.fields
+        ..add(MapEntry(
+            'tax_id', priceTaxesPlan.taxes[chosenTaxPlan].id.toString()));
+      formData.fields
+        ..add(MapEntry(
+            'tax_amount',
+            (priceTaxesPlan.taxes[chosenTaxPlan].amount * total / 100)
+                .toString()));
+      formData.fields..add(MapEntry('discount_amount', sale));
+      if (image != null)
+        formData.files.add(MapEntry(
+          'document',
+          await MultipartFile.fromFile(image.path,
+              filename: image.path.split("/").last),
+        ));
+      print(':::::::::::::::::::' + formData.files.toString());
+      var response = await dio.post(
         url,
-        headers: headers,
-        body: body,
+        data: formData,
+        onSendProgress: (sent, total) {
+          notifyListeners();
+        },
+        options: Options(
+          headers: {
+            // 'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+          // validateStatus: (status) {
+          //   return status == 500;
+          // }
+        ),
       );
-      print("Response :" + response.body.toString());
-      final Map responseData = json.decode(response.body);
-      if (response.statusCode >= 200 && response.statusCode < 300) {
-        //remove items from car and balance the products
-        transactionId = responseData['transaction_id'].toString();
-        await finishBill();
-        notifyListeners();
-        return true;
-      } else {
-        throw HttpException(message: responseData['message']);
-      }
+      print("Response :" + response.toString());
+      final Map responseData = json.decode(response.toString());
+      transactionId = responseData['transaction_id'].toString();
+      await finishBill();
+      notifyListeners();
+      return true;
     } catch (error) {
       print('Request Error :' + error.toString());
-      throw error;
+      if (!error.toString().contains('Unexpected character (at character 1)')) {
+        throw error;
+      }
+      print('Request Error :' + error.toString());
     }
   }
 
@@ -429,6 +617,7 @@ class SellsData with ChangeNotifier {
     await fetchUserData();
     const url = 'https://api.hmto-eleader.com/api/sellsman/debit';
     try {
+      await prepareBillBeforeSending();
       var body = {
 //        "created_by": userId.toString(),
         "business_id": businessId.toString(),
@@ -442,8 +631,8 @@ class SellsData with ChangeNotifier {
             .toString(),
         "tax_id": priceTaxesPlan.taxes[chosenTaxPlan].id.toString(),
         "discount_amount": sale,
-        "lat": lat.toString(),
-        "lan": lan.toString(),
+        "lat": latCache.toString(),
+        "lan": lanCache.toString(),
       };
 
       Map<String, String> headers = {
@@ -552,24 +741,52 @@ class SellsData with ChangeNotifier {
   }
 
   String getName({int id}) {
-    loadedItems = [];
-    int index = loadedItems.indexWhere((i) => i.productId == id);
-    return loadedItems[index].productName;
+    String name =
+        billProducts.firstWhere((item) => item.id == id).product ?? '';
+    return name;
   }
 
   //------------------- Add product to returned invoice ------------------------
   Future<void> addItemToReturnedInvoice({String serialNumber}) async {
     loadedItems = [];
     await fetchCarProduct();
-    int index = loadedItems.indexWhere((i) => i.serialNumber == serialNumber);
-    if (index != -1) {
+    CarProduct targetReturnedProduct;
+    for (var carItem in loadedItems) {
+      if (serialNumber == carItem.serialNumber) {
+        targetReturnedProduct = CarProduct(
+          productId: carItem.productId,
+          serialNumber: carItem.serialNumber,
+          productName: carItem.productName,
+          quantity: 1,
+          units: [],
+          groupPrice: carItem.groupPrice,
+        );
+        break;
+      } else {
+        for (var unit in carItem.units) {
+          if (serialNumber == unit.sku) {
+            targetReturnedProduct = CarProduct(
+              productId: unit.id,
+              serialNumber: unit.sku,
+              productName: unit.actualName,
+              quantity: unit.unitCount,
+              units: [],
+              groupPrice: carItem.groupPrice,
+            );
+            break;
+          }
+        }
+      }
+    }
+    // int index = loadedItems.indexWhere((i) => i.serialNumber == serialNumber);
+    if (targetReturnedProduct != null) {
       int billIndex = returnedBill
-          .indexWhere((i) => i.productId == loadedItems[index].productId);
+          .indexWhere((i) => i.productId == targetReturnedProduct.productId);
       if (billIndex != -1) {
         throw HttpException(message: tr('errors.exist'));
       } else {
         int oldInvoiceIndex = billProducts
-            .indexWhere((item) => item.id == loadedItems[index].productId);
+            .indexWhere((item) => item.id == targetReturnedProduct.productId);
         if (oldInvoiceIndex != -1) {
           try {
             returnedBill.add(
@@ -622,12 +839,38 @@ class SellsData with ChangeNotifier {
   Future<void> addRangeAmountToReturnedInvoice({String serialNumber}) async {
     loadedItems = [];
     await fetchCarProduct();
-    int carIndex =
-        loadedItems.indexWhere((item) => item.serialNumber == serialNumber);
+    CarProduct targetReturnedProduct;
+    for (var carItem in loadedItems) {
+      if (serialNumber == carItem.serialNumber) {
+        targetReturnedProduct = CarProduct(
+          productId: carItem.productId,
+          serialNumber: carItem.serialNumber,
+          productName: carItem.productName,
+          quantity: 1,
+          units: [],
+          groupPrice: carItem.groupPrice,
+        );
+        break;
+      } else {
+        for (var unit in carItem.units) {
+          if (serialNumber == unit.sku) {
+            targetReturnedProduct = CarProduct(
+              productId: unit.id,
+              serialNumber: unit.sku,
+              productName: unit.actualName,
+              quantity: unit.unitCount,
+              units: [],
+              groupPrice: carItem.groupPrice,
+            );
+            break;
+          }
+        }
+      }
+    }
     int billIndex = returnedBill.indexWhere(
-        (item) => item.productId == loadedItems[carIndex].productId);
-    int oldInvoiceIndex = billProducts
-        .indexWhere((item) => item.id == loadedItems[carIndex].productId);
+        (item) => item.productId == targetReturnedProduct?.productId ?? -1);
+    int oldInvoiceIndex = billProducts.indexWhere(
+        (item) => item.id == targetReturnedProduct?.productId ?? -1);
     if (billIndex != -1 &&
         oldInvoiceIndex != -1 &&
         billProducts[oldInvoiceIndex].quantity >
@@ -661,6 +904,7 @@ class SellsData with ChangeNotifier {
 //-------------------------------- Reset range ---------------------------------
   void resetRange() {
     range = 0.0;
+    allRange = 0.0;
     notifyListeners();
   }
 
@@ -694,7 +938,7 @@ class SellsData with ChangeNotifier {
         },
       );
       prefs.setString('cartItems', userData);
-      returnedBill = [];
+      // returnedBill = [];
 //      print('Car products :' + json.encode({'carProducts': loadedItems}));
       notifyListeners();
     } catch (error) {
@@ -757,6 +1001,21 @@ class SellsData with ChangeNotifier {
     });
 //    print('Total price : ' + sum.toString());
     return sum;
+  }
+
+  Future<double> returnTotalOwnMoney() async {
+    final prefs = await SharedPreferences.getInstance();
+    var money = prefs.getDouble('totalCarMoney');
+    print('Money : ' + money.toString());
+    await fetchCarProduct();
+    double sum = 0;
+    loadedItems.forEach((item) {
+      sum = sum + (item.priceForEach * item.quantity);
+    });
+    print('Sum : ' + sum.toString());
+    print('ALl : ' + (money - sum).toString());
+//    print('Total price : ' + sum.toString());
+    return money - sum;
   }
 
   //------------------------- Fetch debit invoices -----------------------------
@@ -914,23 +1173,73 @@ class SellsData with ChangeNotifier {
   //------------------------------- Done plans ---------------------------------
   Future<void> donePlans() async {
     loadedItems = [];
+    CarProduct targetProductPricePlan;
     await fetchCarProduct();
     int priceId = priceTaxesPlan.groupPrice[chosenPricePlan].id;
-    bill.forEach((item) {
-      int targetIndex = loadedItems
-          .indexWhere((carItem) => item.productId == carItem.productId);
-      if (targetIndex != -1) {
-        item.unitPrice = loadedItems[targetIndex]
-            .groupPrice
+    for (var billItem in bill) {
+      for (var carItem in loadedItems) {
+        if (billItem.productId == carItem.productId) {
+          targetProductPricePlan = CarProduct(
+            productId: carItem.productId,
+            serialNumber: carItem.serialNumber,
+            productName: carItem.productName,
+            quantity: 1,
+            units: [],
+            groupPrice: carItem.groupPrice,
+          );
+          break;
+        } else {
+          for (var unit in carItem.units) {
+            if (billItem.productId == unit.id) {
+              billItemRef.add(carItem);
+              targetProductPricePlan = CarProduct(
+                productId: unit.id,
+                serialNumber: unit.sku,
+                productName: unit.actualName,
+                quantity: unit.unitCount,
+                units: [],
+                groupPrice: carItem.groupPrice,
+              );
+              break;
+            }
+          }
+        }
+      }
+      print("::::::::::::" + targetProductPricePlan.toString());
+      print('::::::::::::::' + targetProductPricePlan?.productName ?? 'null');
+
+      if (targetProductPricePlan != null) {
+        billItemRef.add(targetProductPricePlan);
+        double groupPriceTemp = targetProductPricePlan.groupPrice
             .firstWhere((groupPrice) => groupPrice.id == priceId)
             .priceIncTax;
-        item.unitPriceBeforeDiscount = item.unitPrice;
-        item.unitPriceIncTax = item.unitPrice;
+        print('GroupPrice : ' + groupPriceTemp.toString());
+        print('Quantity : ' + targetProductPricePlan.quantity.toString());
+        billItem.unitPrice = (targetProductPricePlan.quantity * groupPriceTemp);
+        billItem.unitPriceBeforeDiscount = billItem.unitPrice;
+        billItem.unitPriceIncTax = billItem.unitPrice;
       } else {
         throw HttpException(
             message: 'error adding new price ,could not find the right price');
       }
-    });
+    }
+
+    // bill.forEach((item) {
+    //   int targetIndex = loadedItems
+    //       .indexWhere((carItem) => item.productId == carItem.productId);
+    //
+    //   if (targetIndex != -1) {
+    //     item.unitPrice = loadedItems[targetIndex]
+    //         .groupPrice
+    //         .firstWhere((groupPrice) => groupPrice.id == priceId)
+    //         .priceIncTax;
+    //     item.unitPriceBeforeDiscount = item.unitPrice;
+    //     item.unitPriceIncTax = item.unitPrice;
+    //   } else {
+    //     throw HttpException(
+    //         message: 'error adding new price ,could not find the right price');
+    //   }
+    // });
     sale = 0.0;
     donePricePlan = true;
     notifyListeners();
@@ -942,6 +1251,7 @@ class SellsData with ChangeNotifier {
     chosenPricePlan = 0;
     chosenTaxPlan = 0;
     priceTaxesPlan = null;
+    billItemRef.clear();
     notifyListeners();
   }
 
@@ -952,5 +1262,53 @@ class SellsData with ChangeNotifier {
     });
 //    print('Total price : ' + sum.toString());
     return sum;
+  }
+
+  Future<void> prepareBillBeforeSending() async {
+    List<BillProduct> refBill = [];
+    BillProduct billRefProduct;
+    for (var billItem in bill) {
+      for (var carItem in loadedItems) {
+        if (billItem.productId == carItem.productId) {
+          billRefProduct = BillProduct(
+            productId: billItem.productId,
+            quantity: billItem.quantity,
+            unitPrice: billItem.unitPrice,
+            unitPriceBeforeDiscount: billItem.unitPriceBeforeDiscount,
+            unitPriceIncTax: billItem.unitPriceIncTax,
+          );
+          break;
+        } else {
+          for (var unit in carItem.units) {
+            if (billItem.productId == unit.id) {
+              billRefProduct = BillProduct(
+                productId: carItem.productId,
+                quantity: (billItem.quantity * unit.unitCount),
+                unitPrice: (billItem.unitPrice / unit.unitCount),
+                unitPriceBeforeDiscount:
+                    billItem.unitPriceBeforeDiscount / unit.unitCount,
+                unitPriceIncTax: billItem.unitPriceIncTax / unit.unitCount,
+              );
+              break;
+            }
+          }
+        }
+      }
+      if (billRefProduct != null) {
+        refBill.add(billRefProduct);
+        billRefProduct = null;
+      }
+    }
+    bill = refBill;
+    print('ShowUnits :::' + json.encode(bill));
+  }
+
+  Future<String> showUnits(CarProduct item, BuildContext context) async {
+    var selectedUnit;
+    if (item.units != null || item.units.isNotEmpty) {
+      selectedUnit = await GlobalAlertDialog.showUnits(item, context);
+    }
+    print('ShowUnits :::' + selectedUnit.toString());
+    return selectedUnit;
   }
 }

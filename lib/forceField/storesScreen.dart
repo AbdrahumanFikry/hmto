@@ -1,12 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:senior/driver/driverStore.dart';
-import 'package:senior/sells/sellsMap.dart';
 import 'package:senior/widgets/qrReader.dart';
-import 'package:easy_localization/easy_localization.dart';
+
 import '../models/stores.dart';
 import '../widgets/qrReaderSells.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class StoresScreen extends StatefulWidget {
   final bool isSells;
@@ -24,8 +23,6 @@ class StoresScreen extends StatefulWidget {
 }
 
 class _StoresScreenState extends State<StoresScreen> {
-  LatLng latLng;
-  double _lat, _long;
   @override
   Widget build(BuildContext context) {
     return widget.data.length == 0 || widget.data == null
@@ -45,11 +42,18 @@ class _StoresScreenState extends State<StoresScreen> {
               return Column(
                 children: <Widget>[
                   ListTile(
-                      subtitle: Text(
-                        widget.data[index].landmark == null
-                            ? ''
-                            : widget.data[index].landmark,
-                        overflow: TextOverflow.ellipsis,
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget?.data[index]?.phone ?? '',
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Text(
+                            widget?.data[index]?.landmark ?? '',
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
                       ),
                       title: Text(widget.data[index].storeName),
                       trailing: Text(
@@ -75,31 +79,29 @@ class _StoresScreenState extends State<StoresScreen> {
                           ? () {}
                           : () async {
                               if (widget.isSells) {
-                                final result = await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => SellsMap(
-                                        openPlace: true,
-                                      ),
-                                    )).then((value) {
-                                  setState(() {
-                                    latLng = value[0];
-                                    _lat = latLng.latitude;
-                                    _long = latLng.longitude;
-                                    print(':::::::::::::::::::::::::::' +
-                                        _lat.toString() +
-                                        '    ' +
-                                        _long.toString());
-                                  });
-                                }).whenComplete(() {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => QrReaderSells(
-                                        latLng: latLng,
-                                      ),
-                                    ),
-                                  );
-                                });
+                                // final result = await Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //       builder: (context) => SellsMap(
+                                //         openPlace: true,
+                                //       ),
+                                //     )).then((value) {
+                                //   setState(() {
+                                //     latLng = value[0];
+                                //     _lat = latLng.latitude;
+                                //     _long = latLng.longitude;
+                                //     print(':::::::::::::::::::::::::::' +
+                                //         _lat.toString() +
+                                //         '    ' +
+                                //         _long.toString());
+                                //   });
+                                // }).whenComplete(() {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => QrReaderSells(),
+                                  ),
+                                );
+                                // });
                               } else {
                                 if (widget.isDriver) {
                                   Navigator.of(context).push(

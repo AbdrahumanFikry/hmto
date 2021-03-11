@@ -105,20 +105,20 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Form(
           key: _formKey,
           child: Container(
-            decoration: new BoxDecoration(
-              gradient: new LinearGradient(
-                begin: Alignment.centerLeft,
-                end: new Alignment(1.0, 0.0),
-                // 10% of the width, so there are ten blinds.
-                colors: [
-                  Colors.white,
-                  Colors.white,
-                ],
-                // whitish to gray
-                tileMode:
-                    TileMode.repeated, // repeats the gradient over the canvas
-              ),
-            ),
+            // decoration: new BoxDecoration(
+            //   gradient: new LinearGradient(
+            //     begin: Alignment.centerLeft,
+            //     end: new Alignment(1.0, 0.0),
+            //     // 10% of the width, so there are ten blinds.
+            //     colors: [
+            //       Colors.white,
+            //       Colors.white,
+            //     ],
+            //     // whitish to gray
+            //     tileMode:
+            //         TileMode.repeated, // repeats the gradient over the canvas
+            //   ),
+            // ),
             height: MediaQuery.of(context).size.height,
             child: ListView(
               children: <Widget>[

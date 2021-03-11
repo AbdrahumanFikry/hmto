@@ -65,6 +65,8 @@ class Question {
     id = json['id'];
     name = json['name'];
     type = json['type'];
-    options = json['options'] ?? List<dynamic>();
+    options = (json['options'] == null || json['options'] == "")
+        ? <dynamic>[]
+        : json['options'];
   }
 }

@@ -1,13 +1,15 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:provider/provider.dart';
+
 import 'package:app_settings/app_settings.dart';
-import '../providers/location.dart';
 import 'package:easy_localization/easy_localization.dart';
-import '../widgets/qrReaderSells.dart';
+import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/location.dart';
 import '../providers/sellsProvider.dart';
+import '../widgets/qrReaderSells.dart';
 
 class SellsMap extends StatefulWidget {
   final bool openPlace;
@@ -48,28 +50,28 @@ class _SellsMapState extends State<SellsMap> {
     Navigator.pop(context, [userLatLng, address]);
   }
 
-  Future<String> _getAddress(Position pos) async {
-    List<Placemark> placeMarks = await Geolocator()
-        .placemarkFromCoordinates(pos.latitude, pos.longitude);
-    if (placeMarks != null && placeMarks.isNotEmpty) {
-      final Placemark pos = placeMarks[0];
-//      print(':::::::::::::' + pos.thoroughfare + ', ' + pos.locality);
-      address = pos.thoroughfare + ', ' + pos.locality;
-      return address;
-    }
-    return "";
-  }
+//   Future<String> _getAddress(Position pos) async {
+//     List<Placemark> placeMarks = await Geolocator()
+//         .placemarkFromCoordinates(pos.latitude, pos.longitude);
+//     if (placeMarks != null && placeMarks.isNotEmpty) {
+//       final Placemark pos = placeMarks[0];
+// //      print(':::::::::::::' + pos.thoroughfare + ', ' + pos.locality);
+//       address = pos.thoroughfare + ', ' + pos.locality;
+//       return address;
+//     }
+//     return "";
+//   }
 
   Future<void> _getLocation() async {
-    currentLocation = await Geolocator()
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
+    currentLocation = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.best);
     userLatLng = LatLng(currentLocation.latitude, currentLocation.longitude);
     print("BeforeRemove:" +
         'lat :' +
         currentLocation.latitude.toString() +
         '-long :' +
         currentLocation.longitude.toString());
-    _getAddress(currentLocation);
+    // _getAddress(currentLocation);
     setState(() {
       _markers.clear();
       final marker = Marker(
@@ -128,10 +130,7 @@ class _SellsMapState extends State<SellsMap> {
                 currentLocation.longitude != null) {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => QrReaderSells(
-                    latLng: LatLng(
-                        currentLocation.latitude, currentLocation.longitude),
-                  ),
+                  builder: (context) => QrReaderSells(),
                 ),
               );
             }
@@ -168,7 +167,7 @@ class _SellsMapState extends State<SellsMap> {
                                 currentLocation = Position();
                               });
                               await _getLocation();
-                              await _getAddress(currentLocation);
+                              // await _getAddress(currentLocation);
                             },
                             tooltip: 'Get Location',
                             child: Icon(

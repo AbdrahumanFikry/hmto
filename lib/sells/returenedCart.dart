@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -5,7 +6,7 @@ import 'package:senior/providers/sellsProvider.dart';
 import 'package:senior/widgets/alertDialog.dart';
 import 'package:senior/widgets/productBarCodeReader.dart';
 import 'package:senior/widgets/returnsdCartItem.dart';
-import 'package:easy_localization/easy_localization.dart';
+
 import '../printers/ScreenPrinter.dart';
 import '../providers/authenticationProvider.dart';
 
@@ -29,7 +30,7 @@ class ReturnedCartCart extends StatelessWidget {
       isLoading = true;
       await Provider.of<SellsData>(context, listen: false)
           .returnProducts(storeId: storeId, total: total);
-      Navigator.of(context).push(
+      await Navigator.of(context).push(
         MaterialPageRoute(
           builder: (_) => PrinterScreen(
             isReturned: true,
@@ -41,8 +42,8 @@ class ReturnedCartCart extends StatelessWidget {
         ),
       );
       // GlobalAlertDialog.showErrorDialog(tr('extra.success'), context);
-      Provider.of<SellsData>(context, listen: false).returnedBill = [];
       isLoading = false;
+      Provider.of<SellsData>(context, listen: false).returnedBill = [];
     } catch (error) {
       GlobalAlertDialog.showErrorDialog(error.toString(), context);
       isLoading = false;
@@ -158,7 +159,7 @@ class ReturnedCartCart extends StatelessWidget {
       formData.save();
       try {
         await Provider.of<SellsData>(context, listen: false)
-            .addItemToBill(serialNumber: number);
+            .addItemToBill(serialNumber: number, context: context);
         Navigator.of(context).pop();
         GlobalAlertDialog.showQuantityDialog(
             context: context, serialNumber: number);

@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:senior/providers/sellsProvider.dart';
 import 'package:senior/widgets/alertDialog.dart';
@@ -21,21 +21,19 @@ class CartScreenItem extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Text(
-                    data.loadedItems
-                        .firstWhere((item) =>
-                            item.productId == data.bill[index].productId)
-                        .productName,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20.0,
-                    ),
+              Expanded(
+                child: Text(
+                  data?.billItemRef
+                          ?.firstWhere((item) =>
+                              item.productId == data.bill[index].productId)
+                          ?.productName ??
+                      '',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20.0,
                   ),
-                ],
+                ),
               ),
-              Spacer(),
               InkWell(
                 onTap: () {
                   data.removeProductFromBill(id: data.bill[index].productId);

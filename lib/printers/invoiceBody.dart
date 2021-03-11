@@ -1,14 +1,15 @@
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
-import 'package:senior/models/startDaySalles.dart';
-import 'package:senior/models/reternedProduct.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:senior/models/reternedProduct.dart';
+import 'package:senior/models/startDaySalles.dart';
 import 'package:senior/providers/sellsProvider.dart';
 
 class InvoiceBody {
   BlueThermalPrinter bluetooth = BlueThermalPrinter.instance;
 
   sample({
+    String storeCode,
     String storeName,
     String sellsName,
     String debit,
@@ -26,40 +27,34 @@ class InvoiceBody {
     int alignLeft = 0;
     int alignCenter = 1;
     int alignRight = 2;
-    totalAfterTax = (double.tryParse(totalAfterTax) - double.tryParse(sale))
-        .toStringAsFixed(2)
-        .toString();
+    totalAfterTax =
+        double.tryParse(totalAfterTax).toStringAsFixed(2).toString();
     bluetooth.isConnected.then((isConnected) {
       if (isConnected) {
         bluetooth.printNewLine();
         bluetooth.printCustom("HMTO", boldLarge, alignCenter);
         bluetooth.printNewLine();
-        bluetooth.printNewLine();
         bluetooth.printCustom("$transactionId", boldLarge, alignCenter);
         bluetooth.printNewLine();
+        bluetooth.printCustom(
+            'StoreCode :' + storeCode ?? '', normalSize, alignCenter);
         bluetooth.printNewLine();
-        bluetooth.printCustom("$storeName", normalSize, alignLeft);
-        bluetooth.printCustom("By : ", normalSize, alignLeft);
-        bluetooth.printCustom("$sellsName", normalSize, alignLeft);
+
+        bluetooth.printCustom("By :   $sellsName", normalSize, alignLeft);
         bluetooth.printNewLine();
-        bluetooth.printNewLine();
-        bluetooth.printCustom("*** المنتجات ***", alignCenter, boldLarge);
+        bluetooth.printCustom("*** Products ***", boldLarge, alignCenter);
         bill.forEach((item) {
           double itemTotal = item.quantity * item.priceForEach;
           bluetooth.printNewLine();
-          bluetooth.printNewLine();
+          bluetooth.printCustom("${item.quantity} * ${item.priceForEach} ",
+              normalSize, alignRight);
           bluetooth.printCustom(
               ">${item.productName}  ${itemTotal.toStringAsFixed(2).toString()} ",
               normalSize,
-              alignCenter);
-          bluetooth.printCustom("${item.quantity} * ${item.priceForEach} ",
-              normalSize, alignRight);
-//          bluetooth.printCustom("$total", alignLeft, normalSize);
+              alignLeft);
+          bluetooth.printCustom("-----------------", normalSize, alignCenter);
           itemTotal = 0.0;
         });
-        bluetooth.printNewLine();
-        bluetooth.printNewLine();
-        bluetooth.printNewLine();
         bluetooth.printNewLine();
         bluetooth.printCustom("Total : $total", normalSize, alignLeft);
         bluetooth.printCustom("Sale : $sale", normalSize, alignLeft);
@@ -76,7 +71,8 @@ class InvoiceBody {
             ? bluetooth.printCustom("Debit :  -------", normalSize, alignLeft)
             : bluetooth.printCustom(
                 "Debit :" +
-                    (double.tryParse(totalAfterTax) - double.tryParse(debit)).toStringAsFixed(2)
+                    (double.tryParse(totalAfterTax) - double.tryParse(debit))
+                        .toStringAsFixed(2)
                         .toString(),
                 normalSize,
                 alignLeft);
@@ -87,8 +83,10 @@ class InvoiceBody {
             normalSize,
             alignLeft);
         bluetooth.printNewLine();
-        bluetooth.printNewLine();
         bluetooth.printCustom("Thank you", boldLarge, alignCenter);
+        bluetooth.printNewLine();
+        bluetooth.printNewLine();
+        bluetooth.printNewLine();
         bluetooth.printNewLine();
         bluetooth.printNewLine();
         bluetooth.paperCut();
@@ -97,6 +95,7 @@ class InvoiceBody {
   }
 
   sample2({
+    String storeCode,
     String storeName,
     String sellsName,
     String paid,
@@ -127,18 +126,12 @@ class InvoiceBody {
         bluetooth.printNewLine();
         bluetooth.printCustom("HMTO", boldLarge, alignCenter);
         bluetooth.printNewLine();
-        bluetooth.printNewLine();
         bluetooth.printCustom("$transactionId", boldLarge, alignCenter);
         bluetooth.printNewLine();
+        bluetooth.printCustom(
+            'StoreCode :' + storeCode ?? '', normalSize, alignCenter);
         bluetooth.printNewLine();
-        bluetooth.printCustom("$storeName", normalSize, alignLeft);
-        bluetooth.printCustom("By : ", normalSize, alignLeft);
-        bluetooth.printCustom("$sellsName", normalSize, alignLeft);
-        bluetooth.printNewLine();
-        bluetooth.printNewLine();
-        bluetooth.printNewLine();
-        bluetooth.printNewLine();
-        bluetooth.printNewLine();
+        bluetooth.printCustom("By : $sellsName", normalSize, alignLeft);
         bluetooth.printNewLine();
         bluetooth.printCustom("Total: $total", normalSize, alignLeft);
         bluetooth.printCustom("AlreadyPaid: $oldTotal", normalSize, alignLeft);
@@ -151,8 +144,9 @@ class InvoiceBody {
             normalSize,
             alignLeft);
         bluetooth.printNewLine();
-        bluetooth.printNewLine();
         bluetooth.printCustom("Thank you", boldLarge, alignCenter);
+        bluetooth.printNewLine();
+        bluetooth.printNewLine();
         bluetooth.printNewLine();
         bluetooth.printNewLine();
         bluetooth.paperCut();
@@ -162,9 +156,8 @@ class InvoiceBody {
 
   cartSample({
     String sellsName,
-    List cart,
+    List<CarProduct> cart,
   }) async {
-
     int normalSize = 0;
     int bold = 1;
     int boldMedium = 2;
@@ -172,32 +165,44 @@ class InvoiceBody {
     int alignLeft = 0;
     int alignCenter = 1;
     int alignRight = 2;
-    bluetooth.isConnected.then((isConnected) {
+    bluetooth.isConnected.then((isConnected) async {
       if (isConnected) {
         bluetooth.printNewLine();
         bluetooth.printCustom("HMTO", boldLarge, alignCenter);
         bluetooth.printNewLine();
+        bluetooth.printCustom("By :   $sellsName", normalSize, alignLeft);
         bluetooth.printNewLine();
-        bluetooth.printCustom("By : ", normalSize, alignLeft);
-        bluetooth.printCustom("$sellsName", normalSize, alignLeft);
-        bluetooth.printNewLine();
-        bluetooth.printNewLine();
-        bluetooth.printCustom("*** المنتجات ***", alignCenter, boldLarge);
+        bluetooth.printCustom("*** Cart Products ***", boldLarge, alignCenter);
         cart.forEach((item) {
           double itemTotal = item.quantity * item.priceForEach;
           bluetooth.printNewLine();
-          bluetooth.printNewLine();
+          for (var unit in item.units) {
+            String name = 'Piece';
+            if (unit.actualName.contains('كرتون')) {
+              name = 'Cartoon';
+            } else if (unit.actualName.contains('علب')) {
+              name = 'Box';
+            } else {
+              name = 'Piece';
+            }
+            bluetooth.printCustom("${item.quantity ~/ unit.unitCount} ($name) ",
+                normalSize, alignRight);
+            print(item.quantity % unit.unitCount);
+            if (item.quantity % unit.unitCount != 0)
+              bluetooth.printCustom(
+                  "${item.quantity % unit.unitCount} (Piece) ",
+                  normalSize,
+                  alignRight);
+            break;
+          }
           bluetooth.printCustom(
               ">${item.productName}  ${itemTotal.toStringAsFixed(2).toString()} ",
               normalSize,
-              alignCenter);
-          bluetooth.printCustom("${item.quantity} * ${item.priceForEach} ",
-              normalSize, alignRight);
+              alignLeft);
+          bluetooth.printCustom("-----------------", normalSize, alignCenter);
 //          bluetooth.printCustom("$total", alignLeft, normalSize);
           itemTotal = 0.0;
         });
-        bluetooth.printNewLine();
-        bluetooth.printNewLine();
         bluetooth.printNewLine();
         bluetooth.printCustom("DateTime : ", normalSize, alignLeft);
         bluetooth.printCustom(
@@ -205,8 +210,9 @@ class InvoiceBody {
             normalSize,
             alignLeft);
         bluetooth.printNewLine();
-        bluetooth.printNewLine();
         bluetooth.printCustom("Thank you", boldLarge, alignCenter);
+        bluetooth.printNewLine();
+        bluetooth.printNewLine();
         bluetooth.printNewLine();
         bluetooth.printNewLine();
         bluetooth.paperCut();
@@ -215,6 +221,7 @@ class InvoiceBody {
   }
 
   returnSample({
+    String storeCode,
     String sellsName,
     String storeName,
     List<ReturnedProduct> bill,
@@ -230,25 +237,20 @@ class InvoiceBody {
         bluetooth.printNewLine();
         bluetooth.printCustom("HMTO", boldLarge, alignCenter);
         bluetooth.printNewLine();
+        bluetooth.printCustom(
+            'StoreCode :' + storeCode ?? '', normalSize, alignCenter);
         bluetooth.printNewLine();
-        bluetooth.printCustom("$storeName", normalSize, alignLeft);
-        bluetooth.printCustom("By : ", normalSize, alignLeft);
-        bluetooth.printCustom("$sellsName", normalSize, alignLeft);
+        bluetooth.printCustom("By :   $sellsName", normalSize, alignLeft);
+        // bluetooth.printCustom("$sellsName", normalSize, alignLeft);
         bluetooth.printNewLine();
-        bluetooth.printNewLine();
-        bluetooth.printCustom("*** المنتجات ***", alignCenter, boldLarge);
+        bluetooth.printCustom("*** Products ***", boldLarge, alignCenter);
         bill.forEach((item) {
-          bluetooth.printNewLine();
           bluetooth.printNewLine();
           String name = Provider.of<SellsData>(context, listen: false)
               .getName(id: item.productId);
-
           bluetooth.printCustom(
               "${item.quantity} * $name ", normalSize, alignRight);
         });
-        bluetooth.printNewLine();
-        bluetooth.printNewLine();
-        bluetooth.printNewLine();
         bluetooth.printNewLine();
         bluetooth.printCustom("DateTime : ", normalSize, alignLeft);
         bluetooth.printCustom(
@@ -256,8 +258,8 @@ class InvoiceBody {
             normalSize,
             alignLeft);
         bluetooth.printNewLine();
-        bluetooth.printNewLine();
         bluetooth.printCustom("Thank you", boldLarge, alignCenter);
+        bluetooth.printNewLine();
         bluetooth.printNewLine();
         bluetooth.printNewLine();
         bluetooth.paperCut();

@@ -17,6 +17,7 @@ class StoresData {
   int id;
   String storeName;
   String landmark;
+  String phone;
   String lat;
   String long;
   String imageIn;
@@ -28,6 +29,7 @@ class StoresData {
   StoresData(
       {this.id,
       this.storeName,
+      this.phone,
       this.landmark,
       this.lat,
       this.long,
@@ -41,6 +43,7 @@ class StoresData {
     id = json['id'];
     storeName = json['store_name'];
     landmark = json['landmark'];
+    phone = json['mobile'];
     lat = json['lat'];
     long = json['long'];
     imageIn = json['image_in'];

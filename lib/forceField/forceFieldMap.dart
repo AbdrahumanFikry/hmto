@@ -1,16 +1,17 @@
 import 'dart:async';
-import 'dart:convert';
+
+import 'package:app_settings/app_settings.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:senior/forceField/addStore.dart';
-import 'package:app_settings/app_settings.dart';
 import 'package:senior/widgets/qrReader.dart';
-import '../providers/location.dart';
-import 'package:easy_localization/easy_localization.dart';
+
 import '../providers/fieldForceProvider.dart';
+import '../providers/location.dart';
 
 class ForceFieldMap extends StatefulWidget {
   @override
@@ -40,35 +41,18 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
     }
   }
 
-  Future<String> _getAddress(Position pos) async {
-    setState(() {
-      searching = true;
-    });
-    List<Placemark> placeMarks = await Geolocator()
-        .placemarkFromCoordinates(pos.latitude, pos.longitude);
-    if (placeMarks != null && placeMarks.isNotEmpty) {
-      final Placemark pos = placeMarks[0];
-      address = pos.thoroughfare + ', ' + pos.locality;
-      return address;
-    }
-    setState(() {
-      searching = false;
-    });
-    return "";
-  }
-
   Future<void> _getLocation() async {
     setState(() {
       searching = true;
     });
-    currentLocation = await Geolocator()
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
+    currentLocation = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.best);
     print("BeforeRemove:" +
         'lat :' +
         currentLocation.latitude.toString() +
         '-long :' +
         currentLocation.longitude.toString());
-    _getAddress(currentLocation);
+    // _getAddress(currentLocation);
     setState(() {
       searching = false;
     });
@@ -87,7 +71,7 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
             latitude: value.latitude,
             longitude: value.longitude,
           );
-          _getAddress(currentLocation);
+          // _getAddress(currentLocation);
           setState(() {
             searching = false;
           });
@@ -98,9 +82,7 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
               'lat :' +
               currentLocation.latitude.toString() +
               '-long :' +
-              currentLocation.longitude.toString() +
-              '-address :' +
-              address);
+              currentLocation.longitude.toString());
           if (!searching) {
             Navigator.of(context).push(
               MaterialPageRoute(
@@ -203,7 +185,7 @@ class _ForceFieldMapState extends State<ForceFieldMap> {
                               currentLocation = Position();
                             });
                             await _getLocation();
-                            await _getAddress(currentLocation);
+                            // await _getAddress(currentLocation);
                           },
                           tooltip: 'Get Location',
                           child: Icon(

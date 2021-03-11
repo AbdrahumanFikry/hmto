@@ -1,20 +1,21 @@
+import 'dart:async';
 import 'dart:convert';
-import 'package:pie_chart/pie_chart.dart';
+import 'dart:io';
+
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pie_chart/pie_chart.dart';
 import 'package:provider/provider.dart';
-import 'package:senior/models/answers.dart';
 import 'package:senior/models/dataForNewShop.dart';
 import 'package:senior/widgets/alertDialog.dart';
 import 'package:senior/widgets/errorWidget.dart';
 import 'package:senior/widgets/inputwidget.dart';
 import 'package:senior/widgets/question.dart';
 import 'package:senior/widgets/trueAndFalse.dart';
-import 'dart:io';
-import 'dart:async';
-import 'package:easy_localization/easy_localization.dart';
+
 import '../providers/fieldForceProvider.dart';
 import '../widgets/persent.dart';
 
@@ -41,7 +42,6 @@ class _AdsAddStoreState extends State<AdsAddStore> {
   int competitorLength = 0;
 
   bool _isLoading = false;
-  List<File> images = new List<File>();
   GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   String shopName,
       customerName,
@@ -50,11 +50,17 @@ class _AdsAddStoreState extends State<AdsAddStore> {
       sellsPhone,
       landmark,
       position,
+      country,
+      city,
+      state,
       answers;
+
   double rate;
+
   // List questionsAnswer = new List();
   List<Competitors> competitors = new List<Competitors>();
   Map<String, double> competitorsData = {};
+  List<File> images = new List<File>();
   File image;
 
   Future getImage() async {
@@ -94,6 +100,9 @@ class _AdsAddStoreState extends State<AdsAddStore> {
           customerPhone == null ||
           sellsName == null ||
           sellsPhone == null ||
+          country == null ||
+          city == null ||
+          state == null ||
           widget.long == null ||
           widget.lat == null) {
         GlobalAlertDialog.showErrorDialog(tr('errors.lessData'), context);
@@ -108,6 +117,9 @@ class _AdsAddStoreState extends State<AdsAddStore> {
             customerPhone: customerPhone == null ? 'no data' : customerPhone,
             sellsName: sellsName == null ? 'no data' : sellsName,
             sellsPhone: sellsPhone == null ? 'no data' : sellsPhone,
+            country: country == null ? 'no data' : country,
+            city: city == null ? 'no data' : city,
+            state: state == null ? 'no data' : state,
             rate: rate == null ? 0.0 : rate,
             image1: images[0] == null ? 'Nothing' : images[0],
             image2: images[1] == null ? 'Nothing' : images[1],
@@ -295,6 +307,30 @@ class _AdsAddStoreState extends State<AdsAddStore> {
                                 },
                                 validator: validator,
                               ),
+                              //------------------------------------------------
+                              InputWidget(
+                                labelText: tr('new_store.info_details.country'),
+                                onSaved: (value) {
+                                  country = value;
+                                },
+                                validator: validator,
+                              ),
+                              InputWidget(
+                                labelText: tr('new_store.info_details.state'),
+                                onSaved: (value) {
+                                  city = value;
+                                },
+                                validator: validator,
+                              ),
+                              InputWidget(
+                                labelText: tr('new_store.info_details.city'),
+                                onSaved: (value) {
+                                  state = value;
+                                },
+                                validator: validator,
+                              ),
+
+                              //------------------------------------------------
                               Text(
                                 tr('new_store.images'),
                                 style: TextStyle(
@@ -502,6 +538,35 @@ class _AdsAddStoreState extends State<AdsAddStore> {
                                 ),
                               ),
                               Divider(),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 10),
+                                child: Text(
+                                  tr('store.products'),
+                                  style: TextStyle(
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                              Consumer<FieldForceData>(
+                                builder: (context, data, child) =>
+                                    ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemCount: data.products.length,
+                                  itemBuilder: (ctx, index) {
+                                    return TrueAndFalse(
+                                      index: index + 1,
+                                      qId: data.products[index].id,
+                                      question: data.products[index].name,
+                                      options: ['صح', 'خطأ'],
+                                    );
+                                  },
+                                ),
+                              ),
                               SizedBox(
                                 height: 20,
                               ),
