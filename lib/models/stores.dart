@@ -7,7 +7,9 @@ class Stores {
     if (json['data'] != null) {
       data = new List<StoresData>();
       json['data'].forEach((v) {
-        data.add(new StoresData.fromJson(v));
+        if(v != null){
+          data.add(new StoresData.fromJson(v));
+        }
       });
     }
   }
